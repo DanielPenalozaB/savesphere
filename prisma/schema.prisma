@@ -1,0 +1,231 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("PROD_DATABASE_URL")
+}
+
+model User {
+    id        String  @id @db.VarChar(50)
+    country   Country @relation(fields: [countryId], references: [id])
+    countryId String  @db.VarChar(50)
+
+    createdAt         DateTime @default(now())
+    modifiedAt        DateTime @updatedAt
+    username          String   @db.VarChar(50)
+    image             String?  @db.LongText
+    email             String   @unique @db.VarChar(255)
+    password          String   @db.VarChar(255)
+    isAdmin           Int      @default(0) @db.TinyInt() // 0 = false, 1 = true
+    emailConfirmed    Int      @default(0) @db.TinyInt() // 0 = false, 1 = true
+    preferredLanguage String   @db.VarChar(50)
+    otp               String   @db.VarChar(6)
+
+    accounts      Account[]
+    transactions  Transaction[]
+    notes         Note[]
+    budgets       Budget[]
+    goals         Goal[]
+    notifications Notification[]
+    settings      Setting[]
+}
+
+model Country {
+    id   String @id @db.VarChar(50)
+    name String @db.VarChar(50)
+
+    users User[]
+}
+
+model Account {
+    id     String @id @db.VarChar(50)
+    user   User   @relation(fields: [userId], references: [id])
+    bank   Bank   @relation(fields: [bankId], references: [id])
+    bankId String @db.VarChar(50)
+    userId String @db.VarChar(50)
+
+    accountNumber Int            @db.Int()
+    name          String         @db.VarChar(50)
+    interestRate  Decimal?
+    creditLimit   Decimal?
+    type          AccountType    @default(DEBIT)
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
+    status        AccountStatus  @default(ACTIVE)
+    currency      Currency       @default(COP)
+    ownershipType OwnershipType  @default(INDIVIDUAL)
+    transactions  Transaction[]
+    tags          TagXAccount[]
+    notes         NoteXAccount[]
+}
+
+model Transaction {
+    id         String   @id @db.VarChar(50)
+    user       User     @relation(fields: [userId], references: [id])
+    account    Account  @relation(fields: [accountId], references: [id])
+    category   Category @relation(fields: [categoryId], references: [id])
+    userId     String   @db.VarChar(50)
+    accountId  String   @db.VarChar(50)
+    categoryId String   @db.VarChar(50)
+
+    amount      Decimal
+    type        TransactionType
+    date        DateTime
+    description String          @db.LongText()
+    createdAt   DateTime        @default(now())
+    updatedAt   DateTime        @updatedAt
+}
+
+model Category {
+    id          String        @id @db.VarChar(50)
+    name        String        @db.VarChar(50)
+    icon        String? // URL or reference to an icon for the category
+    color       String?       @db.VarChar(6)
+    description String?       @db.LongText()
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    Transaction Transaction[]
+}
+
+model Bank {
+    id       String    @id @db.VarChar(50)
+    name     String    @db.VarChar(50)
+    logo     String    @db.LongText()
+    accounts Account[]
+}
+
+model Tag {
+    id       String        @id @db.VarChar(50)
+    name     String        @db.VarChar(50)
+    status   Int           @default(0) @db.TinyInt() // 0 = false, 1 = true
+    accounts TagXAccount[]
+}
+
+model TagXAccount {
+    id        String  @id @db.VarChar(50)
+    tag       Tag     @relation(fields: [tagId], references: [id])
+    account   Account @relation(fields: [accountId], references: [id])
+    tagId     String
+    accountId String
+}
+
+model Note {
+    id        String         @id @db.VarChar(50)
+    user      User           @relation(fields: [userId], references: [id])
+    userId    String         @db.VarChar(50)
+    content   String         @db.LongText()
+    createdAt DateTime       @default(now())
+    accounts  NoteXAccount[]
+}
+
+model NoteXAccount {
+    id        String  @id @db.VarChar(50)
+    note      Note    @relation(fields: [noteId], references: [id])
+    account   Account @relation(fields: [accountId], references: [id])
+    noteId    String
+    accountId String
+}
+
+model Budget {
+    id     String @id @db.VarChar(50)
+    user   User   @relation(fields: [userId], references: [id])
+    userId String @db.VarChar(50)
+
+    name      String
+    limit     Decimal
+    period    Period
+    startDate DateTime?
+    endDate   DateTime?
+}
+
+model Goal {
+    id     String @id @db.VarChar(50)
+    user   User   @relation(fields: [userId], references: [id])
+    userId String @db.VarChar(50)
+
+    name           String
+    targetAmount   Decimal
+    currentAmount  Decimal
+    dueDate        DateTime
+    period         Period
+    isCompleted    Int       @default(0) @db.TinyInt() // 0 = false, 1 = true
+    completionDate DateTime?
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
+}
+
+model Notification {
+    id     String @id @db.VarChar(50)
+    user   User   @relation(fields: [userId], references: [id])
+    userId String @db.VarChar(50)
+
+    title     String   @db.VarChar(60)
+    message   String?  @db.LongText()
+    link      String?  @db.LongText()
+    isRead    Int      @default(0) @db.TinyInt() // 0 = false, 1 = true
+    type      String
+    date      DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Setting {
+    id     String @id @db.VarChar(50)
+    user   User   @relation(fields: [userId], references: [id])
+    userId String @db.VarChar(50)
+
+    currency                Currency @default(COP)
+    notificationPreferences Int      @default(0) @db.TinyInt() // 0 = false, 1 = true
+    createdAt               DateTime @default(now())
+    updatedAt               DateTime @updatedAt
+}
+
+// Enums
+
+enum AccountType {
+    CREDIT
+    DEBIT
+}
+
+enum AccountStatus {
+    ACTIVE
+    CLOSED
+    ONHOLD
+}
+
+enum Currency {
+    USD
+    EUR
+    COP
+}
+
+enum OwnershipType {
+    INDIVIDUAL
+    FAMILY
+    BUSINESS
+}
+
+enum TransactionType {
+    INCOME
+    EXPENSE
+    TRANSFER
+    LOAN_REPAYMENT
+    INVESTMENT
+    CREDIT_CARD_PAYMENT
+    WITHDRAWAL
+    DEPOSIT
+}
+
+enum Period {
+    DAILY
+    WEEKLY
+    BIWEEKLY
+    MONTHLY
+    QUARTERLY
+    YEARLY
+}
