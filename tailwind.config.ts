@@ -8,13 +8,53 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
-			backgroundImage: {
-				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-				"gradient-conic":
-					"conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+			fontFamily: {
+				montserrat: ["var(--font-montserrat)"],
+			},
+			colors: {
+				savesphere: {
+					"50": "#fafee8",
+					"100": "#f3ffc2",
+					"200": "#ecff88",
+					"300": "#e8ff45",
+					"400": "#ebfd12",
+					DEFAULT: "#eaf205",
+					"600": "#cdc401",
+					"700": "#a38e05",
+					"800": "#876f0c",
+					"900": "#725a11",
+					"950": "#433105",
+				},
+			},
+			borderWidth: {
+				"1": "1px",
+				"1.5": "1.5px",
+				"2": "2px",
+				"2.5": "2.5px",
+				"3": "3px",
+				"3.5": "3.5px",
+				"4": "4px",
+				"4.5": "4.5px",
+				"5": "5px",
+				"5.5": "5.5px",
+				"6": "6px",
+			},
+			strokeWidth: {
+				"1": "1px",
+				"1.5": "1.5px",
+				"2": "2px",
+				"2.5": "2.5px",
+				"3": "3px",
+				"3.5": "3.5px",
+				"4": "4px",
+				"4.5": "4.5px",
+				"5": "5px",
+				"5.5": "5.5px",
+				"6": "6px",
 			},
 		},
 	},
 	plugins: [],
+	darkMode: "class",
 };
 export default config;
