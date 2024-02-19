@@ -3,7 +3,14 @@ import { Inter, Montserrat } from 'next/font/google';
 import './globals.css';
 import Providers from './providers';
 import Link from 'next/link';
-import { BudgetIcon } from '@/assets/svg';
+import {
+    BellSchoolIcon,
+    CardIcon,
+    HomeIcon,
+    ReceiptIcon,
+    SortIcon,
+    TargetIcon,
+} from '@/assets/svg';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,23 +31,82 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning={true}>
-            <body className={`${inter.className} ${monserrat.variable} grid bg-white dark:bg-zinc-900 duration-500`}>
+            <body
+                className={`${inter.className} ${monserrat.variable} grid bg-white dark:bg-zinc-900 duration-500`}
+            >
                 <Providers>
-                    <div className='flex h-screen w-[224px] flex-col justify-between border-r border-neutral-200 bg-neutral-200'>
+                    <div className="flex h-screen w-[224px] flex-col justify-between border-r border-neutral-200 bg-neutral-50">
                         <ul className="flex flex-col gap-4 p-4">
                             <li>
-                                <Link href={'/'} className='flex items-center gap-4 rounded-lg p-2 hover:bg-neutral-300'>
-                                    <BudgetIcon className="h-6 w-6" />
-                                    <span className='text-lg font-medium text-neutral-700'>Budget</span>
+                                <Link
+                                    href={'/'}
+                                    className="group flex items-center gap-4 rounded-lg px-4 py-2.5 hover:bg-savesphere-100"
+                                >
+                                    <HomeIcon className="h-5 w-5 fill-neutral-700 group-hover:fill-savesphere-600" />
+                                    <span className="font-medium text-neutral-700 group-hover:text-savesphere-600">
+                                        Budget
+                                    </span>
                                 </Link>
                             </li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
+                            <li>
+                                <Link
+                                    href={'/'}
+                                    className="group flex items-center gap-4 rounded-lg px-4 py-2.5 hover:bg-savesphere-100"
+                                >
+                                    <CardIcon className="h-5 w-5 fill-neutral-700 group-hover:fill-savesphere-600" />
+                                    <span className="font-medium text-neutral-700 group-hover:text-savesphere-600">
+                                        Accounts
+                                    </span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href={'/'}
+                                    className="group flex items-center gap-4 rounded-lg px-4 py-2.5 hover:bg-savesphere-100"
+                                >
+                                    <SortIcon className="h-5 w-5 fill-neutral-700 group-hover:fill-savesphere-600" />
+                                    <span className="font-medium text-neutral-700 group-hover:text-savesphere-600">
+                                        Transactions
+                                    </span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href={'/'}
+                                    className="group flex items-center gap-4 rounded-lg px-4 py-2.5 hover:bg-savesphere-100"
+                                >
+                                    <TargetIcon className="h-5 w-5 fill-neutral-700 group-hover:fill-savesphere-600" />
+                                    <span className="font-medium text-neutral-700 group-hover:text-savesphere-600">
+                                        Goals
+                                    </span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href={'/'}
+                                    className="group flex items-center gap-4 rounded-lg px-4 py-2.5 hover:bg-savesphere-100"
+                                >
+                                    <ReceiptIcon className="h-5 w-5 fill-neutral-700 group-hover:fill-savesphere-600" />
+                                    <span className="font-medium text-neutral-700 group-hover:text-savesphere-600">
+                                        Reports
+                                    </span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href={'/'}
+                                    className="group flex items-center gap-4 rounded-lg px-4 py-2.5 hover:bg-savesphere-100"
+                                >
+                                    <BellSchoolIcon className="h-5 w-5 fill-neutral-700 group-hover:fill-savesphere-600" />
+                                    <span className="font-medium text-neutral-700 group-hover:text-savesphere-600">
+                                        Reminders
+                                    </span>
+                                </Link>
+                            </li>
                         </ul>
+                        <div className='w-full p-4 font-bold text-savesphere'>
+                            Profile
+                        </div>
                     </div>
                     {children}
                 </Providers>
