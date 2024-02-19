@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Inter, Montserrat } from 'next/font/google';
 import './globals.css';
 import Providers from './providers';
+import Link from 'next/link';
+import { BudgetIcon } from '@/assets/svg';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,8 +24,26 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning={true}>
-            <body className={`${inter.className} ${monserrat.variable} bg-white dark:bg-zinc-900 duration-500`}>
-                <Providers>{children}</Providers>
+            <body className={`${inter.className} ${monserrat.variable} grid bg-white dark:bg-zinc-900 duration-500`}>
+                <Providers>
+                    <div className='flex h-screen w-[224px] flex-col justify-between border-r border-neutral-200 bg-neutral-200'>
+                        <ul className="flex flex-col gap-4 p-4">
+                            <li>
+                                <Link href={'/'} className='flex items-center gap-4 rounded-lg p-2 hover:bg-neutral-300'>
+                                    <BudgetIcon className="h-6 w-6" />
+                                    <span className='text-lg font-medium text-neutral-700'>Budget</span>
+                                </Link>
+                            </li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                    </div>
+                    {children}
+                </Providers>
             </body>
         </html>
     );
