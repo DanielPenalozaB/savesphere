@@ -7,6 +7,7 @@ import {
     BellSchoolIcon,
     CardIcon,
     HomeIcon,
+    LogoutIcon,
     ReceiptIcon,
     SortIcon,
     TargetIcon,
@@ -37,6 +38,24 @@ export default function RootLayout({
                 <Providers>
                     <div className="flex h-screen w-[224px] flex-col justify-between border-r border-neutral-200 bg-neutral-50">
                         <ul className="flex flex-col gap-4 p-4">
+                            <li className="flex justify-end">
+                                <button
+                                    type="button"
+                                    title="Expand"
+                                    className="flex h-8 w-8 items-center justify-center fill-neutral-700 hover:fill-savesphere"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        id="Outline"
+                                        viewBox="0 0 24 24"
+                                        className="h-5 fill-inherit"
+                                        width="512"
+                                        height="512"
+                                    >
+                                        <path d="M23.12,9.91,19.25,6a1,1,0,0,0-1.42,0h0a1,1,0,0,0,0,1.41L21.39,11H1a1,1,0,0,0-1,1H0a1,1,0,0,0,1,1H21.45l-3.62,3.61a1,1,0,0,0,0,1.42h0a1,1,0,0,0,1.42,0l3.87-3.88A3,3,0,0,0,23.12,9.91Z" />
+                                    </svg>
+                                </button>
+                            </li>
                             <li>
                                 <Link
                                     href={'/'}
@@ -104,8 +123,47 @@ export default function RootLayout({
                                 </Link>
                             </li>
                         </ul>
-                        <div className='w-full p-4 font-bold text-savesphere'>
-                            Profile
+                        <div className="relative w-full border-t border-neutral-200 p-4">
+                            <div className="group relative flex cursor-pointer items-center gap-4 rounded-lg px-2 py-1 hover:bg-savesphere-100">
+                                <div className="min-h-8 min-w-8 overflow-hidden rounded-full">
+                                    <div className="h-8 w-8 bg-savesphere" />
+                                </div>
+                                <div className="flex flex-col gap-1 truncate">
+                                    <span className="text-sm font-medium text-neutral-700">
+                                        Humpty Alexander Dumpty
+                                    </span>
+                                    <span className="text-xs text-neutral-500">
+                                        humpty@dumpty.com
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="absolute bottom-4 left-[calc(100%+1rem)]">
+                                <ul className="flex max-w-[224px] flex-col gap-2 rounded-lg bg-white p-2 drop-shadow-lg">
+                                    <li className="group relative flex items-center gap-4 rounded-lg px-2 py-1">
+                                        <div className="min-h-8 min-w-8 overflow-hidden rounded-full">
+                                            <div className="h-8 w-8 bg-savesphere" />
+                                        </div>
+                                        <div className="flex flex-col gap-1 truncate">
+                                            <span className="text-sm font-medium text-neutral-700">
+                                                Humpty Alexander Dumpty
+                                            </span>
+                                            <span className="text-xs text-neutral-500">
+                                                humpty@dumpty.com
+                                            </span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <button
+                                            type="button"
+                                            title="Logout"
+                                            className="flex w-full items-center gap-4 rounded-lg fill-neutral-700 px-4 py-2.5 text-neutral-700 hover:bg-savesphere-100 hover:fill-savesphere hover:text-savesphere"
+                                        >
+                                            <LogoutIcon className="h-4 w-4 fill-inherit" />
+                                            <span className='text-inherit'>Logout</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     {children}
