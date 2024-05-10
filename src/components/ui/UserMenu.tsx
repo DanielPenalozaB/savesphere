@@ -2,7 +2,7 @@
 
 import {
     ArrowBarLeftIcon,
-    ChevronIcon,
+    ChevronDownIcon,
     UserSquareRoundedIcon,
 } from '@/assets/svg';
 import { useOutsideClick } from '@/hooks';
@@ -23,7 +23,7 @@ export function UserMenu() {
                 className="before:content-[' '] relative h-8 w-8 cursor-pointer rounded-full bg-savesphere before:absolute before:right-0 before:top-0 before:h-2 before:w-2 before:rounded-full before:bg-savesphere before:ring-4 before:ring-white before:dark:bg-savesphere-200 before:dark:ring-zinc-900"
             ></div>
             <button onClick={() => setOpen(!open)} type="button" title="Menu">
-                <ChevronIcon className="h-5 w-5 stroke-zinc-600 stroke-1 dark:stroke-zinc-300" />
+                <ChevronDownIcon className="h-5 w-5 stroke-zinc-600 stroke-1 dark:stroke-zinc-300" />
             </button>
             <div
                 ref={menuRef}

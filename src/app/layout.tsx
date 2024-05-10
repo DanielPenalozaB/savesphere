@@ -12,6 +12,7 @@ import {
     SortIcon,
     TargetIcon,
 } from '@/assets/svg';
+import Sidebar from '@/components/ui/Sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -33,9 +34,10 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning={true}>
             <body
-                className={`${inter.className} ${monserrat.variable} grid bg-white dark:bg-zinc-900 duration-500`}
+                className={`${inter.className} ${monserrat.variable} grid bg-white dark:bg-gray-900 duration-500`}
             >
                 <Providers>
+                    <Sidebar />
                     <div className="flex h-screen w-[224px] flex-col justify-between border-r border-neutral-200 bg-neutral-50">
                         <ul className="flex flex-col gap-4 p-4">
                             <li className="flex justify-end">
@@ -159,7 +161,9 @@ export default function RootLayout({
                                             className="flex w-full items-center gap-4 rounded-lg fill-neutral-700 px-4 py-2.5 text-neutral-700 hover:bg-savesphere-100 hover:fill-savesphere hover:text-savesphere"
                                         >
                                             <LogoutIcon className="h-4 w-4 fill-inherit" />
-                                            <span className='text-inherit'>Logout</span>
+                                            <span className="text-inherit">
+                                                Logout
+                                            </span>
                                         </button>
                                     </li>
                                 </ul>

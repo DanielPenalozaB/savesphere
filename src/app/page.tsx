@@ -1,4 +1,3 @@
-import { BellIcon, ChevronIcon, GridDotsIcon } from '@/assets/svg';
 import { NotificationsMenu, ThemeSwitcher, UserMenu } from '@/components';
 import { PlusIcon } from '../assets/svg/index';
 
