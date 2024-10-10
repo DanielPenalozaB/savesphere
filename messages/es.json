@@ -1,0 +1,33 @@
+{
+    "auth": {
+        "signin": {
+            "meta": {
+                "title": "Iniciar sesión"
+            },
+            "title": "Iniciar sesión en SaveSphere",
+            "message": "Ingresa tu email para continuar o crear una cuenta nueva.",
+            "form": {
+                "email": "Email",
+                "emailPlaceholder": "Ingresa tu email",
+                "password": "Contraseña",
+                "passwordPlaceholder": "••••••••",
+                "forgotPassword": "¿Olvidaste tu contraseña?",
+                "createAccount": "Crear cuenta",
+                "button": {
+                    "continue": "Continuar",
+                    "continueWithPassword": "Continuar con contraseña",
+                    "signingIn": "Iniciando sesión..."
+                },
+                "orContinueWith": "O continuar con"
+            }
+        },
+        "footer": {
+            "lang": {
+                "en": "Inglés",
+                "es": "Español"
+            },
+            "title": "Bienvenido a <b>SaveSphere.</b>",
+            "message": "Al continuar, aceptas los <terms>Términos de Servicio</terms> y <privacy>Política de Privacidad.</privacy>"
+        }
+    }
+}
