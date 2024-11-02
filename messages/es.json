@@ -5,7 +5,7 @@
                 "title": "Iniciar sesión"
             },
             "title": "Iniciar sesión en SaveSphere",
-            "message": "Ingresa tu email para continuar o crear una cuenta nueva.",
+            "message": "Ingresa tu email para continuar.",
             "form": {
                 "email": "Email",
                 "emailPlaceholder": "Ingresa tu email",
@@ -17,6 +17,28 @@
                     "continue": "Continuar",
                     "continueWithPassword": "Continuar con contraseña",
                     "signingIn": "Iniciando sesión..."
+                },
+                "orContinueWith": "O continuar con"
+            }
+        },
+        "signup": {
+            "meta": {
+                "title": "Crear cuenta"
+            },
+            "title": "Crear cuenta en SaveSphere",
+            "message": "Crea tu cuenta.",
+            "form": {
+                "name": "Nombre",
+                "namePlaceholder": "Ingresa tu nombre",
+                "email": "Email",
+                "emailPlaceholder": "Ingresa tu email",
+                "password": "Contraseña",
+                "passwordPlaceholder": "••••••••",
+                "confirmPassword": "Confirma tu contraseña",
+                "passwordMessage": "La contrase debe ser de al menos 8 caracteres<br>La contrase debe ser de 100 caracteres o menos<br>La contrase debe contener al menos una mayúscula<br>La contrase debe contener al menos una minúscula<br>La contrase debe contener al menos un número<br>",
+                "button": {
+                    "signup": "Crear cuenta",
+                    "signingIn": "Creando cuenta..."
                 },
                 "orContinueWith": "O continuar con"
             }

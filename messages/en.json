@@ -21,6 +21,28 @@
                 "orContinueWith": "Or continue with"
             }
         },
+        "signup": {
+            "meta": {
+                "title": "Sign up"
+            },
+            "title": "Sign up to SaveSphere",
+            "message": "Create your account.",
+            "form": {
+                "name": "Name",
+                "namePlaceholder": "Enter your name",
+                "email": "Email",
+                "emailPlaceholder": "Enter your email",
+                "password": "Password",
+                "passwordPlaceholder": "••••••••",
+                "confirmPassword": "Confirm password",
+                "passwordMessage": "Password must be at least 8 characters long<br>Password cannot exceed 100 characters<br>Password must contain at least one uppercase letter<br>Password must contain at least one lowercase letter<br>Password must contain at least one number<br>",
+                "button": {
+                    "signup": "Sign up",
+                    "signingIn": "Signing up..."
+                },
+                "orContinueWith": "Or continue with"
+            }
+        },
         "footer": {
             "lang": {
                 "en": "English",

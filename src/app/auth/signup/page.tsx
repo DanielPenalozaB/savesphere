@@ -2,22 +2,31 @@
 
 import { Button, Input } from '@/components';
 import { ArrowIcon, GoogleIcon } from '@/icons';
-import { signInSchema } from '@/schemas';
+import { signUpSchema } from '@/schemas';
 import { useFormik } from 'formik';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { useState } from 'react';
 
 interface OnSubmitProps {
+  name: string;
   email: string;
-  password?: string;
+  password: string;
+  confirmPassword: string;
+  terms: boolean;
 }
 
-export default function SignIn() {
-  const t = useTranslations('auth.signin');
+const initialValue = {
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  terms: false
+};
+
+export default function SignUp() {
+  const t = useTranslations('auth.signup');
 
   const [ isLoading, setIsLoading ] = useState(false);
-  const [ enabledPassword, setEnabledPassword ] = useState(false);
 
   const onSubmit = (values: OnSubmitProps) => {
     setIsLoading(true);
@@ -25,19 +34,7 @@ export default function SignIn() {
 
     setTimeout(() => {
       setIsLoading(false);
-      setFieldValue('email', values.email);
-      setEnabledPassword(true);
     }, 2000);
-  };
-
-  const validateFunction = async () => {
-    try {
-      await signInSchema.validate(values, { context: { enabledPassword } });
-    } catch (err: any) {
-      return { [err.path]: err.message }; // Return the validation errors
-    }
-
-    return {};
   };
 
   const {
@@ -48,20 +45,11 @@ export default function SignIn() {
     handleBlur,
     handleChange,
     submitForm,
-    isValid,
-    setFieldValue
+    isValid
   } = useFormik({
-    initialValues: {
-      email: '',
-      password: ''
-    },
-    initialErrors: {
-      email: '',
-      password: ''
-    },
-    validationSchema: signInSchema,
-    validate: validateFunction,
-    enableReinitialize: true,
+    initialValues: initialValue,
+    initialErrors: { ...initialValue, terms: '' },
+    validationSchema: signUpSchema,
     validateOnChange: true,
     onSubmit
   });
@@ -79,6 +67,20 @@ export default function SignIn() {
           </div>
           <form className="mt-8 flex flex-col gap-3" onSubmit={handleSubmit}>
             <Input
+              id="name"
+              name="name"
+              type="text"
+              placeholder={t('form.namePlaceholder')}
+              className='disabled:select-none'
+              value={values.name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              label={t('form.name')}
+              autoFocus
+              required
+              isInvalid={Boolean(errors.name) && Boolean(touched.name)}
+            />
+            <Input
               id="email"
               name="email"
               type="email"
@@ -89,42 +91,45 @@ export default function SignIn() {
               onBlur={handleBlur}
               label={t('form.email')}
               autoComplete="email"
-              autoFocus
               required
               isInvalid={Boolean(errors.email) && Boolean(touched.email)}
-              disabled={enabledPassword}
             />
-            {enabledPassword && (
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder={t('form.passwordPlaceholder')}
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                label={t('form.password')}
-                autoComplete="password"
-                autoFocus
-                required
-                isInvalid={Boolean(errors.password) && Boolean(touched.password)}
-              />
-            )}
-            <div className="flex items-center justify-between">
-              <div className="text-sm">
-                <Link href="#" className="font-medium text-blue-600 transition duration-150 ease-in-out hover:text-blue-500">
-                  {t('form.forgotPassword')}
-                </Link>
-              </div>
-              <div className="text-sm">
-                <Link href="/auth/signup" className="font-medium text-blue-600 transition duration-150 ease-in-out hover:text-blue-500">
-                  {t('form.createAccount')}
-                </Link>
-              </div>
-            </div>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder={t('form.passwordPlaceholder')}
+              className='disabled:select-none'
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              label={t('form.password')}
+              required
+              isInvalid={Boolean(errors.password) && Boolean(touched.password)}
+              message={Boolean(errors.password) && Boolean(touched.password) ? errors.password : undefined}
+            />
+            <Input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              placeholder={t('form.passwordPlaceholder')}
+              className='disabled:select-none'
+              value={values.confirmPassword}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              label={t('form.confirmPassword')}
+              required
+              isInvalid={Boolean(errors.confirmPassword) && Boolean(touched.confirmPassword)}
+              message={Boolean(errors.confirmPassword) && Boolean(touched.confirmPassword) ? errors.confirmPassword : undefined}
+            />
+            <p dangerouslySetInnerHTML={{ __html: t.raw('form.passwordMessage') }} className='text-sm text-neutral-500' />
+            <pre>
+              {isValid ? 'true' : 'false'}
+              {isLoading ? 'true' : 'false'}
+            </pre>
             <Button
               type="submit"
-              title={enabledPassword ? t('form.button.continueWithPassword') : t('form.button.continue')}
+              title={t('form.button.signup')}
               className='gap-4'
               icon={ArrowIcon}
               iconPosition='end'
@@ -133,12 +138,7 @@ export default function SignIn() {
               disabled={!isValid || isLoading}
               isLoading={isLoading}
             >
-              {isLoading
-                ? t('form.button.signingIn')
-                : enabledPassword
-                  ? t('form.button.continueWithPassword')
-                  : t('form.button.continue')
-              }
+              {isLoading ? t('form.button.signingUp') : t('form.button.signup')}
             </Button>
           </form>
           <div className="mt-6 flex flex-col gap-4">
