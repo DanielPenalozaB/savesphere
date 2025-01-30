@@ -1,13 +1,13 @@
 'is client';
 
 import { ExclamationIcon } from '@/icons';
-import { InputHTMLAttributes, LegacyRef } from 'react';
+import { InputHTMLAttributes, ReactNode } from 'react';
 
 // Input component interface
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: InputTypeAttribute;
   label?: string;
-  message?: string;
+  message?: ReactNode;
   isInvalid?: boolean;
 }
 
@@ -31,7 +31,7 @@ export default function Input(props: InputProps) {
   return (
     <dl>
       {label && (
-        <dt className="mb-1.5">
+        <dt className="mb-1.5 text-neutral-800 dark:text-neutral-400">
           {label}
         </dt>
       )}
@@ -41,7 +41,7 @@ export default function Input(props: InputProps) {
           name={name}
           id={id}
           placeholder={placeholder}
-          className={`focus w-[28rem] max-w-full rounded-md border bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-500 focus:border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-neutral-100 disabled:text-neutral-500 ${isInvalid ? 'border-red-500' : 'border-neutral-300 '}${className ? ` ${className}` : ''}`}
+          className={`focus w-[28rem] max-w-full rounded-md border bg-white dark:bg-neutral-900 transition-all duration-200 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-400 placeholder:text-neutral-500 dark:placeholder:text-neutral-600 hover:border-blue-500 dark:hover:border-blue-500 focus:border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-neutral-100 disabled:text-neutral-500 ${isInvalid ? 'border-red-500 hover:border-red-500' : 'border-neutral-300 dark:border-neutral-800 '}${className ? ` ${className}` : ''}`}
           {...rest}
         />
         {message && (

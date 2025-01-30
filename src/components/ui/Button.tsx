@@ -15,7 +15,7 @@ const sizeClasses = {
 };
 
 const variantClasses = {
-  filled: 'text-white bg-blue-500 hover:bg-blue-400 focus:bg-blue-600 disabled:bg-neutral-300 border border-transparent',
+  filled: 'text-white bg-blue-500 hover:bg-blue-400 focus:bg-blue-600 disabled:bg-neutral-300 border border-transparent disabled:dark:bg-neutral-600 disabled:dark:text-neutral-500',
   outline: 'border border-blue-500 text-blue-500 hover:bg-blue-100 focus:bg-blue-100 disabled:border-blue-300 disabled:text-blue-300',
   shades: 'text-blue-500 border border-transparent hover:bg-blue-100 focus:bg-blue-100 disabled:text-blue-300 disabled:border-blue-300',
   text: 'text-blue-500 hover:text-blue-400 focus:text-blue-600 disabled:text-blue-300'
@@ -49,7 +49,7 @@ export default function Button(props: ButtonProps) {
   return (
     <button
       type={type}
-      className={`group relative flex w-full items-center justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out hover:bg-blue-600 focus:outline-none focus:ring-2 disabled:bg-blue-300 disabled:text-neutral-400 focus:ring-gray-500 min-h-[40px] focus:ring-offset-2 ${sizeClass ?? ''} ${variantClass ?? ''} ${className ?? ''}`}
+      className={`group relative flex w-full items-center justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out focus:outline-none focus:ring-2 min-h-[40px] focus:ring-offset-2 ${sizeClass ?? ''} ${variantClass ?? ''} ${className ?? ''}`}
       { ...rest }
     >
       {isLoading ? (

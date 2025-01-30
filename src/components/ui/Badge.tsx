@@ -12,10 +12,19 @@ const sizeClasses = {
 const variantClasses = {
   outline: 'outline outline-1 outline-blue-500 text-blue-500',
   filled: 'bg-blue-200 text-blue-500',
-  filledWithBorder: 'bg-blue-200 outline outline-1 outline-blue-500 text-blue-500'
+  shades: 'bg-blue-200 outline outline-1 outline-blue-500 text-blue-500',
+  text: 'text-blue-500'
 };
 
-export default function Badge({ type = 'pill', size = 'md', variant = 'filled', showDot = false, icon, iconPosition = 'left', children }: BadgeProps) {
+export default function Badge({
+  type = 'pill',
+  size = 'md',
+  variant = 'filled',
+  showDot = false,
+  icon,
+  iconPosition = 'left',
+  children
+}: BadgeProps) {
   const sizeClass = sizeClasses[size];
   const variantClass = variantClasses[variant];
 

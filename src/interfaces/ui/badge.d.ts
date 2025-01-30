@@ -1,9 +1,10 @@
 import React from 'react';
+import { Size, Variant } from './general';
 
 export interface BadgeProps {
   type?: 'badge' | 'pill';
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
-  variant?: 'outline' | 'filled' | 'filledWithBorder';
+  size?: Size;
+  variant?: Variant;
   showDot?: boolean;
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';

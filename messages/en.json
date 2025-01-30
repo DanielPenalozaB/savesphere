@@ -1,55 +1,63 @@
 {
-    "auth": {
-        "signin": {
-            "meta": {
-                "title": "Sign in"
-            },
-            "title": "Sign in to SaveSphere",
-            "message": "Enter your email address to sign in or create an account.",
-            "form": {
-                "email": "Email",
-                "emailPlaceholder": "Enter your email",
-                "password": "Password",
-                "passwordPlaceholder": "••••••••",
-                "forgotPassword": "Forgot your password?",
-                "createAccount": "Create account",
-                "button": {
-                    "continue": "Continue",
-                    "continueWithPassword": "Continue with password",
-                    "signingIn": "Signing in..."
-                },
-                "orContinueWith": "Or continue with"
-            }
-        },
-        "signup": {
-            "meta": {
-                "title": "Sign up"
-            },
-            "title": "Sign up to SaveSphere",
-            "message": "Create your account.",
-            "form": {
-                "name": "Name",
-                "namePlaceholder": "Enter your name",
-                "email": "Email",
-                "emailPlaceholder": "Enter your email",
-                "password": "Password",
-                "passwordPlaceholder": "••••••••",
-                "confirmPassword": "Confirm password",
-                "passwordMessage": "Password must be at least 8 characters long<br>Password cannot exceed 100 characters<br>Password must contain at least one uppercase letter<br>Password must contain at least one lowercase letter<br>Password must contain at least one number<br>",
-                "button": {
-                    "signup": "Sign up",
-                    "signingIn": "Signing up..."
-                },
-                "orContinueWith": "Or continue with"
-            }
-        },
-        "footer": {
-            "lang": {
-                "en": "English",
-                "es": "Spanish"
-            },
-            "title": "Welcome to <b>SaveSphere.</b>",
-            "message": "By continuing, you agree to SaveSphere's <terms>Terms of Service</terms> and <privacy>Privacy Policy.</privacy>"
-        }
-    }
+	"nav": {
+		"theme": {
+			"light": "Toogle light Mode",
+			"dark": "Toogle dark Mode"
+		}
+	},
+	"auth": {
+		"signin": {
+			"meta": {
+				"title": "Sign in"
+			},
+			"title": "Sign in to SaveSphere",
+			"message": "Enter your email address to sign in or create an account.",
+			"form": {
+				"email": "Email",
+				"emailPlaceholder": "Enter your email",
+				"password": "Password",
+				"passwordPlaceholder": "••••••••",
+				"forgotPassword": "Forgot your password?",
+				"createAccount": "Create account",
+				"button": {
+					"continue": "Continue",
+					"continueWithPassword": "Continue with password",
+					"signingIn": "Signing in..."
+				},
+				"orContinueWith": "Or continue with"
+			}
+		},
+		"signup": {
+			"meta": {
+				"title": "Sign up"
+			},
+			"title": "Sign up to SaveSphere",
+			"message": "Create your account.",
+			"form": {
+				"name": "Name",
+				"namePlaceholder": "Enter your name",
+				"email": "Email",
+				"emailPlaceholder": "Enter your email",
+				"password": "Password",
+				"passwordPlaceholder": "••••••••",
+				"confirmPassword": "Confirm password",
+				"passwordMessage": "<min>Password must be at least 8 characters long</min><max>Password must be less than 100 characters</max><upper>Password must contain at least one uppercase letter</upper><lower>Password must contain at least one lowercase letter</lower><number>Password must contain at least one number</number><special>Password must contain a special character</special>",
+				"terms": "I accept the <terms>Terms of Service</terms> and the <privacy>Privacy Policy</privacy>",
+				"signin": "Already have an account? <signin>Sign in</signin>",
+				"button": {
+					"signup": "Sign up",
+					"signingUp": "Signing up..."
+				},
+				"orContinueWith": "Or continue with"
+			}
+		},
+		"footer": {
+			"lang": {
+				"en": "English",
+				"es": "Spanish"
+			},
+			"title": "Welcome to <b>SaveSphere.</b>",
+			"message": "By continuing, you agree to SaveSphere's <terms>Terms of Service</terms> and <privacy>Privacy Policy.</privacy>"
+		}
+	}
 }

@@ -1,55 +1,63 @@
 {
-    "auth": {
-        "signin": {
-            "meta": {
-                "title": "Iniciar sesión"
-            },
-            "title": "Iniciar sesión en SaveSphere",
-            "message": "Ingresa tu email para continuar.",
-            "form": {
-                "email": "Email",
-                "emailPlaceholder": "Ingresa tu email",
-                "password": "Contraseña",
-                "passwordPlaceholder": "••••••••",
-                "forgotPassword": "¿Olvidaste tu contraseña?",
-                "createAccount": "Crear cuenta",
-                "button": {
-                    "continue": "Continuar",
-                    "continueWithPassword": "Continuar con contraseña",
-                    "signingIn": "Iniciando sesión..."
-                },
-                "orContinueWith": "O continuar con"
-            }
-        },
-        "signup": {
-            "meta": {
-                "title": "Crear cuenta"
-            },
-            "title": "Crear cuenta en SaveSphere",
-            "message": "Crea tu cuenta.",
-            "form": {
-                "name": "Nombre",
-                "namePlaceholder": "Ingresa tu nombre",
-                "email": "Email",
-                "emailPlaceholder": "Ingresa tu email",
-                "password": "Contraseña",
-                "passwordPlaceholder": "••••••••",
-                "confirmPassword": "Confirma tu contraseña",
-                "passwordMessage": "La contrase debe ser de al menos 8 caracteres<br>La contrase debe ser de 100 caracteres o menos<br>La contrase debe contener al menos una mayúscula<br>La contrase debe contener al menos una minúscula<br>La contrase debe contener al menos un número<br>",
-                "button": {
-                    "signup": "Crear cuenta",
-                    "signingIn": "Creando cuenta..."
-                },
-                "orContinueWith": "O continuar con"
-            }
-        },
-        "footer": {
-            "lang": {
-                "en": "Inglés",
-                "es": "Español"
-            },
-            "title": "Bienvenido a <b>SaveSphere.</b>",
-            "message": "Al continuar, aceptas los <terms>Términos de Servicio</terms> y <privacy>Política de Privacidad.</privacy>"
-        }
-    }
+	"nav": {
+		"theme": {
+			"light": "Cambiar a Modo Claro",
+			"dark": "Cambiar a Modo Oscuro"
+		}
+	},
+	"auth": {
+		"signin": {
+			"meta": {
+				"title": "Iniciar sesión"
+			},
+			"title": "Iniciar sesión en SaveSphere",
+			"message": "Ingresa tu email para continuar.",
+			"form": {
+				"email": "Email",
+				"emailPlaceholder": "Ingresa tu email",
+				"password": "Contraseña",
+				"passwordPlaceholder": "••••••••",
+				"forgotPassword": "¿Olvidaste tu contraseña?",
+				"createAccount": "Crear cuenta",
+				"button": {
+					"continue": "Continuar",
+					"continueWithPassword": "Continuar con contraseña",
+					"signingIn": "Iniciando sesión..."
+				},
+				"orContinueWith": "O continuar con"
+			}
+		},
+		"signup": {
+			"meta": {
+				"title": "Crear cuenta"
+			},
+			"title": "Crear cuenta en SaveSphere",
+			"message": "Crea tu cuenta.",
+			"form": {
+				"name": "Nombre",
+				"namePlaceholder": "Ingresa tu nombre",
+				"email": "Email",
+				"emailPlaceholder": "Ingresa tu email",
+				"password": "Contraseña",
+				"passwordPlaceholder": "••••••••",
+				"confirmPassword": "Confirma tu contraseña",
+				"passwordMessage": "<min>La contraseña debe tener al menos 8 caracteres</min><max>La contraseña debe tener menos de 100 caracteres</max><upper>La contraseña debe contener al menos una mayúscula</upper><lower>La contraseña debe contener al menos una minúscula</lower><number>La contraseña debe contener al menos un número</number><special>La contraseña debe contener un caracter especial</special>",
+				"terms": "Acepto los <terms>Términos de Servicio</terms> y la <privacy>Política de Privacidad</privacy>",
+				"signin": "¿Ya tienes una cuenta? <signin>Inicia sesión</signin>",
+				"button": {
+					"signup": "Crear cuenta",
+					"signingUp": "Creando cuenta..."
+				},
+				"orContinueWith": "O continuar con"
+			}
+		},
+		"footer": {
+			"lang": {
+				"en": "Inglés",
+				"es": "Español"
+			},
+			"title": "Bienvenido a <b>SaveSphere.</b>",
+			"message": "Al continuar, aceptas los <terms>Términos de Servicio</terms> y <privacy>Política de Privacidad.</privacy>"
+		}
+	}
 }

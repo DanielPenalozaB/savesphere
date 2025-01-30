@@ -1,10 +1,11 @@
 'use client';
 
-import { Button, Input } from '@/components';
-import { ArrowIcon, GoogleIcon } from '@/icons';
+import { Button, Checkbox, Input } from '@/components';
+import { ArrowIcon, Doodle, GoogleIcon } from '@/icons';
 import { signUpSchema } from '@/schemas';
 import { useFormik } from 'formik';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useState } from 'react';
 
 interface OnSubmitProps {
@@ -48,7 +49,7 @@ export default function SignUp() {
     isValid
   } = useFormik({
     initialValues: initialValue,
-    initialErrors: { ...initialValue, terms: '' },
+    initialErrors: { ...initialValue, terms: 'true' },
     validationSchema: signUpSchema,
     validateOnChange: true,
     onSubmit
@@ -57,11 +58,16 @@ export default function SignUp() {
   return (
     <>
       <title>{t('meta.title')}</title>
-      <div className="flex min-h-screen items-center justify-center bg-[#FBFBFA] p-4">
-        <div className="flex w-full max-w-md flex-col">
+      <div className="relative flex min-h-screen items-center justify-center p-4">
+        <div className="absolute -left-10 top-0 z-0 flex bg-blue-100 dark:bg-[#111111]">
+          <div className='absolute inset-0 z-0 bg-gradient-to-l from-white from-20% to-transparent dark:from-dark' />
+          <Doodle className="flex w-32 flex-col" />
+          <Doodle className="flex w-32 flex-col-reverse" />
+        </div>
+        <div className="z-10 flex w-full max-w-md flex-col">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold text-neutral-900">{t('title')}</h2>
-            <p className="mt-2 text-sm text-neutral-600">
+            <h2 className="mt-6 text-3xl font-extrabold text-neutral-900 dark:text-neutral-200">{t('title')}</h2>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
               {t('message')}
             </p>
           </div>
@@ -122,11 +128,29 @@ export default function SignUp() {
               isInvalid={Boolean(errors.confirmPassword) && Boolean(touched.confirmPassword)}
               message={Boolean(errors.confirmPassword) && Boolean(touched.confirmPassword) ? errors.confirmPassword : undefined}
             />
-            <p dangerouslySetInnerHTML={{ __html: t.raw('form.passwordMessage') }} className='text-sm text-neutral-500' />
-            <pre>
-              {isValid ? 'true' : 'false'}
-              {isLoading ? 'true' : 'false'}
-            </pre>
+            <Checkbox
+              id='terms'
+              label={
+                t.rich('form.terms', {
+                  terms: (chunks) => <Link href='/legal/terms-of-service' className='text-blue-400 underline hover:text-blue-600'>{chunks}</Link>,
+                  privacy: (chunks) => <Link href='/legal/privacy-policy' className='text-blue-400 underline hover:text-blue-600'>{chunks}</Link>
+                })
+              }
+              isInvalid={Boolean(errors.terms) && Boolean(touched.terms)}
+              checked={values.terms}
+              onChange={handleChange}
+              message={Boolean(errors.terms) && Boolean(touched.terms) ? errors.terms : undefined}
+              size='sm'
+            />
+            <div className="flex items-center justify-end">
+              <div className="text-sm">
+                <p className="text-neutral-500">
+                  {t.rich('form.signin', {
+                    signin: (chunks) => <Link href="/auth/signin" className="font-medium text-blue-600 transition duration-150 ease-in-out hover:text-blue-500">{chunks}</Link>
+                  })}
+                </p>
+              </div>
+            </div>
             <Button
               type="submit"
               title={t('form.button.signup')}
@@ -144,18 +168,18 @@ export default function SignUp() {
           <div className="mt-6 flex flex-col gap-4">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-neutral-300"></div>
+                <div className="w-full border-t border-neutral-300 dark:border-neutral-600"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-[#FBFBFA] px-2 text-neutral-500">{t('form.orContinueWith')}</span>
+                <span className="bg-light px-2 text-neutral-500 dark:bg-dark">{t('form.orContinueWith')}</span>
               </div>
             </div>
             <Button
               title='Continue with Google'
-              className="inline-flex w-full justify-center gap-2 rounded-md border !border-neutral-300 bg-white px-4 py-2 text-sm font-medium !text-neutral-500 shadow-sm transition duration-150 ease-in-out hover:!bg-neutral-100 focus:!bg-neutral-100"
+              className="inline-flex w-full justify-center gap-2 rounded-md border !border-neutral-300 bg-white px-4 py-2 text-sm font-medium !text-neutral-500 shadow-sm transition duration-150 ease-in-out hover:!bg-neutral-100 focus:!bg-neutral-100 dark:!border-neutral-700 dark:!bg-neutral-800 dark:!text-neutral-400"
               icon={GoogleIcon}
             >
-            Google
+              Google
             </Button>
           </div>
         </div>
