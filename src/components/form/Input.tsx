@@ -3,7 +3,6 @@
 import { ExclamationIcon } from '@/icons';
 import { InputHTMLAttributes, ReactNode } from 'react';
 
-// Input component interface
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: InputTypeAttribute;
   label?: string;
@@ -24,7 +23,6 @@ type InputTypeAttribute =
   | 'location'
   | 'url';
 
-// Main Input component
 export default function Input(props: InputProps) {
   const { id, name, type, placeholder, className, children, label, message, isInvalid, ...rest } = props;
 
