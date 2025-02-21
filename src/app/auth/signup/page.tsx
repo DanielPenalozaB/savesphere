@@ -85,6 +85,7 @@ export default function SignUp() {
               autoFocus
               required
               isInvalid={Boolean(errors.name) && Boolean(touched.name)}
+              message={Boolean(errors.name) && Boolean(touched.name) ? errors.name : undefined}
             />
             <Input
               id="email"
@@ -99,6 +100,7 @@ export default function SignUp() {
               autoComplete="email"
               required
               isInvalid={Boolean(errors.email) && Boolean(touched.email)}
+              message={Boolean(errors.email) && Boolean(touched.email) ? errors.email : undefined}
             />
             <Input
               id="password"

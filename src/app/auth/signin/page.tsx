@@ -21,6 +21,7 @@ export default function SignIn() {
 
   const [ isLoading, setIsLoading ] = useState(false);
   const [ enabledPassword, setEnabledPassword ] = useState(false);
+  const [ showButton, setShowButton ] = useState(true);
 
   const onSubmit = (values: OnSubmitProps) => {
     setIsLoading(true);
@@ -28,8 +29,9 @@ export default function SignIn() {
 
     if (values.password) {
       setTimeout(() => {
+        setShowButton(false);
         setIsLoading(false);
-        router.push('/');
+        router.push('/app');
       }, 2000);
     } else {
       setTimeout(() => {
@@ -73,6 +75,7 @@ export default function SignIn() {
     validate: validateFunction,
     enableReinitialize: true,
     validateOnChange: true,
+    validateOnBlur: true,
     onSubmit
   });
 
@@ -124,6 +127,7 @@ export default function SignIn() {
                 autoFocus
                 required
                 isInvalid={Boolean(errors.password) && Boolean(touched.password)}
+                disabled={!showButton}
               />
             )}
             <div className="flex items-center justify-between">
@@ -138,24 +142,26 @@ export default function SignIn() {
                 </Link>
               </div>
             </div>
-            <Button
-              type="submit"
-              title={enabledPassword ? t('form.button.continueWithPassword') : t('form.button.continue')}
-              className='gap-4'
-              icon={ArrowIcon}
-              iconPosition='end'
-              iconClassName={isValid ? 'ml-0 transition-all duration-150 ease-out group-hover:ml-2 group-focus:ml-2 group-active:ml-2' : ''}
-              onClick={submitForm}
-              disabled={!isValid || isLoading}
-              isLoading={isLoading}
-            >
-              {isLoading
-                ? t('form.button.signingIn')
-                : enabledPassword
-                  ? t('form.button.continueWithPassword')
-                  : t('form.button.continue')
-              }
-            </Button>
+            {showButton && (
+              <Button
+                type="submit"
+                title={enabledPassword ? t('form.button.continueWithPassword') : t('form.button.continue')}
+                className='gap-4'
+                icon={ArrowIcon}
+                iconPosition='end'
+                iconClassName={isValid ? 'ml-0 transition-all duration-150 ease-out group-hover:ml-2 group-focus:ml-2 group-active:ml-2' : ''}
+                onClick={submitForm}
+                disabled={!isValid || isLoading}
+                isLoading={isLoading}
+              >
+                {isLoading
+                  ? t('form.button.signingIn')
+                  : enabledPassword
+                    ? t('form.button.continueWithPassword')
+                    : t('form.button.continue')
+                }
+              </Button>
+            )}
           </form>
           <div className="mt-6 flex flex-col gap-4">
             <div className="relative">

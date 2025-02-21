@@ -5,8 +5,8 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import localFont from 'next/font/local';
-import '../globals.css';
 import Providers from '../providers';
+import CalendarIcon from '@/icons/Calendar';
 
 const geistSans = localFont({
   src: '../fonts/GeistVF.woff',
@@ -40,30 +40,19 @@ export default async function RootLayout({
       childrenOptions: [
         {
           label: 'History',
-          href: '/'
+          href: '/app/'
         }, {
           label: 'Starred',
-          href: '/starred'
+          href: '/app/starred'
         }, {
           label: 'Settings',
-          href: '/settings'
+          href: '/app/settings'
         }
       ]
     }, {
-      label: 'Overview',
-      icon: <SquaresPlusIcon className='size-4' />,
-      childrenOptions: [
-        {
-          label: 'History',
-          href: '/'
-        }, {
-          label: 'Starred',
-          href: '/starred'
-        }, {
-          label: 'Settings',
-          href: '/settings'
-        }
-      ]
+      label: 'Calendar',
+      icon: <CalendarIcon className='size-4' />,
+      href: '/app/calendar'
     }
   ];
 

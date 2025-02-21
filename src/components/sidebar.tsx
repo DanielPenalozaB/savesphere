@@ -34,7 +34,7 @@ export default function Sidebar({
   return (
     <aside className="group peer hidden md:block">
       <div className={`inset-y-0 left-0 z-10 hidden h-svh border-r border-neutral-800 transition-all duration-300 ease-in-out md:block ${isOpen ? 'w-64' : 'w-16'}`}>
-        <div className="bg-light relative flex h-full w-full flex-col dark:bg-neutral-900">
+        <div className="relative flex h-full w-full flex-col bg-light dark:bg-neutral-900">
           <div className="flex flex-col gap-2 p-2">
             <div className={'flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none transition-all duration-300'}>
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-500">
@@ -84,7 +84,17 @@ export default function Sidebar({
                       </div>
                     </li>
                   </ul>
-                ) : 'No children options'}
+                ) : (
+                  <a
+                    href={option.href}
+                    className='ring-sidebar-ring flex h-8 w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm font-medium text-neutral-200 outline-none transition-all duration-300 hover:bg-neutral-800 hover:text-neutral-50 focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50'
+                  >
+                    {option.icon && option.icon}
+                    <span className={`transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>
+                      {option.label}
+                    </span>
+                  </a>
+                )}
               </div>
             ))}
           </div>
