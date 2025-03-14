@@ -2,21 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -24,4 +10,47 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.gradient-01 {
+  background-image: linear-gradient(270deg, #d123e1, #d18aea 26%, #d0c2f4 39%, #ceecfd 50%, #a9c8f4 61%, #7b9eea 74%, #2362e1);
+  filter: blur(125px);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar {
+  /* For Chrome, Edge, and Safari */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 9999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* For dark mode compatibility */
+.dark .custom-scrollbar {
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
