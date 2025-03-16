@@ -97,7 +97,7 @@ export default function DatePicker({
   const [ selectedRecurring, setSelectedRecurring ] = useState<'none' | 'daily' | 'weekly' | 'monthly' | 'yearly'>(recurring);
 
   // Recurring dropdown state
-  const { dropdownRef: recurringDropdownRef, isOpen: isRecurringOpen, toggleDropdown: toggleRecurringDropdown, closeDropdown: closeRecurringDropdown } = useDropdown({
+  const { dropdownRef: recurringDropdownRef, isOpen: isRecurringOpen, toggleDropdown: toggleRecurringDropdown, closeDropdown: closeRecurringDropdown } = useDropdown<HTMLUListElement>({
     animation: {
       open: {
         duration: 0.2,
@@ -490,23 +490,19 @@ export default function DatePicker({
               </svg>
             </button>
             {isRecurringOpen && (
-              <div
-                ref={recurringDropdownRef}
-                className="absolute right-0 z-10 mt-1 w-48 overflow-auto rounded-md border border-neutral-200 bg-white py-1 shadow-lg"
-              >
+              <ul ref={recurringDropdownRef} className="absolute right-0 z-10 mt-1 max-h-60 w-48 overflow-auto rounded-lg border border-neutral-200 bg-white p-1 text-sm shadow-lg">
                 {recurrenceOptions.map((option) => (
-                  <button
+                  <li
                     key={option.value}
-                    type="button"
                     onClick={() => handleRecurringSelect(option.value as 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly')}
-                    className={`flex w-full items-center px-4 py-2 text-left text-sm hover:bg-neutral-100 ${
+                    className={`flex w-full items-center rounded-md px-2 py-1.5 cursor-pointer text-left hover:bg-neutral-100 ${
                       option.value === selectedRecurring ? 'bg-neutral-50 font-medium' : ''
                     }`}
                   >
                     {option.label}
-                  </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
         )}

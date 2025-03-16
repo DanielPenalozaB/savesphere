@@ -76,7 +76,7 @@ interface CurrencyInputProps {
   name?: string;
   value?: string | number | null;
   defaultValue?: string | number;
-  onChange?: (value: number, syntheticEvent: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (value: number | undefined, syntheticEvent: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   onCurrencyChange?: (currencyCode: string) => void;
   disabled?: boolean;
@@ -123,7 +123,7 @@ export default function CurrencyInput({
   );
 
   // Setup dropdown with animation
-  const { isOpen, dropdownRef, toggleDropdown, closeDropdown } = useDropdown({
+  const { isOpen, dropdownRef, toggleDropdown, closeDropdown } = useDropdown<HTMLUListElement>({
     animation: {
       open: {
         duration: 0.2,
@@ -193,8 +193,15 @@ export default function CurrencyInput({
             onValueChange={(values) => {
               setNumericValue(values.floatValue || null);
 
-              if (onChange && values.floatValue !== undefined) {
-                onChange(values.floatValue, values as unknown as React.ChangeEvent<HTMLInputElement>);
+              if (onChange) {
+                const syntheticEvent = {
+                  target: {
+                    name,
+                    value: values.floatValue
+                  }
+                };
+
+                onChange(values.floatValue, syntheticEvent as unknown as React.ChangeEvent<HTMLInputElement>);
               }
             }}
             onBlur={onBlur}
@@ -225,27 +232,26 @@ export default function CurrencyInput({
               </svg>
             </button>
             {isOpen && (
-              <div ref={dropdownRef} className="absolute right-0 z-10 mt-1 max-h-60 w-48 overflow-auto rounded-md border border-neutral-200 bg-white py-1 shadow-lg">
+              <ul ref={dropdownRef} className="absolute right-0 z-10 mt-1 max-h-60 w-48 overflow-auto rounded-lg border border-neutral-200 bg-white p-1 text-sm shadow-lg">
                 {availableCurrencies.map((code) => {
                   const currency = CURRENCY_CONFIGS[code];
                   if (!currency) return null;
 
                   return (
-                    <button
+                    <li
                       key={code}
-                      type="button"
                       onClick={() => handleCurrencySelect(code)}
-                      className={`flex w-full items-center px-4 py-2 text-left text-sm hover:bg-neutral-100 ${
+                      className={`flex w-full items-center rounded-md px-2 py-1.5 cursor-pointer text-left hover:bg-neutral-100 ${
                         code === selectedCurrency ? 'bg-neutral-50 font-medium' : ''
                       }`}
                     >
                       <span className="mr-2">{currency.symbol}</span>
                       <span>{currency.code}</span>
                       <span className="ml-1 text-xs text-neutral-500">- {currency.name}</span>
-                    </button>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             )}
           </div>
         )}

@@ -17,8 +17,11 @@ body {
   filter: blur(125px);
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - can be added to your global.css file */
 .custom-scrollbar {
+  /* Add padding to create space between content and scrollbar */
+  padding-right: 10px;
+
   /* For Chrome, Edge, and Safari */
   &::-webkit-scrollbar {
     width: 6px;

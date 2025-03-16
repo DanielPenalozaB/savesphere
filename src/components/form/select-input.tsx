@@ -1,5 +1,6 @@
 import { useDropdown } from '@/hooks/useDropdown';
 import React, { useState, useEffect, useRef, useMemo, KeyboardEvent, ChangeEvent } from 'react';
+import { CheckIcon } from '../icons';
 
 interface SelectOption {
   value: string;
@@ -281,20 +282,14 @@ export default function SelectInput({
                 <li
                   key={option.value}
                   className={`px-2 py-1.5 cursor-pointer hover:bg-neutral-100 rounded-md ${
-                    isSelected(option.value) ? 'bg-neutral-100 font-medium' : ''
+                    !multiple && isSelected(option.value) ? 'bg-neutral-100 font-medium' : ''
                   }`}
                   onClick={() => handleSelect(option)}
                 >
                   {multiple && (
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={isSelected(option.value)}
-                        className="mr-2"
-                        onChange={() => handleSelect(option)}
-                        onClick={(e) => e.stopPropagation()} // Prevent double triggering
-                      />
+                    <div className="flex items-center justify-between">
                       {option.label}
+                      <CheckIcon className={`h-3.5 transition-opacity duration-150 ease-in ${isSelected(option.value) ? 'opacity-100' : 'opacity-0'}`}/>
                     </div>
                   )}
                   {!multiple && option.label}

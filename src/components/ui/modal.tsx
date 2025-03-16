@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import Button, { ButtonProps } from '@/components/ui/button';
 
@@ -34,17 +34,12 @@ export default function Modal({
   const contentRef = useRef<HTMLDivElement>(null);
   const [ isRendered, setIsRendered ] = useState(isOpen);
 
-  // Default animation settings
-  const defaultAnimation = {
-    duration: 0.5,
-    ease: 'power3.out'
-  };
-
   // Combined animation settings
-  const animationSettings = {
-    ...defaultAnimation,
+  const animationSettings = useMemo(() => ({
+    duration: 0.5,
+    ease: 'power3.out',
     ...animation
-  };
+  }), [ animation ]);
 
   // Size classes
   const sizeClasses = {
@@ -53,7 +48,6 @@ export default function Modal({
     lg: 'max-w-2xl'
   };
 
-  // Handle modal opening animation
   useEffect(() => {
     if (isOpen) {
       setIsRendered(true);
@@ -84,9 +78,9 @@ export default function Modal({
         });
       }
     } else if (isRendered) {
-      // Animate closing
+    // Animate closing
       if (modalRef.current && contentRef.current) {
-        // Animate the modal content out
+      // Animate the modal content out
         gsap.to(contentRef.current, {
           opacity: 0,
           y: -20,
@@ -108,7 +102,7 @@ export default function Modal({
         setIsRendered(false);
       }
     }
-  }, [ isOpen, animation, animationSettings.duration, animationSettings.ease, isRendered ]);
+  }, [ isOpen ]); // Only depend on isOpen, remove other dependencies
 
   // Close on escape key
   useEffect(() => {

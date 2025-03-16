@@ -26,6 +26,9 @@ interface InputProps extends Omit<React.DetailedHTMLProps<React.InputHTMLAttribu
   showCurrencySelector?: boolean;
   onCurrencyChange?: (currencyCode: string) => void;
   showRecurringSelector?: boolean;
+  recurring?: 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly';
+  onRecurringChange?: (value: 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly') => void;
+  optional?: boolean;
 }
 
 export default function Input(props: InputProps) {
@@ -47,7 +50,9 @@ export default function Input(props: InputProps) {
     availableCurrencies,
     showCurrencySelector = true,
     onCurrencyChange,
+    recurring = 'none',
     showRecurringSelector = false,
+    optional = false,
     ...restProps
   } = props;
 
@@ -92,14 +97,13 @@ export default function Input(props: InputProps) {
   };
 
   // Create handler for currency input onChange
-  const handleCurrencyChange = (value: number, syntheticEvent: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCurrencyChange = (value: number| undefined, syntheticEvent: React.ChangeEvent<HTMLInputElement>) => {
     if (restProps.onChange) {
       // Create a new event with the numeric value in the target.value
       const newEvent = {
         ...syntheticEvent,
         target: {
-          ...syntheticEvent.target,
-          value: value.toString()
+          ...syntheticEvent.target
         }
       };
 
@@ -167,6 +171,7 @@ export default function Input(props: InputProps) {
           formatString={formatString}
           showControls={showControls}
           showRecurring={showRecurringSelector}
+          onRecurringChange={restProps.onRecurringChange}
         />
       );
     }
@@ -190,6 +195,7 @@ export default function Input(props: InputProps) {
           maxDate={maxDate}
           formatString={formatString}
           showControls={showControls}
+          recurring={recurring}
           showRecurring={showRecurringSelector}
         />
       );
@@ -244,9 +250,10 @@ export default function Input(props: InputProps) {
       {(children || label) && (
         <label
           htmlFor={restProps.id}
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          className="flex items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
           {children || label}
+          {(optional && !restProps.required) && (<span className='text-xs text-neutral-500'>(optional)</span>)}
         </label>
       )}
       {renderInput()}

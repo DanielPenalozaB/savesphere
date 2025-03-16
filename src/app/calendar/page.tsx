@@ -14,29 +14,23 @@ import {
   addWeeks,
   subWeeks,
   addMonths,
-  subMonths
+  subMonths,
+  formatDate
 } from 'date-fns';
 import { ChevronIcon } from '@/components/icons/chevron';
 import Button from '@/components/ui/button';
 import Modal from '@/components/ui/modal';
 import Input from '@/components/form/input';
-
-interface CalendarEvent {
-  id: string;
-  title: string;
-  description?: string;
-  date: Date;
-  startTime?: string;
-  endTime?: string;
-  isAllDay?: boolean;
-}
+import { useFormik } from 'formik';
+import { createModalSchema } from '@/schemas/transactions/create-modal-schema';
+import { CreateTransactionModal, Transaction, TransactionCurrency, TransactionRecurringInterval, TransactionType } from '@/interfaces/transactions';
 
 export default function Calendar() {
   const [ currentDate, setCurrentDate ] = useState<Date>(new Date());
   const [ type, setType ] = useState<'day' | 'week' | 'month'>('month');
   const [ isModalOpen, setIsModalOpen ] = useState<boolean>(false);
-  const [ editingEvent, setEditingEvent ] = useState<CalendarEvent | null>(null);
-  const [ events, setEvents ] = useState<CalendarEvent[]>([]);
+  const [ editingEvent, setEditingEvent ] = useState<Transaction>();
+  const [ events, setEvents ] = useState<Transaction[]>([]);
 
   const getViewRange = () => {
     switch (type) {
@@ -116,23 +110,21 @@ export default function Calendar() {
 
   const getCurrentDayOfWeek = () => format(currentDate, 'EEE').toLowerCase();
 
-  const handleCreateEvent = (date?: Date) => {
-    setEditingEvent(null);
+  const handleCreateEvent = (date: Date) => {
+    setEditingEvent(undefined);
     setIsModalOpen(true);
-
-    if (date) {
-      setCurrentDate(date);
-    }
+    setCurrentDate(date);
+    setFieldValue('date', date);
   };
 
   // Open modal to edit an existing event
-  const handleEditEvent = (event: CalendarEvent) => {
+  const handleEditEvent = (event: Transaction) => {
     setEditingEvent(event);
     setIsModalOpen(true);
   };
 
   // Handle event form submission
-  const handleEventSubmit = (eventData: CalendarEvent) => {
+  const onSubmit = (eventData: CreateTransactionModal) => {
     if (editingEvent) {
       // Update existing event
       setEvents(events.map((event) => (event.id === editingEvent.id ? { ...eventData, id: event.id } : event)));
@@ -150,6 +142,36 @@ export default function Calendar() {
 
   // Get events for a specific date
   const getEventsForDate = (date: Date) => events.filter((event) => isSameDay(event.date, date));
+
+  const {
+    handleSubmit,
+    errors,
+    touched,
+    values,
+    handleBlur,
+    handleChange,
+    resetForm,
+    submitForm,
+    isValid,
+    setFieldValue
+  } = useFormik({
+    initialValues: {
+      type: TransactionType.EXPENSE,
+      date: editingEvent ? editingEvent.date : formatDate(currentDate, 'yyyy-MM-dd'),
+      recurring: TransactionRecurringInterval.NONE,
+      amount: 0,
+      amountCurrency: TransactionCurrency.USD,
+      title: '',
+      description: '',
+      account: '',
+      category: '',
+      tags: [],
+      image: ''
+    },
+    validationSchema: createModalSchema,
+    isInitialValid: false,
+    onSubmit
+  });
 
   return (
     <main className="z-0 flex h-full w-full p-4">
@@ -219,7 +241,7 @@ export default function Calendar() {
               variant="fill"
               size="sm"
               className="h-8"
-              onClick={() => handleCreateEvent(currentDate)}
+              onClick={() => handleCreateEvent(new Date())}
             >
               Create
             </Button>
@@ -256,14 +278,7 @@ export default function Calendar() {
                       }}
                     >
                       <div className="font-semibold">{event.title}</div>
-                      {!event.isAllDay && (
-                        <div className="text-xs text-neutral-600">
-                          {event.startTime} - {event.endTime}
-                        </div>
-                      )}
-                      {event.isAllDay && (
-                        <div className="text-xs text-neutral-600">All day</div>
-                      )}
+                      <div className="font-semibold">{event.description}</div>
                     </div>
                   ))}
                 </div>
@@ -317,7 +332,8 @@ export default function Calendar() {
                               handleEditEvent(event);
                             }}
                           >
-                            {event.title}
+                            <div className="font-semibold">{event.title}</div>
+                            <div className="font-semibold">{event.description}</div>
                           </div>
                         ))}
                         {dateEvents.length > 2 && (
@@ -338,11 +354,11 @@ export default function Calendar() {
           onClose={() => setIsModalOpen(false)}
           title={editingEvent ? 'Edit Transaction' : 'Create Transaction'}
           primaryButton={{
+            type: 'submit',
             children: editingEvent ? 'Update' : 'Create',
             className: 'focus:outline-offset-[-1px] focus:outline-calypso-400 h-9',
-            onClick: () => {
-              console.log('Event created/updated');
-            },
+            disabled: !isValid,
+            onClick: submitForm,
             size: 'sm'
           }}
           secondaryButton={{
@@ -357,10 +373,12 @@ export default function Calendar() {
             ease: 'back.out(1.5)'
           }}
         >
-          <form className='flex flex-col gap-4'>
+          <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
             <Input
+              name='type'
               type='radioCard'
               className='grid-cols-2'
+              value={values.type}
               options={[
                 {
                   value: 'expense',
@@ -373,39 +391,68 @@ export default function Calendar() {
                   description: 'Monitor earnings and incoming funds.'
                 }
               ]}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={errors.type && touched.type ? errors.type : undefined}
             >
               Type
             </Input>
             <Input
+              name='date'
               type='date'
               placeholder='Date'
               description='Choose the date of the transaction.'
+              value={values.date}
+              onChange={handleChange}
               error={undefined}
               showRecurringSelector
+              recurring={values.recurring}
+              onRecurringChange={(recurring) => setFieldValue('recurring', recurring)}
             >
               Date
             </Input>
             <Input
+              name='amount'
               type='currency'
               description='Enter the transaction amount.'
+              value={values.amount}
+              onChange={handleChange}
               placeholder='0.00'
               error={undefined}
+              currencyCode={values.amountCurrency}
+              onCurrencyChange={(currency) => setFieldValue('amountCurrency', currency)}
             >
               Amount
             </Input>
             <Input
+              name='title'
+              type='text'
+              description='Add a title for the transaction.'
+              value={values.title}
+              onChange={handleChange}
+              placeholder='Groceries'
+              error={undefined}
+            >
+              Title
+            </Input>
+            <Input
+              name='description'
               type='text'
               description='Add a brief note about the transaction.'
+              value={values.description}
+              onChange={handleChange}
               placeholder='Groceries or Salary'
               error={undefined}
+              optional
             >
               Description
             </Input>
             <Input
+              name='category'
               type='select'
               description='Choose a category for the transaction.'
               placeholder='Select category'
-              error={undefined}
+              value={values.category}
               options={[
                 {
                   value: 'groceries',
@@ -416,14 +463,18 @@ export default function Calendar() {
                   label: 'Entertainment'
                 }
               ]}
+              onChange={handleChange}
+              error={undefined}
             >
               Category
             </Input>
             <Input
+              name='tags'
               type='select'
               description='Add tags to organize your transaction.'
               placeholder='"Food", "Work"'
               error={undefined}
+              value={values.tags}
               options={[
                 {
                   value: 'groceries',
@@ -434,14 +485,18 @@ export default function Calendar() {
                   label: 'Entertainment'
                 }
               ]}
+              multiple
+              onChange={handleChange}
             >
               Tags
             </Input>
             <Input
+              name='account'
               type='select'
               description='Choose the account or account used.'
               placeholder='Choose account'
               error={undefined}
+              value={values.account}
               options={[
                 {
                   value: '1',
@@ -452,12 +507,16 @@ export default function Calendar() {
                   label: 'Credit Card'
                 }
               ]}
+              onChange={handleChange}
             >
               Account
             </Input>
             <Input
+              name='image'
               type='file'
               description='Upload a receipt or document (optional).'
+              value={values.image}
+              onChange={handleChange}
               error={undefined}
             >
               Image
