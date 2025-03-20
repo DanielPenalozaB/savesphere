@@ -5,6 +5,7 @@ import { format, isValid, parse, addMonths, subMonths, isAfter, isBefore, isEqua
 import gsap from 'gsap';
 import { useDropdown } from '@/hooks/useDropdown';
 import { StringUtils } from '@/utils/string-utils';
+import { CalendarIcon } from '../icons/calendar';
 
 interface DateInputProps {
   id?: string;
@@ -454,32 +455,29 @@ export default function DatePicker({
   return (
     <div ref={containerRef} className="relative">
       <div className="relative flex">
-        <input
-          id={id}
-          name={name}
-          type="text"
-          value={displayValue}
-          onChange={handleInputChange}
-          onBlur={handleInputBlur}
-          placeholder={placeholder}
-          disabled={disabled}
-          required={required}
-          onClick={() => !disabled && openCalendarDropdown()}
-          className={`flex h-9 w-full rounded-md border border-neutral-300 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus-visible:border-calypso-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm${showRecurring ? ' rounded-r-none' : ''} ${className}`}
-        />
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-          <button
-            type="button"
-            onClick={() => !disabled && toggleCalendarDropdown()}
-            className="text-neutral-500 hover:text-neutral-700"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-          </button>
+        <div className="relative w-full">
+          <input
+            id={id}
+            name={name}
+            type="text"
+            value={displayValue}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            placeholder={placeholder}
+            disabled={disabled}
+            required={required}
+            onClick={() => !disabled && openCalendarDropdown()}
+            className={`flex h-9 w-full rounded-md border border-neutral-300 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus-visible:border-calypso-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm${showRecurring ? ' rounded-r-none' : ''} ${className}`}
+          />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+            <button
+              type="button"
+              onClick={() => !disabled && toggleCalendarDropdown()}
+              className="text-neutral-500 hover:text-neutral-700"
+            >
+              <CalendarIcon className="h-4 w-4" />
+            </button>
+          </div>
         </div>
         {showRecurring && (
           <div className={`relative inline-block${isRecurringOpen ? ' z-10' : ''}`}>
