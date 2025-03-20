@@ -34,6 +34,7 @@ export default function Calendar() {
   const [ currentDate, setCurrentDate ] = useState<Date>(new Date());
   const [ type, setType ] = useState<'day' | 'week' | 'month'>('month');
   const [ isModalOpen, setIsModalOpen ] = useState<boolean>(false);
+  const [ isDeletingModalOpen, setIsDeletingModalOpen ] = useState<boolean>(false);
   const [ editingEvent, setEditingEvent ] = useState<Transaction>();
   const [ events, setEvents ] = useState<Transaction[]>([]);
   const [ eventTitle, setEventTitle ] = useState('');
@@ -176,19 +177,20 @@ export default function Calendar() {
 
   const debouncedValues = useDebounce(values, 1000);
 
-  // Clear form and reset when modal is closed
+  const closeDeletingModal = () => {
+    setIsDeletingModalOpen(false);
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingEvent(undefined);
     setEventTitle('');
-    // Force a form reset by changing the key
     setFormKey((prev) => prev + 1);
   };
 
   const handleCreateEvent = (date: Date) => {
-    closeModal(); // Close any open modal first
+    closeModal();
 
-    // Wait for the previous modal to fully close
     setTimeout(() => {
       setIsModalOpen(true);
       setCurrentDate(date);
@@ -234,9 +236,13 @@ export default function Calendar() {
       onClick: () => console.log('Create template')
     }, {
       label: 'Delete',
-      onClick: () => handleRemoveEvent(editingEvent!),
-      className: 'text-red-400 hover:text-red-500 hover:bg-red-50 transition-all duration-150 ease-in-out',
-      icon: <BackspaceIcon className="h-4 w-4" />
+      onClick: () => {
+        setIsModalOpen(false);
+        setIsDeletingModalOpen(true);
+      },
+      className: 'text-red-400 hover:text-red-500 hover:bg-red-50 transition-all duration-150 ease-in-out disabled:hover:bg-transparent disabled:cursor-default',
+      icon: <BackspaceIcon className="h-4 w-4" />,
+      disabled: !editingEvent?.id
     }
   ];
 
@@ -358,7 +364,6 @@ export default function Calendar() {
                     <button
                       key={event.id}
                       type='button'
-                      title='Edit event'
                       className="w-full rounded-md bg-calypso-50 p-2 text-left text-calypso-900 hover:bg-calypso-100"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -397,7 +402,6 @@ export default function Calendar() {
                   <button
                     key={index}
                     type='button'
-                    title='Edit event'
                     className={`flex flex-col rounded-lg p-2 text-sm ${
                       !isSameMonth(date, startOfMonth(currentDate))
                         ? 'text-neutral-400 bg-neutral-100/50'
@@ -466,27 +470,28 @@ export default function Calendar() {
             <div className="flex-1">
               <div className="custom-scrollbar h-full overflow-y-auto pr-2">
                 <div className="flex flex-col gap-4">
-                  <Input
-                    name='template'
-                    type='select'
-                    placeholder='Select a template'
-                    value={values.category}
-                    options={[
-                      {
-                        value: 'shopping-list',
-                        label: 'Shopping List'
-                      },
-                      {
-                        value: 'groceries',
-                        label: 'Groceries'
-                      }
-                    ]}
-                    onChange={handleChange}
-                    error={undefined}
-                    className='max-w-40'
-                  >
-                    Template
-                  </Input>
+                  <div className='z-20 max-w-40'>
+                    <Input
+                      name='template'
+                      type='select'
+                      placeholder='Select a template'
+                      value={values.category}
+                      options={[
+                        {
+                          value: 'shopping-list',
+                          label: 'Shopping List'
+                        },
+                        {
+                          value: 'groceries',
+                          label: 'Groceries'
+                        }
+                      ]}
+                      onChange={handleChange}
+                      error={undefined}
+                    >
+                      Template
+                    </Input>
+                  </div>
                   <ItemsTable
                     items={values.items}
                     setItems={(items) => setFieldValue('items', items)}
@@ -640,19 +645,40 @@ export default function Calendar() {
                   >
                     Image
                   </Input>
-                  <div className="mt-4 flex justify-end">
-                    <Button
-                      variant="outline"
-                      size="md"
-                      onClick={closeModal}
-                    >
-                      Close
-                    </Button>
-                  </div>
                 </div>
               </div>
             </div>
           </form>
+        </Modal>
+        <Modal
+          isOpen={isDeletingModalOpen}
+          onClose={closeDeletingModal}
+          title='Delete Transaction'
+          primaryButton={{
+            children: 'Delete',
+            onClick: () => {
+              handleRemoveEvent(editingEvent!);
+              closeDeletingModal();
+            },
+            className: 'bg-red-400 hover:bg-red-500'
+          }}
+          secondaryButton={{
+            children: 'Cancel',
+            onClick: () => {
+              closeDeletingModal();
+              handleEditEvent(editingEvent!);
+            },
+            variant: 'outline',
+            className: 'hover:!bg-neutral-100 dark:focus-visible:!border-red-500 disabled:!border-neutral-300 disabled:!text-neutral-300 !border-neutral-200 !text-neutral-500 focus:bg-neutral-100 focus:outline-offset-[-1px] focus:outline-neutral-400 dark:hover:bg-neutral-100 dark:focus:bg-neutral-100'
+          }}
+          animation={{
+            duration: 0.4,
+            ease: 'back.out(1.5)'
+          }}
+        >
+          <p className='text-neutral-500'>
+            Are you sure you want to delete this transaction? This action cannot be undone, and all associated data will be <strong>permanently removed.</strong>
+          </p>
         </Modal>
       </div>
     </main>

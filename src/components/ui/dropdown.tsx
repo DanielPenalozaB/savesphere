@@ -92,7 +92,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
           ref={dropdownRef}
           className={`absolute z-50 w-48 ${getPositionClasses()}`}
         >
-          <div className="flex max-h-60 w-full flex-col overflow-auto rounded-lg border border-neutral-200 bg-white p-1 text-sm">
+          <div className="flex max-h-60 w-full flex-col overflow-auto rounded-lg border border-neutral-200 bg-white p-1 text-sm shadow-lg">
             {options.map((option, index) => (
               <button
                 key={index}

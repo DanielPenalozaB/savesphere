@@ -8,6 +8,7 @@ import { PlusIcon } from '../icons/plus';
 import { MinusIcon } from '../icons/minus';
 import { BackspaceIcon } from '../icons/backspace';
 import Link from 'next/link';
+import { NumberUtils } from '@/utils/number-utils';
 
 const PRODUCTS = [
   { id: '1', name: 'Laptop', price: 1299.99 },
@@ -122,7 +123,7 @@ export default function ItemsTable({ items, setItems, currencyCode }: ItemsTable
   return (
     <div className='flex flex-col gap-2'>
       <div className='flex items-center justify-between text-sm'>
-        <h3 className='font-semibold text-neutral-600'>Items ({items.length})</h3>
+        <h3 className='font-medium text-neutral-600'>Items ({items.length})</h3>
         <button type='button' className='text-calypso-500'>
           Database
         </button>
@@ -263,7 +264,7 @@ export default function ItemsTable({ items, setItems, currencyCode }: ItemsTable
       </table>
       <div className='flex flex-col items-end'>
         <span className='text-sm font-medium text-neutral-400'>Total</span>
-        <span className='text-2xl font-semibold text-neutral-600'>${calculateTotal().toFixed(2)}</span>
+        <span className='text-2xl font-semibold text-neutral-600'>{NumberUtils.formatCurrency(calculateTotal(), currencyCode)}</span>
       </div>
     </div>
   );

@@ -9,10 +9,26 @@ export const NumberUtils = {
    * @param locale - The locale to use for formatting (e.g., 'en-US').
    * @returns The formatted currency string.
    */
-  formatCurrency: (value: number, currency: string = 'USD', locale: string = 'en-US'): string => new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency
-  }).format(value),
+  formatCurrency: (value: number, currency: string = 'USD', locale?: string): string => {
+    // Map currency codes to their respective locales
+    const currencyToLocaleMap: Record<string, string> = {
+      USD: 'en-US', // US Dollar
+      EUR: 'en-US', // Euro (can also use 'de-DE' for Germany)
+      COP: 'es-CO', // Colombian Peso
+      MXN: 'es-MX', // Mexican Peso
+      GBP: 'en-GB', // British Pound
+      JPY: 'ja-JP', // Japanese Yen
+    };
+
+    // Use the provided locale or infer it from the currency
+    const inferredLocale = locale || currencyToLocaleMap[currency] || 'en-US';
+
+    return new Intl.NumberFormat(inferredLocale, {
+      style: 'currency',
+      currency,
+    }).format(value);
+  },
+
 
   /**
    * Format a number with commas as thousand separators.
