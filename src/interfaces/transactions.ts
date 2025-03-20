@@ -33,18 +33,13 @@ export interface Transaction {
   tags: string[];
   account: string;
   image: string;
+  items: TransactionItem[];
 }
 
-export interface CreateTransactionModal {
-  type: TransactionType;
-  date: string;
-  recurring: TransactionRecurringInterval;
-  amount: number;
-  amountCurrency: TransactionCurrency;
-  title: string;
-  description: string;
-  category: string;
-  tags: string[];
-  account: string;
-  image: string;
+export interface TransactionItem {
+  id: string
+  concept: string
+  quantity: number
+  price: number
+  productId?: string
 }

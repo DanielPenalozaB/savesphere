@@ -209,7 +209,7 @@ export default function CurrencyInput({
             disabled={disabled}
             required={required}
             placeholder={placeholder}
-            className={`flex h-9 w-full rounded-l-md border border-neutral-300 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-neutral-800 placeholder:text-neutral-400 focus-visible:border-calypso-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm ${className}`}
+            className={`flex h-9 w-full rounded-md border border-neutral-300 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-neutral-800 placeholder:text-neutral-400 focus-visible:border-calypso-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm ${className} ${showCurrencySelector ? 'rounded-r-none' : ''}`}
             autoFocus={autoFocus}
             thousandSeparator={config.thousandsSeparator}
             decimalSeparator={config.decimalSeparator}

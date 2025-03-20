@@ -97,7 +97,12 @@ export default function DatePicker({
   const [ selectedRecurring, setSelectedRecurring ] = useState<'none' | 'daily' | 'weekly' | 'monthly' | 'yearly'>(recurring);
 
   // Recurring dropdown state
-  const { dropdownRef: recurringDropdownRef, isOpen: isRecurringOpen, toggleDropdown: toggleRecurringDropdown, closeDropdown: closeRecurringDropdown } = useDropdown<HTMLUListElement>({
+  const {
+    dropdownRef: recurringDropdownRef,
+    isOpen: isRecurringOpen,
+    toggleDropdown: toggleRecurringDropdown,
+    closeDropdown: closeRecurringDropdown
+  } = useDropdown<HTMLUListElement>({
     animation: {
       open: {
         duration: 0.2,

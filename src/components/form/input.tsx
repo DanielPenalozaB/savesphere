@@ -5,7 +5,7 @@ import DateInput from './date-input';
 import RadioCardInput, { RadioCardOption } from './radio-card-input';
 import CurrencyInput from './currency-input';
 
-type ExtendedInputType = React.HTMLInputTypeAttribute | 'otp' | 'select' | 'dateRange' | 'radioCard' | 'currency';
+type ExtendedInputType = React.HTMLInputTypeAttribute | 'otp' | 'select' | 'dateRange' | 'radioCard' | 'currency' | 'textarea';
 
 interface InputProps extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'type'> {
   type?: ExtendedInputType;
@@ -29,6 +29,8 @@ interface InputProps extends Omit<React.DetailedHTMLProps<React.InputHTMLAttribu
   recurring?: 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly';
   onRecurringChange?: (value: 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly') => void;
   optional?: boolean;
+  rows?: number;
+  cols?: number;
 }
 
 export default function Input(props: InputProps) {
@@ -53,6 +55,8 @@ export default function Input(props: InputProps) {
     recurring = 'none',
     showRecurringSelector = false,
     optional = false,
+    rows = 3,
+    cols,
     ...restProps
   } = props;
 
@@ -70,9 +74,11 @@ export default function Input(props: InputProps) {
   }
 
   const className = 'flex h-9 w-full rounded-md border border-neutral-300 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-neutral-800 placeholder:text-neutral-400 focus-visible:border-calypso-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm';
+  const textareaClassName = 'flex min-h-[80px] w-full rounded-md border border-neutral-300 bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-neutral-400 focus-visible:border-calypso-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm';
 
   // Add classes
   const inputClassName = restProps.className ? `${className} ${restProps.className}` : className;
+  const textareaInputClassName = restProps.className ? `${textareaClassName} ${restProps.className}` : textareaClassName;
 
   // Create handler for select onChange that converts from select to input event
   const handleCustomSelectChange = (value: string | string[], syntheticEvent?: React.SyntheticEvent) => {
@@ -99,7 +105,6 @@ export default function Input(props: InputProps) {
   // Create handler for currency input onChange
   const handleCurrencyChange = (value: number| undefined, syntheticEvent: React.ChangeEvent<HTMLInputElement>) => {
     if (restProps.onChange) {
-      // Create a new event with the numeric value in the target.value
       const newEvent = {
         ...syntheticEvent,
         target: {
@@ -111,8 +116,35 @@ export default function Input(props: InputProps) {
     }
   };
 
+  const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (restProps.onChange) {
+      // Convert textarea event to input event
+      restProps.onChange(event as unknown as React.ChangeEvent<HTMLInputElement>);
+    }
+  };
+
   // Render different input types
   const renderInput = () => {
+    if (type === 'textarea') {
+      return (
+        <textarea
+          id={restProps.id}
+          name={restProps.name}
+          value={restProps.value as string}
+          defaultValue={restProps.defaultValue as string}
+          placeholder={restProps.placeholder}
+          disabled={restProps.disabled}
+          required={restProps.required}
+          className={textareaInputClassName}
+          onChange={handleTextareaChange}
+          onBlur={restProps.onBlur as unknown as React.FocusEventHandler<HTMLTextAreaElement>}
+          autoFocus={restProps.autoFocus}
+          rows={rows}
+          cols={cols}
+        />
+      );
+    }
+
     if (type === 'currency') {
       return (
         <CurrencyInput
@@ -158,8 +190,8 @@ export default function Input(props: InputProps) {
         <DateInput
           id={restProps.id}
           name={restProps.name}
-          value={restProps.value as unknown as Date}  // Add the unknown cast first
-          defaultValue={restProps.defaultValue as unknown as Date}  // Add the unknown cast first
+          value={restProps.value ? new Date(restProps.value.toString()) : undefined}  // Add the unknown cast first
+          defaultValue={restProps.defaultValue ? new Date(restProps.defaultValue.toString()) : undefined}  // Add the unknown cast first
           placeholder={restProps.placeholder}
           disabled={restProps.disabled}
           required={restProps.required}
@@ -176,7 +208,6 @@ export default function Input(props: InputProps) {
       );
     }
 
-    // For the dateRange input
     if (type === 'dateRange') {
       return (
         <DateInput
@@ -201,7 +232,6 @@ export default function Input(props: InputProps) {
       );
     }
 
-    // Handle custom select input
     if (type === 'select' && options) {
       return (
         <SelectInput
@@ -222,7 +252,6 @@ export default function Input(props: InputProps) {
       );
     }
 
-    // Handle OTP input
     if (type === 'otp') {
       return (
         <OtpInput
@@ -241,8 +270,7 @@ export default function Input(props: InputProps) {
       );
     }
 
-    // Handle all other standard input types
-    return <input type={type as React.HTMLInputTypeAttribute} className={inputClassName} {...restProps} />;
+    return <input type={type as React.HTMLInputTypeAttribute} {...restProps} className={inputClassName} />;
   };
 
   return (
