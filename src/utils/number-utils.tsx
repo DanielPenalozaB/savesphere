@@ -17,7 +17,7 @@ export const NumberUtils = {
       COP: 'es-CO', // Colombian Peso
       MXN: 'es-MX', // Mexican Peso
       GBP: 'en-GB', // British Pound
-      JPY: 'ja-JP', // Japanese Yen
+      JPY: 'ja-JP' // Japanese Yen
     };
 
     // Use the provided locale or infer it from the currency
@@ -25,10 +25,9 @@ export const NumberUtils = {
 
     return new Intl.NumberFormat(inferredLocale, {
       style: 'currency',
-      currency,
+      currency
     }).format(value);
   },
-
 
   /**
    * Format a number with commas as thousand separators.
