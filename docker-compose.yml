@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: savesphere-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: savesphere
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrations:
+    image: migrate/migrate
+    container_name: savesphere-migrations
+    volumes:
+      - ./apps/api/migrations:/migrations
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - -path=/migrations/
+      - -database=postgres://postgres:postgres@db:5432/savesphere?sslmode=disable
+      - up
+
+volumes:
+  postgres_data:

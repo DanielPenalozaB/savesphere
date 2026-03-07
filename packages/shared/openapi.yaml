@@ -1,0 +1,44 @@
+openapi: 3.1.0
+info:
+  title: SaveSphere API
+  description: API for money and budget tracking
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+  /auth/login:
+    post:
+      summary: Login
+  /api/wallets:
+    get:
+      summary: List wallets
+    post:
+      summary: Create wallet
+  /api/wallets/liquidity:
+    get:
+      summary: Get total liquidity
+  /api/transactions:
+    post:
+      summary: Create transaction
+  /api/wallets/{walletId}/transactions:
+    get:
+      summary: List transactions for a wallet
+  /api/intelligence/safe-to-spend:
+    get:
+      summary: Get safe to spend amount
+  /api/intelligence/advice:
+    get:
+      summary: Get AI financial advice
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string

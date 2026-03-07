@@ -1,0 +1,22 @@
+{
+  "name": "savesphere-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "api:dev": "turbo dev --filter=api",
+    "web:dev": "turbo dev --filter=web",
+    "web:format": "turbo format --filter=web",
+    "web:check": "turbo check --filter=web"
+  },
+  "devDependencies": {
+    "turbo": "latest"
+  },
+  "packageManager": "yarn@1.22.22"
+}
