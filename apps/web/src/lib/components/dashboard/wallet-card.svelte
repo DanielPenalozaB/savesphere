@@ -2,6 +2,7 @@
   import { cn } from '$lib/utils';
   import CreditCard from '@lucide/svelte/icons/credit-card';
   import PiggyBank from '@lucide/svelte/icons/piggy-bank';
+  import * as DashboardCard from './dashboard-card';
 
   let {
     type = 'Visa Platinum',
@@ -13,9 +14,9 @@
   } = $props();
 </script>
 
-<div
+<DashboardCard.Root
   class={cn(
-    'relative flex flex-col justify-between gap-2 rounded-md border border-white/5 bg-slate-100 p-4 dark:bg-slate-900',
+    'relative justify-between gap-2 p-4',
     isPrimary &&
       'border-2 border-indigo-300 bg-linear-to-br from-indigo-50 to-indigo-200 dark:border-indigo-900 dark:from-indigo-900 dark:to-indigo-950'
   )}
@@ -62,4 +63,4 @@
       >
     {/if}
   </div>
-</div>
+</DashboardCard.Root>

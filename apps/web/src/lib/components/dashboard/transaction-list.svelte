@@ -4,6 +4,7 @@
   import Utensils from '@lucide/svelte/icons/utensils';
   import Play from '@lucide/svelte/icons/play';
   import Wallet from '@lucide/svelte/icons/wallet';
+  import * as DashboardCard from './dashboard-card';
 
   const transactions = [
     {
@@ -49,14 +50,12 @@
   ];
 </script>
 
-<div class="flex flex-col rounded-md border border-white/5 bg-slate-100 dark:bg-slate-900">
-  <div
-    class="flex flex-col gap-2 rounded-t-md bg-slate-50 bg-linear-to-br from-white to-slate-100 p-4 dark:from-slate-800 dark:to-slate-900"
-  >
+<DashboardCard.Root>
+  <DashboardCard.Header>
     <div class="flex items-start justify-between gap-6">
-      <h3 class="text-lg font-bold tracking-tight text-slate-600 dark:text-white">
+      <DashboardCard.Title>
         Monthly Spending Summary
-      </h3>
+      </DashboardCard.Title>
       <div class="flex items-center gap-2">
         <div class="flex flex-col items-end">
           <span
@@ -118,12 +117,12 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="flex flex-col gap-6 p-4">
+  </DashboardCard.Header>
+  <DashboardCard.Content>
     <div class="flex items-center justify-between">
-      <h3 class="text-lg font-bold tracking-tight text-slate-600 dark:text-white">
+      <DashboardCard.Title>
         Recent Transactions
-      </h3>
+      </DashboardCard.Title>
       <button
         class="text-xs font-bold tracking-widest text-blue-500 uppercase transition-colors hover:text-blue-400"
         >View All</button
@@ -160,5 +159,5 @@
         </div>
       {/each}
     </div>
-  </div>
-</div>
+  </DashboardCard.Content>
+</DashboardCard.Root>

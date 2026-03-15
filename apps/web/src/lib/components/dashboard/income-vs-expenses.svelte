@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Info } from '@lucide/svelte';
   import { BarChart } from 'layerchart';
+  import * as DashboardCard from './dashboard-card';
 
   const data = [
     {
@@ -42,16 +43,15 @@
   ];
 </script>
 
-<div
-  class="flex flex-col gap-6 rounded-lg border border-white/5 bg-slate-100 p-4 dark:bg-slate-900"
->
-  <div class="flex items-start justify-between">
-    <div class="flex flex-col">
-      <h3 class="text-lg font-bold tracking-tight text-slate-600 dark:text-white">
-        Income vs Expenses
-      </h3>
-      <span class="text-sm text-slate-400">Last 4 months</span>
-    </div>
+<DashboardCard.Root>
+  <DashboardCard.Content>
+    <div class="flex items-start justify-between">
+      <div class="flex flex-col">
+        <DashboardCard.Title>
+          Income vs Expenses
+        </DashboardCard.Title>
+        <DashboardCard.Description>Last 4 months</DashboardCard.Description>
+      </div>
     <button class="text-slate-500 transition-colors hover:text-white">
       <Info class="size-5" />
     </button>
@@ -89,4 +89,5 @@
       groupPadding={0.2}
     />
   </div>
-</div>
+  </DashboardCard.Content>
+</DashboardCard.Root>
