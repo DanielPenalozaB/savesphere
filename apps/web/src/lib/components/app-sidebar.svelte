@@ -1,26 +1,25 @@
-<script lang="ts" module>
-  import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
-  import BanknoteArrowDown from '@lucide/svelte/icons/banknote-arrow-down';
-  import BrainCircuit from '@lucide/svelte/icons/brain-circuit';
-  import CalendarSync from '@lucide/svelte/icons/calendar-sync';
-  import FingerprintPattern from '@lucide/svelte/icons/fingerprint-pattern';
-  import FlagTriangleRight from '@lucide/svelte/icons/flag-triangle-right';
-  import GitFork from '@lucide/svelte/icons/git-fork';
-  import HardDriveDownload from '@lucide/svelte/icons/hard-drive-download';
-  import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
-  import LifeBuoyIcon from '@lucide/svelte/icons/life-buoy';
-  import Lightbulb from '@lucide/svelte/icons/lightbulb';
-  import SendIcon from '@lucide/svelte/icons/send';
-  import TrendingUpDown from '@lucide/svelte/icons/trending-up-down';
-  import Wallet from '@lucide/svelte/icons/wallet';
-</script>
-
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import { m } from '$lib/paraglide/messages.js';
   import { localizeHref } from '$lib/paraglide/runtime';
-  import { resolve } from '$app/paths';
   import { toLocalizedPath } from '$lib/utils';
+  import {
+    ArrowLeftRight,
+    BanknoteArrowDown,
+    BrainCircuit,
+    CalendarSync,
+    FingerprintPattern,
+    FlagTriangleRight,
+    GitFork,
+    HardDriveDownload,
+    LayoutDashboard,
+    LifeBuoyIcon,
+    Lightbulb,
+    SendIcon,
+    TrendingUpDown,
+    Wallet
+  } from '@lucide/svelte';
   import CommandIcon from '@lucide/svelte/icons/command';
   import type { ComponentProps } from 'svelte';
   import NavIntelligence from './navigation/nav-intelligence.svelte';
@@ -59,6 +58,10 @@
         url: localizeHref('/transactions'),
         icon: ArrowLeftRight,
         items: [
+          {
+            title: m.sidebar_nav_bills(),
+            url: localizeHref('/transactions/bills')
+          },
           {
             title: m.sidebar_nav_history(),
             url: localizeHref('/transactions/history')
@@ -136,7 +139,7 @@
     user: {
       name: 'Daniel Peñaloza',
       email: 'dpenaloza@savesphere.com',
-      avatar: '/avatars/dpenaloza.jpg'
+      avatar: 'https://doodleipsum.com/1200?i=aaae4ac68a7288537c3192c776e5afab'
     }
   });
 </script>

@@ -27,6 +27,13 @@
   } = $props();
 
   const sidebar = useSidebar();
+
+  const initials = $derived(
+    user.name
+      .split(' ')
+      .map((word) => word[0])
+      .join('')
+  );
 </script>
 
 <Sidebar.Menu>
@@ -41,7 +48,7 @@
           >
             <Avatar.Root class="size-8 rounded-lg">
               <Avatar.Image src={user.avatar} alt={user.name} />
-              <Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
+              <Avatar.Fallback class="rounded-lg">{initials}</Avatar.Fallback>
             </Avatar.Root>
             <div class="grid flex-1 text-start text-sm leading-tight">
               <span class="truncate font-medium">{user.name}</span>
@@ -60,8 +67,8 @@
         <DropdownMenu.Label class="p-0 font-normal">
           <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
             <Avatar.Root class="size-8 rounded-lg">
-              <Avatar.Image src={user.avatar} alt={user.name} />
-              <Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
+              <Avatar.Image src={user.avatar} alt={user.name} class="h-8" />
+              <Avatar.Fallback class="rounded-lg">{initials}</Avatar.Fallback>
             </Avatar.Root>
             <div class="grid flex-1 text-start text-sm leading-tight">
               <span class="truncate font-medium">{user.name}</span>
