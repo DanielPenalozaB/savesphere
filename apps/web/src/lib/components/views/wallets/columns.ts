@@ -4,13 +4,8 @@ import { renderComponent, renderSnippet } from '$lib/components/ui/data-table';
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import DataTableActions from './data-table-actions.svelte';
-import { WalletCurrencyEnum, WalletStatusEnum, type Wallet } from './types';
-
-const currencyConfig: Record<WalletCurrencyEnum, { code: string; locale: string }> = {
-  [WalletCurrencyEnum.USD]: { code: 'USD', locale: 'en-US' },
-  [WalletCurrencyEnum.EUR]: { code: 'EUR', locale: 'de-DE' },
-  [WalletCurrencyEnum.COP]: { code: 'COP', locale: 'es-CO' }
-};
+import { WalletStatusEnum, type Wallet } from './types';
+import { formatCurrency } from '$lib/utils/format.js';
 
 export const columns: ColumnDef<Wallet>[] = [
   {
@@ -51,27 +46,17 @@ export const columns: ColumnDef<Wallet>[] = [
     accessorKey: 'balance',
     header: 'Balance',
     cell: ({ row }) => {
-      const config =
-        currencyConfig[row.original.currency] ?? currencyConfig[WalletCurrencyEnum.USD];
-      const formatted = new Intl.NumberFormat(config.locale, {
-        style: 'currency',
-        currency: config.code
-      }).format(Number.parseFloat(row.original.balance));
-
-      return formatted;
+      return formatCurrency(row.original.balance, row.original.currency);
     }
   },
   {
     accessorKey: 'currency',
     header: 'Currency',
     cell: ({ row }) => {
-      const config =
-        currencyConfig[row.original.currency] ?? currencyConfig[WalletCurrencyEnum.USD];
-
       return renderComponent(Badge, {
         variant: 'secondary',
         children: createRawSnippet(() => ({
-          render: () => `<span>${config.code}</span>`
+          render: () => `<span>${row.original.currency.toUpperCase()}</span>`
         }))
       });
     }

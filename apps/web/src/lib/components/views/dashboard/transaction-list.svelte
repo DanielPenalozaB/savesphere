@@ -5,6 +5,7 @@
   import Play from '@lucide/svelte/icons/play';
   import Wallet from '@lucide/svelte/icons/wallet';
   import * as DashboardCard from './dashboard-card';
+  import SpendingSummary from './spending-summary.svelte';
 
   const transactions = [
     {
@@ -51,78 +52,10 @@
 </script>
 
 <DashboardCard.Root>
-  <DashboardCard.Header>
-    <div class="flex items-start justify-between gap-6">
-      <DashboardCard.Title>
-        Monthly Spending Summary
-      </DashboardCard.Title>
-      <div class="flex items-center gap-2">
-        <div class="flex flex-col items-end">
-          <span
-            class="text-[10px] font-semibold tracking-widest text-slate-400 uppercase dark:text-slate-500"
-          >
-            Total Spent
-          </span>
-          <span class="text-sm font-medium tracking-tighter text-red-500">$2.000.000</span>
-        </div>
-        <div class="flex flex-col items-end">
-          <span
-            class="text-[10px] font-semibold tracking-widest text-slate-400 uppercase dark:text-slate-500"
-          >
-            Saving Rate
-          </span>
-          <span class="text-sm font-medium tracking-tighter text-green-500">35%</span>
-        </div>
-      </div>
-    </div>
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-2">
-        <span class="h-1.5 w-2/5 rounded-full bg-indigo-300"></span>
-        <span class="h-1.5 w-1/5 rounded-full bg-amber-200"></span>
-        <span class="h-1.5 w-1/5 rounded-full bg-emerald-300"></span>
-        <span class="h-1.5 w-1/5 rounded-full bg-slate-400"></span>
-      </div>
-      <div class="flex flex-wrap items-center gap-4">
-        <div class="flex items-center gap-2">
-          <span class="size-2 rounded-full bg-indigo-300"></span>
-          <span
-            class="text-[10px] font-semibold tracking-widest text-slate-500 uppercase dark:text-slate-400"
-          >
-            Fixed (40%)
-          </span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="size-2 rounded-full bg-amber-200"></span>
-          <span
-            class="text-[10px] font-semibold tracking-widest text-slate-500 uppercase dark:text-slate-400"
-          >
-            Variable (20%)
-          </span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="size-2 rounded-full bg-emerald-300"></span>
-          <span
-            class="text-[10px] font-semibold tracking-widest text-slate-500 uppercase dark:text-slate-400"
-          >
-            Savings (20%)
-          </span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="size-2 rounded-full bg-slate-400"></span>
-          <span
-            class="text-[10px] font-semibold tracking-widest text-slate-500 uppercase dark:text-slate-400"
-          >
-            Others (20%)
-          </span>
-        </div>
-      </div>
-    </div>
-  </DashboardCard.Header>
+  <SpendingSummary />
   <DashboardCard.Content>
     <div class="flex items-center justify-between">
-      <DashboardCard.Title>
-        Recent Transactions
-      </DashboardCard.Title>
+      <DashboardCard.Title>Recent Transactions</DashboardCard.Title>
       <button
         class="text-xs font-bold tracking-widest text-blue-500 uppercase transition-colors hover:text-blue-400"
         >View All</button

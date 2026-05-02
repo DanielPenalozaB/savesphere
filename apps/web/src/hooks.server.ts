@@ -11,3 +11,8 @@ const handleParaglide: Handle = ({ event, resolve }) =>
   });
 
 export const handle: Handle = handleParaglide;
+
+export const handleError = ({ error, event }) => {
+  // eslint-disable-next-line no-console
+  console.error('Server error:', error, 'at', event.url.pathname);
+};

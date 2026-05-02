@@ -30,3 +30,7 @@ export function toLocalizedPath(
 ): Parameters<typeof resolve>[0] {
   return localizeHref(path, options) as Parameters<typeof resolve>[0];
 }
+
+// Re-export format utilities for convenience
+export { formatCurrency, formatDate, formatPercent } from './utils/format.js';
+

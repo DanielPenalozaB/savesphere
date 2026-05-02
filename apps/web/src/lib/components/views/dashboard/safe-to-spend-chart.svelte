@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { ChartLine, Info } from '@lucide/svelte';
+  import { Info } from '@lucide/svelte';
   import * as DashboardCard from './dashboard-card';
+  import BudgetProgress from './budget-progress.svelte';
+  import BudgetInfoCard from './budget-info-card.svelte';
 
   let { amount = '$2.014.000', total = '$8.014.000', percentage = 75 } = $props();
-
-  const radius = 90;
-  const circumference = 2 * Math.PI * radius;
-  const offset = $derived(circumference - (percentage / 100) * circumference);
 </script>
 
 <DashboardCard.Root>
@@ -49,38 +47,12 @@
             >
           </div>
         </div>
-        <div class="flex flex-col gap-4">
-          <div class="h-6 w-full overflow-hidden rounded-full bg-indigo-200 dark:bg-indigo-900">
-            <div
-              class="h-full rounded-full bg-indigo-500 transition-all duration-500"
-              style="width: {percentage}%"
-            ></div>
-          </div>
-          <div class="flex items-center justify-between text-sm font-semibold">
-            <span class="text-indigo-500 dark:text-indigo-300">75% consumed </span>
-            <span class="text-white dark:text-slate-400">12 days left</span>
-          </div>
-        </div>
+        <BudgetProgress {percentage} />
       </div>
       <div
         class="absolute bottom-0 z-0 h-2/3 w-full border-t-4 border-indigo-400 bg-linear-to-br from-indigo-100 to-indigo-500 opacity-50 dark:border-indigo-500 dark:from-indigo-600 dark:to-indigo-900"
       ></div>
     </div>
-    <div
-      class="flex items-center gap-6 rounded-md border border-slate-200 bg-white p-4 dark:border-slate-600 dark:bg-slate-800"
-    >
-      <div
-        class="rounded-sm bg-indigo-100 p-3 text-indigo-600 dark:bg-indigo-700 dark:text-indigo-200"
-      >
-        <ChartLine class="size-6 opacity-80" />
-      </div>
-      <div class="flex flex-col text-sm">
-        <span class="font-bold text-slate-600 dark:text-slate-200">Story Update</span>
-        <span class="leading-tight font-normal tracking-tight text-slate-400"
-          >You're currently <strong class="font-medium text-indigo-400">under-budget</strong> by $500k.
-          At this rate, you'll reach your $2.000.000 savings goal.</span
-        >
-      </div>
-    </div>
+    <BudgetInfoCard />
   </DashboardCard.Content>
 </DashboardCard.Root>

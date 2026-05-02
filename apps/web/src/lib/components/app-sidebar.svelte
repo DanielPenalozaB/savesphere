@@ -22,10 +22,7 @@
   } from '@lucide/svelte';
   import CommandIcon from '@lucide/svelte/icons/command';
   import type { ComponentProps } from 'svelte';
-  import NavIntelligence from './navigation/nav-intelligence.svelte';
-  import NavMain from './navigation/nav-main.svelte';
-  import NavManagement from './navigation/nav-management.svelte';
-  import NavPlanning from './navigation/nav-planning.svelte';
+  import NavGroup from './layout/nav-group.svelte';
   import NavSecondary from './navigation/nav-secondary.svelte';
   import NavUser from './navigation/nav-user.svelte';
 
@@ -167,10 +164,10 @@
     </Sidebar.Menu>
   </Sidebar.Header>
   <Sidebar.Content>
-    <NavMain items={data.navMain} />
-    <NavIntelligence items={data.intelligence} />
-    <NavPlanning items={data.planning} />
-    <NavManagement items={data.management} />
+    <NavGroup label={m.sidebar_group_overview()} items={data.navMain} />
+    <NavGroup label={m.sidebar_nav_intelligence_ai()} items={data.intelligence} />
+    <NavGroup label={m.sidebar_nav_planning()} items={data.planning} />
+    <NavGroup label={m.sidebar_nav_management()} items={data.management} />
     <NavSecondary items={data.navSecondary} class="mt-auto" />
   </Sidebar.Content>
   <Sidebar.Footer>

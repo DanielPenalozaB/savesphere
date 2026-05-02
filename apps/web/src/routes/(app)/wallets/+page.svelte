@@ -1,45 +1,10 @@
 <script lang="ts">
   import Button from '$lib/components/ui/button/button.svelte';
-  import {
-    columns,
-    DataTable,
-    WalletCurrencyEnum,
-    WalletStatusEnum,
-    WalletTypeEnum,
-    type Wallet
-  } from '$lib/components/views/wallets';
+  import { columns, DataTable } from '$lib/components/views/wallets';
   import { m } from '$lib/paraglide/messages.js';
   import { TrendingDown, TrendingUp } from '@lucide/svelte';
 
-  const wallets: Wallet[] = [
-    {
-      id: '1',
-      name: 'Visa Platinum',
-      type: WalletTypeEnum.CREDIT,
-      balance: '45200.50',
-      isPrimary: true,
-      status: WalletStatusEnum.ACTIVE,
-      currency: WalletCurrencyEnum.USD
-    },
-    {
-      id: '2',
-      name: 'Savings Account',
-      type: WalletTypeEnum.SAVINGS,
-      balance: '12000.00',
-      isPrimary: false,
-      status: WalletStatusEnum.ACTIVE,
-      currency: WalletCurrencyEnum.USD
-    },
-    {
-      id: '3',
-      name: 'Checking Account',
-      type: WalletTypeEnum.DEBIT,
-      balance: '5000.00',
-      isPrimary: false,
-      status: WalletStatusEnum.ACTIVE,
-      currency: WalletCurrencyEnum.USD
-    }
-  ];
+  let { data } = $props();
 </script>
 
 <svelte:head>
@@ -54,33 +19,33 @@
           Liquid Assets
         </p>
         <div class="flex items-end justify-between">
-          <h3 class="text-2xl font-bold tracking-tight">$124,500.00</h3>
+          <h3 class="text-2xl font-bold tracking-tight">{data.summary.liquidAssets}</h3>
           <span
             class="mb-1 flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500"
           >
-            <span class="mr-0.5"><TrendingUp class="size-4" /></span> 2.4%
+            <span class="mr-0.5"><TrendingUp class="size-4" /></span> {data.summary.liquidAssetsTrend}%
           </span>
         </div>
       </div>
       <div class="rounded-md bg-slate-100 p-5 dark:bg-slate-900">
         <p class="mb-1 text-xs font-medium tracking-wider text-slate-500 uppercase">Total Debt</p>
         <div class="flex items-end justify-between">
-          <h3 class="text-2xl font-bold tracking-tight">-$12,400.00</h3>
+          <h3 class="text-2xl font-bold tracking-tight">{data.summary.totalDebt}</h3>
           <span
             class="mb-1 flex items-center rounded-full bg-orange-500/10 px-2 py-0.5 text-xs font-bold text-orange-500"
           >
-            <span class="mr-0.5"><TrendingDown class="size-4" /></span> 0.5%
+            <span class="mr-0.5"><TrendingDown class="size-4" /></span> {Math.abs(data.summary.totalDebtTrend)}%
           </span>
         </div>
       </div>
       <div class="rounded-md bg-slate-100 p-5 dark:bg-slate-900">
         <p class="mb-1 text-xs font-medium tracking-wider text-slate-500 uppercase">Net Worth</p>
         <div class="flex items-end justify-between">
-          <h3 class="text-2xl font-bold tracking-tight">$112,100.00</h3>
+          <h3 class="text-2xl font-bold tracking-tight">{data.summary.netWorth}</h3>
           <span
             class="mb-1 flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500"
           >
-            <span class="mr-0.5"><TrendingUp class="size-4" /></span> 3.1%
+            <span class="mr-0.5"><TrendingUp class="size-4" /></span> {data.summary.netWorthTrend}%
           </span>
         </div>
       </div>
@@ -91,7 +56,7 @@
       >
         Add Wallet
       </Button>
-      <DataTable data={wallets} {columns} />
+      <DataTable data={data.wallets} {columns} />
     </div>
   </main>
 </div>
