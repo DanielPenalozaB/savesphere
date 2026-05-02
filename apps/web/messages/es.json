@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "hello_world": "Hola, {name} desde es!",
   "sidebar_app_name": "SaveSphere",
   "sidebar_app_description": "Finanzas Personales",
   "sidebar_nav_dashboard": "Tablero",

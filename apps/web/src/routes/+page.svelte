@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { IncomeVsExpenses, SafeToSpendChart, TransactionList, UpcomingBills, WalletCard } from '$lib/components/dashboard';
+  import {
+    IncomeVsExpenses,
+    SafeToSpendChart,
+    TransactionList,
+    UpcomingBills,
+    WalletCard
+  } from '$lib/components/views/dashboard';
+  import { m } from '$lib/paraglide/messages.js';
   import TrendingUp from '@lucide/svelte/icons/trending-up';
 
   // Sample data
@@ -30,7 +37,7 @@
 </script>
 
 <svelte:head>
-  <title>SaveSphere | Dashboard</title>
+  <title>SaveSphere | {m.sidebar_nav_dashboard()}</title>
 </svelte:head>
 
 <div class="flex w-full overflow-hidden">
@@ -59,7 +66,7 @@
     <!-- Charts & Transactions -->
     <section class="grid grid-cols-1 gap-4 xl:grid-cols-2">
       <IncomeVsExpenses />
-			<UpcomingBills />
+      <UpcomingBills />
       <SafeToSpendChart />
       <TransactionList />
     </section>

@@ -1,0 +1,629 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>OmniWallet | Account Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style type="text/tailwindcss">
+      :root {
+        --primary: #1754cf;
+        --background-dark: #0a0a0a;
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .glass {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+      }
+      .table-row-hover:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+      .dropdown-menu {
+        display: none;
+      }
+      .group:focus-within .dropdown-menu {
+        display: block;
+      }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#1754cf',
+              'background-light': '#f6f6f8',
+              'background-dark': '#0a0a0a'
+            },
+            fontFamily: {
+              display: ['Inter', 'sans-serif']
+            },
+            borderRadius: {
+              DEFAULT: '0.75rem',
+              lg: '1.5rem',
+              xl: '2.5rem',
+              full: '9999px'
+            }
+          }
+        }
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-100"
+  >
+    <div class="flex h-screen overflow-hidden">
+      <aside
+        class="bg-background-light dark:bg-background-dark flex w-20 flex-col border-r border-white/5 transition-all duration-300 lg:w-64"
+      >
+        <div class="flex items-center gap-3 p-6">
+          <div class="flex items-center justify-center rounded-xl bg-primary p-2 text-white">
+            <span class="material-symbols-outlined">account_balance_wallet</span>
+          </div>
+          <span class="hidden text-xl font-bold tracking-tight lg:block">OmniWallet</span>
+        </div>
+        <nav class="mt-4 flex-1 space-y-2 px-4">
+          <a
+            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-400 transition-colors hover:bg-primary/10 hover:text-primary"
+            href="#"
+          >
+            <span class="material-symbols-outlined">grid_view</span>
+            <span class="hidden text-sm font-medium lg:block">Overview</span>
+          </a>
+          <a
+            class="flex items-center gap-3 rounded-xl bg-primary/10 px-4 py-3 text-primary transition-colors"
+            href="#"
+          >
+            <span class="material-symbols-outlined">account_balance</span>
+            <span class="hidden text-sm font-medium lg:block">Accounts</span>
+          </a>
+          <a
+            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-400 transition-colors hover:bg-primary/10 hover:text-primary"
+            href="#"
+          >
+            <span class="material-symbols-outlined">query_stats</span>
+            <span class="hidden text-sm font-medium lg:block">Analytics</span>
+          </a>
+          <a
+            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-400 transition-colors hover:bg-primary/10 hover:text-primary"
+            href="#"
+          >
+            <span class="material-symbols-outlined">settings</span>
+            <span class="hidden text-sm font-medium lg:block">Settings</span>
+          </a>
+        </nav>
+        <div class="mt-auto p-4">
+          <div class="glass hidden rounded-xl p-4 lg:block">
+            <p class="mb-2 text-xs font-medium tracking-wider text-slate-500 uppercase">Storage</p>
+            <div class="mb-2 h-1.5 w-full rounded-full bg-primary/20">
+              <div class="h-1.5 w-3/4 rounded-full bg-primary"></div>
+            </div>
+            <p class="text-[10px] text-slate-400">7.5GB of 10GB used</p>
+          </div>
+          <div class="mt-4 flex items-center gap-3 border-t border-white/5 p-3">
+            <div
+              class="h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-tr from-primary to-blue-400"
+            ></div>
+            <div class="hidden overflow-hidden lg:block">
+              <p class="truncate text-sm font-semibold">Alex Rivera</p>
+              <p class="truncate text-xs text-slate-500">Pro Plan</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <main
+        class="bg-background-light dark:bg-background-dark custom-scrollbar flex-1 overflow-y-auto p-4 lg:p-8"
+      >
+        <header class="mb-8 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
+          <div>
+            <h1 class="text-3xl font-bold tracking-tight">Account Management</h1>
+            <p class="mt-1 text-slate-500">Configure and monitor your linked financial endpoints</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="relative hidden sm:block">
+              <span
+                class="material-symbols-outlined absolute top-1/2 left-3 -translate-y-1/2 text-lg text-slate-500"
+                >search</span
+              >
+              <input
+                class="w-64 rounded-full border-white/10 bg-white/5 py-2 pr-4 pl-10 text-sm text-slate-200 focus:border-primary focus:ring-primary"
+                placeholder="Search accounts..."
+                type="text"
+              />
+            </div>
+            <button
+              class="glass flex items-center justify-center rounded-full p-2.5 text-slate-400 transition-colors hover:text-white"
+            >
+              <span class="material-symbols-outlined">tune</span>
+            </button>
+            <button
+              class="glass flex items-center justify-center rounded-full p-2.5 text-slate-400 transition-colors hover:text-white"
+            >
+              <span class="material-symbols-outlined">notifications</span>
+            </button>
+          </div>
+        </header>
+        <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div class="glass rounded-2xl border-l-4 border-l-primary p-5">
+            <p class="mb-1 text-xs font-medium tracking-wider text-slate-500 uppercase">
+              Liquid Assets
+            </p>
+            <div class="flex items-end justify-between">
+              <h3 class="text-2xl font-bold tracking-tight">$124,500.00</h3>
+              <span
+                class="mb-1 flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500"
+              >
+                <span class="material-symbols-outlined mr-0.5 text-xs">trending_up</span> 2.4%
+              </span>
+            </div>
+          </div>
+          <div class="glass rounded-2xl border-l-4 border-l-orange-500 p-5">
+            <p class="mb-1 text-xs font-medium tracking-wider text-slate-500 uppercase">
+              Total Debt
+            </p>
+            <div class="flex items-end justify-between">
+              <h3 class="text-2xl font-bold tracking-tight">-$12,400.00</h3>
+              <span
+                class="mb-1 flex items-center rounded-full bg-orange-500/10 px-2 py-0.5 text-xs font-bold text-orange-500"
+              >
+                <span class="material-symbols-outlined mr-0.5 text-xs">trending_down</span> 0.5%
+              </span>
+            </div>
+          </div>
+          <div class="glass rounded-2xl border-l-4 border-l-blue-400 p-5">
+            <p class="mb-1 text-xs font-medium tracking-wider text-slate-500 uppercase">
+              Net Worth
+            </p>
+            <div class="flex items-end justify-between">
+              <h3 class="text-2xl font-bold tracking-tight">$112,100.00</h3>
+              <span
+                class="mb-1 flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500"
+              >
+                <span class="material-symbols-outlined mr-0.5 text-xs">trending_up</span> 3.1%
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="mb-4 flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <div class="flex items-center gap-2 self-start">
+            <button
+              class="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90"
+            >
+              <span class="material-symbols-outlined text-lg">add</span>
+              Add New Account
+            </button>
+            <div class="mx-2 hidden h-8 w-[1px] bg-white/10 sm:block"></div>
+            <div class="glass flex items-center rounded-lg p-1">
+              <button class="p-1.5 text-slate-500 hover:text-slate-300">
+                <span class="material-symbols-outlined text-sm">visibility_off</span>
+              </button>
+              <button class="p-1.5 text-slate-500 hover:text-rose-500">
+                <span class="material-symbols-outlined text-sm">delete</span>
+              </button>
+            </div>
+            <span class="ml-2 text-xs font-medium text-slate-500">2 selected</span>
+          </div>
+          <div class="glass flex items-center gap-1 self-end rounded-lg p-1">
+            <button
+              class="px-3 py-1.5 text-xs font-medium text-slate-400 transition-colors hover:text-white"
+            >
+              All
+            </button>
+            <button
+              class="rounded-md bg-white/5 px-3 py-1.5 text-xs font-medium text-primary shadow-sm"
+            >
+              Active
+            </button>
+            <button
+              class="px-3 py-1.5 text-xs font-medium text-slate-400 transition-colors hover:text-white"
+            >
+              Hidden
+            </button>
+          </div>
+        </div>
+        <div class="glass mb-8 overflow-hidden rounded-2xl border border-white/5">
+          <div class="custom-scrollbar overflow-x-auto">
+            <table class="w-full border-collapse text-left">
+              <thead>
+                <tr class="border-b border-white/5 bg-white/[0.02]">
+                  <th class="w-10 px-6 py-4">
+                    <input
+                      class="rounded border-white/10 bg-white/5 text-primary focus:ring-primary focus:ring-offset-0"
+                      type="checkbox"
+                    />
+                  </th>
+                  <th class="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <button class="flex items-center gap-1 transition-colors hover:text-slate-300">
+                      Account Name
+                      <span class="material-symbols-outlined text-xs">unfold_more</span>
+                    </button>
+                  </th>
+                  <th class="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    Type
+                  </th>
+                  <th class="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <button class="flex items-center gap-1 transition-colors hover:text-slate-300">
+                      Balance
+                      <span class="material-symbols-outlined text-xs">unfold_more</span>
+                    </button>
+                  </th>
+                  <th class="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    Status
+                  </th>
+                  <th class="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    Last Synced
+                  </th>
+                  <th
+                    class="w-16 px-6 py-4 text-right text-xs font-bold tracking-wider text-slate-500 uppercase"
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/5">
+                <tr class="table-row-hover transition-colors">
+                  <td class="px-6 py-4">
+                    <input
+                      checked=""
+                      class="rounded border-white/10 bg-white/5 text-primary focus:ring-primary focus:ring-offset-0"
+                      type="checkbox"
+                    />
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5"
+                      >
+                        <img
+                          alt="Chase"
+                          class="h-5 w-5 object-contain brightness-200 grayscale"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoVu5dHflmPE5Z3PuNV7Ljbg4LG8X_Fgkfv-Q193WWWO1HU2OnVV9QqBHJT4RczvRBwLcTzh9B3AmzHgVzIMOBlpsVm5k6YLrobOasd-C4ZB1KpA7rmgJzR60tqvJ_v_Xeclygm7Rs47azFhfU7Bm345yxl1b8PgRI8OZSolKDbBuz_j5jRrC2nZyrx8brgf5Nb6YKs6Am7xgtC4gJrdy52Qrco0rm1T8Jx64WPLHMFGr8SL8rDGI2Xy_xPtPRkPK4g0_vlGdGad2I"
+                        />
+                      </div>
+                      <div>
+                        <div class="text-sm font-semibold">Chase Sapphire Preferred</div>
+                        <div class="text-[10px] tracking-wider text-slate-500">...8842</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="rounded-md border border-white/5 bg-white/5 px-2 py-1 text-[10px] font-bold text-slate-400"
+                      >CHECKING</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="text-sm font-bold">$42,850.12</div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500">
+                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                      LIVE
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-xs text-slate-500">2 mins ago</td>
+                  <td class="px-6 py-4 text-right">
+                    <div class="group relative inline-block">
+                      <button
+                        class="rounded-md p-1 text-slate-500 transition-colors hover:bg-white/10"
+                      >
+                        <span class="material-symbols-outlined text-lg">more_vert</span>
+                      </button>
+                      <div
+                        class="dropdown-menu glass absolute right-0 z-10 mt-1 w-32 overflow-hidden rounded-lg border border-white/10 py-1 shadow-xl"
+                      >
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium hover:bg-white/5"
+                        >
+                          <span class="material-symbols-outlined text-base">edit</span> Edit
+                        </button>
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium hover:bg-white/5"
+                        >
+                          <span class="material-symbols-outlined text-base">visibility_off</span>
+                          Hide
+                        </button>
+                        <div class="my-1 h-[1px] bg-white/5"></div>
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium text-rose-500 hover:bg-rose-500/10"
+                        >
+                          <span class="material-symbols-outlined text-base">delete</span> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="table-row-hover transition-colors">
+                  <td class="px-6 py-4">
+                    <input
+                      checked=""
+                      class="rounded border-white/10 bg-white/5 text-primary focus:ring-primary focus:ring-offset-0"
+                      type="checkbox"
+                    />
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5"
+                      >
+                        <img
+                          alt="Vanguard"
+                          class="h-5 w-5 object-contain brightness-200 grayscale"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuB04QUQk0lW6W6Q5oObubpqyNAT4851u3KBrGi6oyd6UycWjdjwLPyQ14IW8xJniragXVckcj5lrLE4qFYpwxyJK2T6QcIJHeYr_jKDglADrCs-ewH1au-tQwa4YoCU44YvAq0U-fFF1dh55hQc12Mb8Xc1dCxw1dlWh7lqpGkiJIco-fPlfQ8I6rTVrfCXbQaNh_Lh3dZQdRhIQH9lucqjwjVu1WhvF_QdhcznfTZzhkF-UxHBX6Vrp3O-buBY1oHDR2DpojhQk_iH"
+                        />
+                      </div>
+                      <div>
+                        <div class="text-sm font-semibold">Vanguard Brokerage</div>
+                        <div class="text-[10px] tracking-wider text-slate-500">...1029</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="rounded-md border border-white/5 bg-white/5 px-2 py-1 text-[10px] font-bold text-slate-400"
+                      >INVESTMENT</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="text-sm font-bold">$81,649.88</div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="flex items-center gap-1.5 text-[10px] font-bold text-primary">
+                      <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                      ONLINE
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-xs text-slate-500">1 hour ago</td>
+                  <td class="px-6 py-4 text-right">
+                    <div class="group relative inline-block">
+                      <button
+                        class="rounded-md p-1 text-slate-500 transition-colors hover:bg-white/10"
+                      >
+                        <span class="material-symbols-outlined text-lg">more_vert</span>
+                      </button>
+                      <div
+                        class="dropdown-menu glass absolute right-0 z-10 mt-1 w-32 overflow-hidden rounded-lg border border-white/10 py-1 shadow-xl"
+                      >
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium hover:bg-white/5"
+                        >
+                          <span class="material-symbols-outlined text-base">edit</span> Edit
+                        </button>
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium hover:bg-white/5"
+                        >
+                          <span class="material-symbols-outlined text-base">visibility_off</span>
+                          Hide
+                        </button>
+                        <div class="my-1 h-[1px] bg-white/5"></div>
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium text-rose-500 hover:bg-rose-500/10"
+                        >
+                          <span class="material-symbols-outlined text-base">delete</span> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="table-row-hover transition-colors">
+                  <td class="px-6 py-4">
+                    <input
+                      class="rounded border-white/10 bg-white/5 text-primary focus:ring-primary focus:ring-offset-0"
+                      type="checkbox"
+                    />
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5"
+                      >
+                        <img
+                          alt="Amex"
+                          class="h-5 w-5 object-contain brightness-200 grayscale"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrAasS3mG7-oaEyPJuruJNQGwCfs_n9RRNezI7FG1IyVY1KBbdUKEcxaihU-6ifHXRYMJM73ljIq9xiA_kuraiC8ynB-0AJYduRes43FSPLBRre5FtV7nuDNTIyS4ZSBsiyTBQSnfzvYrk93LJJDIbQwpqvuw8FunhzCp71weRa8n4gxy5kVTj7aMcOUwx7bxFy3UfbsHxr20cpwtA6N0PXlBJin6TlKC38deu-hlxvmOQLzA-XgpG6Sd5CiLU4UoBPEiUTytCyqt8"
+                        />
+                      </div>
+                      <div>
+                        <div class="text-sm font-semibold">Amex Gold Card</div>
+                        <div class="text-[10px] tracking-wider text-slate-500">...4007</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="rounded-md border border-white/5 bg-white/5 px-2 py-1 text-[10px] font-bold text-slate-400"
+                      >CREDIT CARD</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="text-sm font-bold text-rose-400">-$2,140.50</div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="flex items-center gap-1.5 text-[10px] font-bold text-orange-500">
+                      <span class="h-1.5 w-1.5 rounded-full bg-orange-500"></span>
+                      DUE 15D
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-xs text-slate-500">5 mins ago</td>
+                  <td class="px-6 py-4 text-right">
+                    <div class="group relative inline-block">
+                      <button
+                        class="rounded-md p-1 text-slate-500 transition-colors hover:bg-white/10"
+                      >
+                        <span class="material-symbols-outlined text-lg">more_vert</span>
+                      </button>
+                      <div
+                        class="dropdown-menu glass absolute right-0 z-10 mt-1 w-32 overflow-hidden rounded-lg border border-white/10 py-1 shadow-xl"
+                      >
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium hover:bg-white/5"
+                        >
+                          <span class="material-symbols-outlined text-base">edit</span> Edit
+                        </button>
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium hover:bg-white/5"
+                        >
+                          <span class="material-symbols-outlined text-base">visibility_off</span>
+                          Hide
+                        </button>
+                        <div class="my-1 h-[1px] bg-white/5"></div>
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium text-rose-500 hover:bg-rose-500/10"
+                        >
+                          <span class="material-symbols-outlined text-base">delete</span> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="table-row-hover transition-colors">
+                  <td class="px-6 py-4">
+                    <input
+                      class="rounded border-white/10 bg-white/5 text-primary focus:ring-primary focus:ring-offset-0"
+                      type="checkbox"
+                    />
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5"
+                      >
+                        <img
+                          alt="Ally"
+                          class="h-5 w-5 object-contain brightness-200 grayscale"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpN3CJtZaYKqVkpEUvd8EX5k9FrKeJXav8nlxIAaFHqhliRnlnDjZm2f4eC7sjp1HbIbPJvJ8RNg9TCLwjpT45rMq2-RbNWNIM1CG3NQMvQnD5ficbFaQqAM8gu73LaREHm0nywCmYz6KRNMUa3KSkwQjGI2T7C7UHxYCmwOUhzIG9iEJjlMw2BOUvGwXCPT8hWwzn3A0Yy3LmzY7JH4eDVFb2MF9d2w5OLZPiYyiwmOYvOPNvZnkLtoM0vQnyLhAolp_FW1e7k5nS"
+                        />
+                      </div>
+                      <div>
+                        <div class="text-sm font-semibold">Ally Savings</div>
+                        <div class="text-[10px] tracking-wider text-slate-500">...5541</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="rounded-md border border-white/5 bg-white/5 px-2 py-1 text-[10px] font-bold text-slate-400"
+                      >SAVINGS</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="text-sm font-bold">$15,200.00</div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500">
+                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                      LIVE
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-xs text-slate-500">12 mins ago</td>
+                  <td class="px-6 py-4 text-right">
+                    <div class="group relative inline-block">
+                      <button
+                        class="rounded-md p-1 text-slate-500 transition-colors hover:bg-white/10"
+                      >
+                        <span class="material-symbols-outlined text-lg">more_vert</span>
+                      </button>
+                      <div
+                        class="dropdown-menu glass absolute right-0 z-10 mt-1 w-32 overflow-hidden rounded-lg border border-white/10 py-1 shadow-xl"
+                      >
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium hover:bg-white/5"
+                        >
+                          <span class="material-symbols-outlined text-base">edit</span> Edit
+                        </button>
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium hover:bg-white/5"
+                        >
+                          <span class="material-symbols-outlined text-base">visibility_off</span>
+                          Hide
+                        </button>
+                        <div class="my-1 h-[1px] bg-white/5"></div>
+                        <button
+                          class="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium text-rose-500 hover:bg-rose-500/10"
+                        >
+                          <span class="material-symbols-outlined text-base">delete</span> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="flex items-center justify-between border-t border-white/5 bg-white/[0.02] px-6 py-4"
+          >
+            <p class="text-[10px] font-medium text-slate-500">Showing 4 of 12 linked accounts</p>
+            <div class="flex items-center gap-2">
+              <button
+                class="rounded p-1 text-slate-400 hover:bg-white/5 disabled:opacity-30"
+                disabled=""
+              >
+                <span class="material-symbols-outlined text-lg">chevron_left</span>
+              </button>
+              <button class="rounded p-1 text-slate-400 hover:bg-white/5">
+                <span class="material-symbols-outlined text-lg">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="glass mt-8 rounded-2xl p-6">
+          <div class="mb-6 flex items-center justify-between">
+            <h3 class="text-sm font-bold tracking-wider text-slate-500 uppercase">
+              Synchronization Status
+            </h3>
+            <button class="text-[10px] font-bold text-primary hover:underline">
+              Full Log View
+            </button>
+          </div>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between rounded-xl bg-white/[0.02] p-3">
+              <div class="flex items-center gap-3">
+                <div class="flex h-6 w-6 items-center justify-center rounded bg-emerald-500/10">
+                  <span class="material-symbols-outlined text-[16px] text-emerald-500"
+                    >check_circle</span
+                  >
+                </div>
+                <p class="text-xs font-semibold">Automated sweep successful for 4 accounts</p>
+              </div>
+              <p class="text-[10px] text-slate-500">10:42 AM Today</p>
+            </div>
+            <div class="flex items-center justify-between rounded-xl bg-white/[0.02] p-3">
+              <div class="flex items-center gap-3">
+                <div class="flex h-6 w-6 items-center justify-center rounded bg-orange-500/10">
+                  <span class="material-symbols-outlined text-[16px] text-orange-500">warning</span>
+                </div>
+                <p class="text-xs font-semibold">Robinhood connection requires re-authentication</p>
+              </div>
+              <p class="text-[10px] text-slate-500">Yesterday, 11:20 PM</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -398,10 +398,10 @@
     sqlite-wasm-kysely "0.3.0"
     uuid "^13.0.0"
 
-"@internationalized/date@^3.10.0":
-  version "3.11.0"
-  resolved "https://registry.npmjs.org/@internationalized/date/-/date-3.11.0.tgz"
-  integrity sha512-BOx5huLAWhicM9/ZFs84CzP+V3gBW6vlpM02yzsdYC7TGlZJX1OJiEEHcSayF00Z+3jLlm4w79amvSt6RqKN3Q==
+"@internationalized/date@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@internationalized/date/-/date-3.12.0.tgz#cdcd12adf36e1ccb05ec7b964f4857e7ec62137d"
+  integrity sha512-/PyIMzK29jtXaGU23qTvNZxvBXRtKbNnGDFD+PY6CZw/Y8Ex8pFUzkuCJCG9aOqmShjqhS9mPqP6Dk5onQY8rQ==
   dependencies:
     "@swc/helpers" "^0.5.0"
 
@@ -492,10 +492,10 @@
   resolved "https://registry.npmjs.org/@lix-js/server-protocol-schema/-/server-protocol-schema-0.1.1.tgz"
   integrity sha512-jBeALB6prAbtr5q4vTuxnRZZv1M2rKe8iNqRQhFJ4Tv7150unEa0vKyz0hs8Gl3fUGsWaNJBh3J8++fpbrpRBQ==
 
-"@lucide/svelte@^0.577.0":
-  version "0.577.0"
-  resolved "https://registry.npmjs.org/@lucide/svelte/-/svelte-0.577.0.tgz"
-  integrity sha512-0P6mkySd2MapIEgq08tADPmcN4DHndC/02PWwaLkOerXlx5Sv9aT4BxyXLIY+eccr0g/nEyCYiJesqS61YdBZQ==
+"@lucide/svelte@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@lucide/svelte/-/svelte-1.6.0.tgz#df8bdb7044400ae6b9a6e674e5cbaa1b2a0d3e41"
+  integrity sha512-5pH6MHQTVy/IwO8YNN2Usj47p9D/dM/srAAO9Hr2r33/yEoh6y7R2N7eCE4WtiybXOQJO14KrtVK6PGUhVHJJw==
 
 "@mdx-js/react@^3.0.0":
   version "3.1.1"
@@ -996,6 +996,11 @@
     "@tailwindcss/oxide" "4.2.0"
     tailwindcss "4.2.0"
 
+"@tanstack/table-core@^8.21.3":
+  version "8.21.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.21.3.tgz#2977727d8fc8dfa079112d9f4d4c019110f1732c"
+  integrity sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==
+
 "@testing-library/jest-dom@^6.6.3":
   version "6.9.1"
   resolved "https://registry.npmjs.org/@testing-library/jest-dom/-/jest-dom-6.9.1.tgz"
@@ -1390,10 +1395,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
-bits-ui@^2.14.4:
-  version "2.16.1"
-  resolved "https://registry.npmjs.org/bits-ui/-/bits-ui-2.16.1.tgz"
-  integrity sha512-/TQ975f98yfjbNaUtIRZZG761f3ghABUkuWImUPf0oP4+jL8TSKQqfM+hfYTRtvS5TTlLAEa7vcyKVBTWUItBw==
+bits-ui@^2.16.3:
+  version "2.16.3"
+  resolved "https://registry.yarnpkg.com/bits-ui/-/bits-ui-2.16.3.tgz#4df8c04073aec0ce81d75105567a25513e42ecfc"
+  integrity sha512-5hJ5dEhf5yPzkRFcxzgQHScGodeo0gK0MUUXrdLlRHWaBOBGZiacWLG96j/wwFatKwZvouw7q+sn14i0fx3RIg==
   dependencies:
     "@floating-ui/core" "^1.7.1"
     "@floating-ui/dom" "^1.7.1"

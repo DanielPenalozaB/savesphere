@@ -67,11 +67,11 @@
           },
           {
             key: 'Expenses',
-            color: 'var(--color-violet-400)'
+            color: '#1418eb'
           },
           {
             key: 'Savings',
-            color: 'var(--color-purple-500)'
+            color: '#a1a3f7'
           }
         ]}
         seriesLayout="group"
