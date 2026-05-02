@@ -160,7 +160,7 @@
                       </button>
                     {:else}
                       <button
-                        class="rounded-lg bg-white/5 px-3 py-1.5 text-xs text-slate-300 transition-all hover:bg-white/10 whitespace-nowrap"
+                        class="rounded-lg bg-white/5 px-3 py-1.5 text-xs whitespace-nowrap text-slate-300 transition-all hover:bg-white/10"
                       >
                         SET AS DEFAULT
                       </button>
@@ -250,7 +250,9 @@
               <Calculator class="size-5 text-indigo-500" />
               Exchange Calculator
             </h2>
-            <div class="bg-[#6366f10d] backdrop-blur-sm border border-white/10 rounded-3xl p-8 shadow-2xl shadow-indigo-500/5">
+            <div
+              class="rounded-3xl border border-white/10 bg-[#6366f10d] p-8 shadow-2xl shadow-indigo-500/5 backdrop-blur-sm"
+            >
               <div class="space-y-6">
                 <!-- From Section -->
                 <div class="space-y-2">
@@ -357,27 +359,6 @@
                 <p class="text-center text-xs text-slate-500">
                   Last updated 2 minutes ago. Rates are indicative.
                 </p>
-              </div>
-            </div>
-
-            <!-- Monthly Limit Indicator -->
-            <div
-              class="mt-6 flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-100/50 p-4 backdrop-blur-sm"
-            >
-              <div class="flex size-10 items-center justify-center rounded-full bg-indigo-500/10">
-                <Info class="size-5 text-indigo-500" />
-              </div>
-              <div class="flex-1">
-                <div class="mb-1 flex justify-between">
-                  <span class="text-xs font-bold uppercase">Monthly Limit</span>
-                  <span class="text-xs text-slate-400">85% Used</span>
-                </div>
-                <div class="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                  <div
-                    class="h-full w-[85%] rounded-full bg-indigo-500"
-                    style="box-shadow: 0 0 8px rgba(99, 102, 241, 0.5)"
-                  ></div>
-                </div>
               </div>
             </div>
           </div>
