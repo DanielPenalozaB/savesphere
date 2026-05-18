@@ -6,7 +6,9 @@ declare global {
       message: string;
       code?: string;
     }
-    // interface Locals {}
+    interface Locals {
+      token?: string;
+    }
     interface PageData {
       /** Will be populated by +page.ts load functions */
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

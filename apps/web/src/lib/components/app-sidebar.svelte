@@ -25,6 +25,7 @@
   import NavGroup from './layout/nav-group.svelte';
   import NavSecondary from './navigation/nav-secondary.svelte';
   import NavUser from './navigation/nav-user.svelte';
+  import { authState } from '$lib/auth.svelte.js';
 
   let { ref = $bindable(null), ...restProps }: ComponentProps<typeof Sidebar.Root> = $props();
 
@@ -133,11 +134,7 @@
         icon: SendIcon
       }
     ],
-    user: {
-      name: 'Daniel Peñaloza',
-      email: 'dpenaloza@savesphere.com',
-      avatar: 'https://doodleipsum.com/1200?i=aaae4ac68a7288537c3192c776e5afab'
-    }
+    user: authState.user
   });
 </script>
 

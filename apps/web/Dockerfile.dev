@@ -1,0 +1,18 @@
+# Dev stage: Vite dev server with HMR
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package.json yarn.lock turbo.json ./
+COPY apps/web/package.json ./apps/web/
+
+RUN yarn install --frozen-lockfile
+
+COPY apps/web ./apps/web
+COPY packages ./packages
+
+WORKDIR /app/apps/web
+
+EXPOSE 5173
+
+CMD ["yarn", "dev", "--host", "0.0.0.0"]

@@ -15,21 +15,26 @@
   import { m } from '$lib/paraglide/messages.js';
   import { setLocale } from '$lib/paraglide/runtime';
   import { themeState } from '$lib/theme.svelte';
+  import { authState } from '$lib/auth.svelte.js';
 
   let {
     user
   }: {
     user: {
-      name: string;
+      fullName: string;
       email: string;
-      avatar: string;
-    };
+      avatar?: string;
+    } | null;
   } = $props();
 
   const sidebar = useSidebar();
 
+  const displayName = $derived(user?.fullName || 'User');
+  const displayEmail = $derived(user?.email || '');
+  const avatarUrl = $derived(user?.avatar || '');
+
   const initials = $derived(
-    user.name
+    displayName
       .split(' ')
       .map((word) => word[0])
       .join('')
@@ -47,12 +52,12 @@
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar.Root class="size-8 rounded-lg">
-              <Avatar.Image src={user.avatar} alt={user.name} />
+              <Avatar.Image src={avatarUrl} alt={displayName} />
               <Avatar.Fallback class="rounded-lg">{initials}</Avatar.Fallback>
             </Avatar.Root>
             <div class="grid flex-1 text-start text-sm leading-tight">
-              <span class="truncate font-medium">{user.name}</span>
-              <span class="truncate text-xs">{user.email}</span>
+              <span class="truncate font-medium">{displayName}</span>
+              <span class="truncate text-xs">{displayEmail}</span>
             </div>
             <ChevronsUpDownIcon class="ms-auto size-4" />
           </Sidebar.MenuButton>
@@ -67,12 +72,12 @@
         <DropdownMenu.Label class="p-0 font-normal">
           <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
             <Avatar.Root class="size-8 rounded-lg">
-              <Avatar.Image src={user.avatar} alt={user.name} class="h-8" />
+              <Avatar.Image src={avatarUrl} alt={displayName} class="h-8" />
               <Avatar.Fallback class="rounded-lg">{initials}</Avatar.Fallback>
             </Avatar.Root>
             <div class="grid flex-1 text-start text-sm leading-tight">
-              <span class="truncate font-medium">{user.name}</span>
-              <span class="truncate text-xs">{user.email}</span>
+              <span class="truncate font-medium">{displayName}</span>
+              <span class="truncate text-xs">{displayEmail}</span>
             </div>
           </div>
         </DropdownMenu.Label>
@@ -129,7 +134,7 @@
           </DropdownMenu.Item>
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
-        <DropdownMenu.Item>
+        <DropdownMenu.Item onclick={() => authState.logout()}>
           <LogOutIcon />
           {m.sidebar_user_logout()}
         </DropdownMenu.Item>

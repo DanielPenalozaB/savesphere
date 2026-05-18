@@ -1,0 +1,76 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: savesphere-db-dev
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: savesphere
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrations:
+    image: migrate/migrate
+    container_name: savesphere-migrations-dev
+    volumes:
+      - ./apps/api/migrations:/migrations
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - -path=/migrations/
+      - -database=postgres://postgres:postgres@db:5432/savesphere?sslmode=disable
+      - up
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile.dev
+    container_name: savesphere-api-dev
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/savesphere?sslmode=disable
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      OAUTH_REDIRECT_URL: ${OAUTH_REDIRECT_URL:-http://localhost:5173/auth/callback}
+    ports:
+      - "3001:3000"
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+    volumes:
+      - ./apps/api:/app
+      - go_mod_cache:/go/pkg/mod
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
+    container_name: savesphere-web-dev
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: development
+      API_PROXY_URL: http://api:3000
+    depends_on:
+      - api
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - web_node_modules:/app/apps/web/node_modules
+    restart: unless-stopped
+
+volumes:
+  postgres_dev_data:
+  go_mod_cache:
+  node_modules:
+  web_node_modules:

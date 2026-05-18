@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"savesphere-api/internal/database"
 	"savesphere-api/internal/handlers"
@@ -31,7 +32,29 @@ func main() {
 	// Users
 	userRepo := repository.NewUserRepository(pool)
 	userService := services.NewUserService(userRepo, jwtService)
-	authHandler := handlers.NewAuthHandler(userService, jwtService)
+
+	// Password Reset
+	resetRepo := repository.NewPasswordResetRepository(pool)
+	emailService := services.NewEmailService()
+	passwordResetService := services.NewPasswordResetService(userRepo, resetRepo, emailService)
+
+	// Sessions
+	sessionRepo := repository.NewSessionRepository(pool)
+	sessionService := services.NewSessionService(userRepo, sessionRepo, jwtService)
+
+	// Email Verification
+	verificationRepo := repository.NewEmailVerificationRepository(pool)
+	emailVerificationService := services.NewEmailVerificationService(verificationRepo, userRepo, emailService)
+
+	// Audit
+	auditRepo := repository.NewLoginAuditRepository(pool)
+	auditService := services.NewAuditService(auditRepo)
+
+	authHandler := handlers.NewAuthHandler(userService, jwtService, passwordResetService, emailVerificationService, sessionService, auditService)
+
+	// OAuth
+	oauthService := services.NewOAuthService(userRepo)
+	oauthHandler := handlers.NewOAuthHandler(oauthService, jwtService, sessionService, auditService)
 
 	// Wallets
 	walletRepo := repository.NewWalletRepository(pool)
@@ -52,7 +75,12 @@ func main() {
 	// Default CORS and Logger middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowCredentials: true,
+	}))
 
 	// Public Health check
 	e.GET("/health", func(c echo.Context) error {
@@ -62,10 +90,38 @@ func main() {
 		})
 	})
 
-	// Auth routes
+	// Auth routes with rate limiting
 	auth := e.Group("/auth")
+	auth.Use(middleware.RateLimiterWithConfig(middleware.RateLimiterConfig{
+		Skipper: middleware.DefaultSkipper,
+		Store: middleware.NewRateLimiterMemoryStoreWithConfig(
+			middleware.RateLimiterMemoryStoreConfig{Rate: 10, Burst: 15, ExpiresIn: 1 * time.Minute},
+		),
+		IdentifierExtractor: func(ctx echo.Context) (string, error) {
+			id := ctx.RealIP()
+			return id, nil
+		},
+		ErrorHandler: func(context echo.Context, err error) error {
+			return context.JSON(http.StatusTooManyRequests, map[string]string{
+				"message": "Too many requests. Please try again later.",
+			})
+		},
+		DenyHandler: func(context echo.Context, identifier string, err error) error {
+			return context.JSON(http.StatusTooManyRequests, map[string]string{
+				"message": "Too many requests. Please try again later.",
+			})
+		},
+	}))
 	auth.POST("/register", authHandler.Register)
 	auth.POST("/login", authHandler.Login)
+	auth.POST("/forgot-password", authHandler.ForgotPassword)
+	auth.POST("/reset-password", authHandler.ResetPassword)
+	auth.GET("/verify-email", authHandler.VerifyEmail)
+	auth.POST("/refresh", authHandler.Refresh)
+	auth.POST("/logout", authHandler.Logout)
+	auth.GET("/me", authHandler.Me)
+	auth.POST("/google", oauthHandler.BeginGoogleAuth)
+	auth.POST("/google/callback", oauthHandler.GoogleCallback)
 
 	// API routes (Protected)
 	api := e.Group("/api")

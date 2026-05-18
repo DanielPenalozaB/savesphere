@@ -20,17 +20,26 @@ const UserIDKey contextKey = "user_id"
 func AuthMiddleware(jwtService services.JWTService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			authHeader := c.Request().Header.Get("Authorization")
-			if authHeader == "" {
-				return response.Error(c, http.StatusUnauthorized, "Missing authorization header", nil)
+			var tokenString string
+
+			// Try cookie first
+			cookie, err := c.Cookie("access_token")
+			if err == nil && cookie.Value != "" {
+				tokenString = cookie.Value
+			} else {
+				// Fall back to Authorization header
+				authHeader := c.Request().Header.Get("Authorization")
+				if authHeader == "" {
+					return response.Error(c, http.StatusUnauthorized, "Missing authorization header", nil)
+				}
+
+				headerParts := strings.Split(authHeader, " ")
+				if len(headerParts) != 2 || headerParts[0] != "Bearer" {
+					return response.Error(c, http.StatusUnauthorized, "Invalid authorization header format", nil)
+				}
+				tokenString = headerParts[1]
 			}
 
-			headerParts := strings.Split(authHeader, " ")
-			if len(headerParts) != 2 || headerParts[0] != "Bearer" {
-				return response.Error(c, http.StatusUnauthorized, "Invalid authorization header format", nil)
-			}
-
-			tokenString := headerParts[1]
 			token, err := jwtService.ValidateToken(tokenString)
 
 			if err != nil || !token.Valid {

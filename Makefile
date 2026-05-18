@@ -1,4 +1,4 @@
-.PHONY: dev build lint test clean docker-up docker-down
+.PHONY: dev build lint test clean docker-up docker-down dev-up dev-down
 
 # Orchestration via Turbo
 dev:
@@ -13,12 +13,22 @@ lint:
 test:
 	yarn turbo test
 
-# Docker
+# Docker — Database only (legacy, backwards compatible)
 docker-up:
 	docker compose up -d
 
 docker-down:
 	docker compose down
+
+# Docker — Full development stack (DB + API + Web)
+dev-up:
+	docker compose -f docker-compose.dev.yml up -d --build
+
+dev-down:
+	docker compose -f docker-compose.dev.yml down
+
+dev-logs:
+	docker compose -f docker-compose.dev.yml logs -f
 
 # Specific apps
 api-dev:
@@ -28,12 +38,6 @@ web-dev:
 	yarn turbo dev --filter=web
 
 # Database setup
-db-up:
-	docker compose up -d
-
-db-down:
-	docker compose down
-
 migrate-up:
 	docker compose run --rm migrations
 

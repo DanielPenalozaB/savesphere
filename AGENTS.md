@@ -24,7 +24,8 @@ The project uses PostgreSQL for persistence and Google Gemini for AI financial a
 │   └── web/              # SvelteKit frontend (Svelte 5, Tailwind v4)
 ├── packages/
 │   └── shared/           # Shared OpenAPI spec (openapi.yaml)
-├── docker-compose.yml    # Postgres + migrate services
+├── docker-compose.yml      # Postgres + migrate services
+├── docker-compose.dev.yml  # Full dev stack (DB + API + Web)
 ├── turbo.json            # Turbo task graph
 └── package.json          # Workspace root (Yarn 1.22.22)
 ```
@@ -122,7 +123,29 @@ yarn web:check        # svelte-check + sync
 yarn web:format       # Prettier write
 ```
 
-### Database (Docker)
+### Full Stack — Docker Development (Recommended for Quick Start)
+
+```bash
+# Start Postgres + API + Web with one command
+make dev-up
+
+# View logs
+make dev-logs
+
+# Tear down
+make dev-down
+```
+
+| Service | Host URL | Purpose |
+|---------|----------|---------|
+| Web (Vite dev) | http://localhost:5173 | Frontend with HMR |
+| API (Go) | http://localhost:3001 | Backend (direct access) |
+| API (via Web proxy) | http://localhost:5173/api/* | Proxied through Vite |
+| Postgres | localhost:5432 | Database |
+
+The web container proxies `/api/*` and `/auth/*` requests to the API container automatically.
+
+### Database Only (Docker)
 
 ```bash
 # Start Postgres + run migrations
@@ -304,9 +327,15 @@ Run `make migrate-up` after `make docker-up` to initialize the schema.
 Both applications are containerized:
 
 - **API Dockerfile:** Multi-stage build (`golang:1.23-alpine` → `alpine:3.20`). Exposes port `3000`.
+- **API Dockerfile.dev:** Go dev container (`golang:1.23-alpine`) with live-reload via `go run`. Exposes port `3000`.
 - **Web Dockerfile:** Multi-stage Node build (`node:20-alpine` builder + runner). Uses the Node adapter output in `build/`. Exposes port `3000`.
+- **Web Dockerfile.dev:** Node dev container (`node:20-alpine`) running Vite dev server with HMR. Exposes port `5173`.
 
-Docker Compose (`docker-compose.yml`) is intended for local development only (Postgres + migrations). Production orchestration is not yet defined in this repository.
+Docker Compose files:
+- `docker-compose.yml` — Database + migrations only.
+- `docker-compose.dev.yml` — Full development stack (Postgres + migrations + Go API + Vite web dev server).
+
+Production orchestration is not yet defined in this repository.
 
 ---
 
@@ -322,7 +351,7 @@ Docker Compose (`docker-compose.yml`) is intended for local development only (Po
 
 ## Known Gaps & TODOs
 
-- Frontend API integration is incomplete (`API_BASE = ''`, demo data in loads).
+- Frontend API integration is now wired via Vite proxy in dev mode (`API_BASE = ''`). Both Docker dev and local dev routes `/api/*` and `/auth/*` to the backend automatically.
 - No Go API tests exist yet.
 - OpenAPI contract generation for frontend types is stubbed in the Makefile (`generate` target) but not implemented.
 - The `packages/shared` directory currently only contains `openapi.yaml` and is not consumed as a published package.

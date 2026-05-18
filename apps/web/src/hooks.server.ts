@@ -1,18 +1,20 @@
 import type { Handle } from '@sveltejs/kit';
-import { paraglideMiddleware } from '$lib/paraglide/server';
 
-const handleParaglide: Handle = ({ event, resolve }) =>
-  paraglideMiddleware(event.request, ({ request, locale }) => {
-    event.request = request;
+export const handle: Handle = async ({ event, resolve }) => {
+	// Read auth token from cookie for SSR context
+	const token = event.cookies.get('access_token');
 
-    return resolve(event, {
-      transformPageChunk: ({ html }) => html.replace('lang="en"', `lang="${locale}"`)
-    });
-  });
+	if (token) {
+		try {
+			// We can't verify the JWT here without the secret,
+			// but we can attach the token for downstream use if needed.
+			// In a full SSR setup, you'd validate against the backend
+			// or share the JWT secret with the frontend server.
+			event.locals.token = token;
+		} catch {
+			// Invalid token
+		}
+	}
 
-export const handle: Handle = handleParaglide;
-
-export const handleError = ({ error, event }) => {
-  // eslint-disable-next-line no-console
-  console.error('Server error:', error, 'at', event.url.pathname);
+	return resolve(event);
 };

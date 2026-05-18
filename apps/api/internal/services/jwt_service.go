@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 type JWTService interface {
 	GenerateToken(UserID uuid.UUID) (string, error)
 	ValidateToken(tokenString string) (*jwt.Token, error)
+	ExtractUserID(tokenString string) (uuid.UUID, error)
 }
 
 type jwtService struct {
@@ -27,7 +29,12 @@ type authCustomClaims struct {
 func NewJWTService() JWTService {
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		secret = "savesphere-secret-key-change-me" // Should be in .env
+		fmt.Println("FATAL: JWT_SECRET environment variable is required")
+		os.Exit(1)
+	}
+	if len(secret) < 32 {
+		fmt.Println("FATAL: JWT_SECRET must be at least 32 characters")
+		os.Exit(1)
 	}
 	return &jwtService{
 		secretKey: secret,
@@ -39,7 +46,7 @@ func (s *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
 	claims := &authCustomClaims{
 		userID,
 		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
 			Issuer:    s.issuer,
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
@@ -51,6 +58,30 @@ func (s *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
 		return "", err
 	}
 	return t, nil
+}
+
+func (s *jwtService) ExtractUserID(tokenString string) (uuid.UUID, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected signing method")
+		}
+		return []byte(s.secretKey), nil
+	}, jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Name}))
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return uuid.Nil, errors.New("invalid token claims")
+	}
+
+	userIDStr, ok := claims["user_id"].(string)
+	if !ok {
+		return uuid.Nil, errors.New("user ID not found in token")
+	}
+
+	return uuid.Parse(userIDStr)
 }
 
 func (s *jwtService) ValidateToken(tokenString string) (*jwt.Token, error) {
