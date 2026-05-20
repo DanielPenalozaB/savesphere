@@ -117,7 +117,7 @@
       <Card.Description>{m.auth_login_description()}</Card.Description>
     </Card.Header>
     <Card.Content>
-      <form onsubmit={handleSubmit}>
+      <form onsubmit={handleSubmit} aria-busy={isSubmitting || isGoogleLoading}>
         <FieldGroup>
           {#if serverError}
             <Field>
@@ -125,7 +125,7 @@
                 class="flex items-start gap-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive"
                 role="alert"
               >
-                <AlertCircleIcon class="mt-0.5 size-4 shrink-0" />
+                <AlertCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                 <span>{serverError}</span>
               </div>
             </Field>
@@ -137,7 +137,7 @@
                 class="flex items-start gap-2 rounded-md border border-green-600 bg-green-600/10 p-3 text-sm text-green-700"
                 role="status"
               >
-                <CheckCircleIcon class="mt-0.5 size-4 shrink-0" />
+                <CheckCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                 <span>{serverSuccess}</span>
               </div>
             </Field>
@@ -150,10 +150,12 @@
               type="email"
               placeholder={m.auth_email_placeholder()}
               bind:value={email}
+              autocomplete="email"
               aria-invalid={errors.email ? "true" : undefined}
+              aria-describedby={errors.email ? `email-error-${id}` : undefined}
             />
             {#if errors.email}
-              <FieldError>{errors.email}</FieldError>
+              <FieldError id="email-error-{id}">{errors.email}</FieldError>
             {/if}
           </Field>
 
@@ -174,23 +176,26 @@
                 placeholder={m.auth_password_placeholder()}
                 bind:value={password}
                 class="pe-9"
+                autocomplete="current-password"
                 aria-invalid={errors.password ? "true" : undefined}
+                aria-describedby={errors.password ? `password-error-${id}` : undefined}
               />
               <button
                 type="button"
                 onclick={() => (showPassword = !showPassword)}
                 class="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground hover:text-foreground"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? m.auth_password_hide() : m.auth_password_show()}
+                aria-pressed={showPassword}
               >
                 {#if showPassword}
-                  <EyeOffIcon class="size-4" />
+                  <EyeOffIcon class="size-4" aria-hidden="true" />
                 {:else}
-                  <EyeIcon class="size-4" />
+                  <EyeIcon class="size-4" aria-hidden="true" />
                 {/if}
               </button>
             </div>
             {#if errors.password}
-              <FieldError>{errors.password}</FieldError>
+              <FieldError id="password-error-{id}">{errors.password}</FieldError>
             {/if}
           </Field>
 
@@ -202,6 +207,7 @@
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <circle
                     class="opacity-25"
@@ -247,6 +253,7 @@
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <circle
                     class="opacity-25"
@@ -264,7 +271,7 @@
                 </svg>
                 {m.auth_loading_google()}
               {:else}
-                <svg class="mr-2 size-4" viewBox="0 0 24 24">
+                <svg class="mr-2 size-4" viewBox="0 0 24 24" aria-hidden="true">
                   <path
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1Z"
                     fill="#4285F4"

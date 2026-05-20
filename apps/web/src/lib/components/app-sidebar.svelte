@@ -1,5 +1,6 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
+  import { page } from '$app/state';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import { m } from '$lib/paraglide/messages.js';
   import { localizeHref } from '$lib/paraglide/runtime';
@@ -29,17 +30,26 @@
 
   let { ref = $bindable(null), ...restProps }: ComponentProps<typeof Sidebar.Root> = $props();
 
+  const currentPath = $derived(page.url.pathname);
+
+  function isActive(url: string): boolean {
+    const resolved = resolve(toLocalizedPath(url));
+    return currentPath === resolved;
+  }
+
   const data = $derived({
     navMain: [
       {
         title: m.sidebar_nav_dashboard(),
         url: localizeHref('/'),
-        icon: LayoutDashboard
+        icon: LayoutDashboard,
+        isActive: isActive('/')
       },
       {
         title: m.sidebar_nav_wallets(),
         url: localizeHref('/wallets'),
         icon: Wallet,
+        isActive: isActive('/wallets'),
         items: [
           {
             title: m.sidebar_nav_active_accounts(),
@@ -55,6 +65,7 @@
         title: m.sidebar_nav_transactions(),
         url: localizeHref('/transactions'),
         icon: ArrowLeftRight,
+        isActive: isActive('/transactions'),
         items: [
           {
             title: m.sidebar_nav_bills(),
@@ -75,51 +86,60 @@
       {
         title: m.sidebar_nav_financial_coach(),
         url: localizeHref('/intelligence/financial-coach'),
-        icon: BrainCircuit
+        icon: BrainCircuit,
+        isActive: isActive('/intelligence/financial-coach')
       },
       {
         title: m.sidebar_nav_temporal_reports(),
         url: localizeHref('/intelligence/temporal-reports'),
-        icon: FlagTriangleRight
+        icon: FlagTriangleRight,
+        isActive: isActive('/intelligence/temporal-reports')
       },
       {
         title: m.sidebar_nav_insights(),
         url: localizeHref('/intelligence/insights'),
-        icon: Lightbulb
+        icon: Lightbulb,
+        isActive: isActive('/intelligence/insights')
       }
     ],
     planning: [
       {
         title: m.sidebar_nav_safe_to_spend(),
         url: localizeHref('/planning/safe-to-spend'),
-        icon: BanknoteArrowDown
+        icon: BanknoteArrowDown,
+        isActive: isActive('/planning/safe-to-spend')
       },
       {
         title: m.sidebar_nav_subscriptions(),
         url: localizeHref('/planning/subscriptions'),
-        icon: CalendarSync
+        icon: CalendarSync,
+        isActive: isActive('/planning/subscriptions')
       },
       {
         title: m.sidebar_nav_simulations(),
         url: localizeHref('/planning/simulations'),
-        icon: TrendingUpDown
+        icon: TrendingUpDown,
+        isActive: isActive('/planning/simulations')
       }
     ],
     management: [
       {
         title: m.sidebar_nav_taxonomy(),
         url: localizeHref('/management/taxonomy'),
-        icon: GitFork
+        icon: GitFork,
+        isActive: isActive('/management/taxonomy')
       },
       {
         title: m.sidebar_nav_data_exports(),
         url: localizeHref('/management/data-exports'),
-        icon: HardDriveDownload
+        icon: HardDriveDownload,
+        isActive: isActive('/management/data-exports')
       },
       {
         title: m.sidebar_nav_security_privacy(),
         url: localizeHref('/management/security-privacy'),
-        icon: FingerprintPattern
+        icon: FingerprintPattern,
+        isActive: isActive('/management/security-privacy')
       }
     ],
     navSecondary: [
@@ -148,7 +168,7 @@
               <div
                 class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
               >
-                <CommandIcon class="size-4" />
+                <CommandIcon class="size-4" aria-hidden="true" />
               </div>
               <div class="grid flex-1 text-start text-sm leading-tight">
                 <span class="truncate font-medium">{m.sidebar_app_name()}</span>

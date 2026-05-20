@@ -25,7 +25,7 @@
           <Sidebar.MenuButton size="sm">
             {#snippet child({ props })}
               <a href={resolve(toPath(item.url))} {...props}>
-                <item.icon />
+                <item.icon aria-hidden="true" />
                 <span>{item.title}</span>
               </a>
             {/snippet}

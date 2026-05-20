@@ -25,7 +25,7 @@
         <div
           class="flex items-center gap-2 rounded-full bg-green-500/10 px-2.5 py-1 text-xs font-medium text-green-500 ring-1 ring-green-500/20 ring-inset"
         >
-          <TrendingUp class="size-4" />
+          <TrendingUp class="size-4" aria-hidden="true" />
           + {data.monthlyTrend}%
         </div>
         <span class="text-xs font-medium text-slate-400">from last month</span>

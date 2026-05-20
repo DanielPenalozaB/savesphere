@@ -64,11 +64,15 @@
   }
 </script>
 
-<div class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+<svelte:head>
+  <title>SaveSphere | {m.auth_reset_title()}</title>
+</svelte:head>
+
+<main id="auth-main" class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
   <div class="flex w-full max-w-sm flex-col gap-6">
     <a href="/" class="flex items-center gap-2 self-center font-medium">
       <div class="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-        <GalleryVerticalEndIcon class="size-4" />
+        <GalleryVerticalEndIcon class="size-4" aria-hidden="true" />
       </div>
       {m.sidebar_app_name()}
     </a>
@@ -79,12 +83,12 @@
         <Card.Description>{m.auth_reset_description()}</Card.Description>
       </Card.Header>
       <Card.Content>
-        <form onsubmit={handleSubmit}>
+        <form onsubmit={handleSubmit} aria-busy={isSubmitting}>
           <FieldGroup>
             {#if serverError}
               <Field>
-                <div class="flex items-start gap-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive" role="alert">
-                  <AlertCircleIcon class="mt-0.5 size-4 shrink-0" />
+                <div id="reset-error" class="flex items-start gap-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive" role="alert">
+                  <AlertCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                   <span>{serverError}</span>
                 </div>
               </Field>
@@ -92,8 +96,8 @@
 
             {#if serverSuccess}
               <Field>
-                <div class="flex items-start gap-2 rounded-md border border-green-600 bg-green-600/10 p-3 text-sm text-green-700" role="status">
-                  <CheckCircleIcon class="mt-0.5 size-4 shrink-0" />
+                <div id="reset-success" class="flex items-start gap-2 rounded-md border border-green-600 bg-green-600/10 p-3 text-sm text-green-700" role="status">
+                  <CheckCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                   <span>{serverSuccess}</span>
                 </div>
               </Field>
@@ -108,16 +112,21 @@
                   placeholder={m.auth_password_placeholder()}
                   bind:value={password}
                   class="pe-9"
+                  autocomplete="new-password"
+                  aria-invalid={serverError ? 'true' : undefined}
+                  aria-describedby={serverError ? 'reset-error' : undefined}
                 />
                 <button
                   type="button"
                   onclick={() => (showPassword = !showPassword)}
                   class="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? m.auth_password_hide() : m.auth_password_show()}
+                  aria-pressed={showPassword}
                 >
                   {#if showPassword}
-                    <EyeOffIcon class="size-4" />
+                    <EyeOffIcon class="size-4" aria-hidden="true" />
                   {:else}
-                    <EyeIcon class="size-4" />
+                    <EyeIcon class="size-4" aria-hidden="true" />
                   {/if}
                 </button>
               </div>
@@ -130,6 +139,9 @@
                 type={showPassword ? "text" : "password"}
                 placeholder={m.auth_confirm_password_placeholder()}
                 bind:value={confirmPassword}
+                autocomplete="new-password"
+                aria-invalid={serverError ? 'true' : undefined}
+                aria-describedby={serverError ? 'reset-error' : undefined}
               />
             </Field>
 
@@ -147,4 +159,4 @@
       <a href="/auth/sign-in" class="underline-offset-4 hover:underline">{m.auth_link_login()}</a>
     </FieldDescription>
   </div>
-</div>
+</main>

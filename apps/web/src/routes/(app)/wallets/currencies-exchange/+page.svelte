@@ -28,13 +28,13 @@
             variant="outline"
             class="flex items-center gap-2 border border-white/10 bg-slate-100 px-5 py-2.5 font-semibold transition-all hover:bg-white/10"
           >
-            <History class="size-4" />
+            <History class="size-4" aria-hidden="true" />
             Activity
           </Button>
           <Button
             class="flex items-center gap-2 bg-indigo-600 px-5 py-2.5 font-semibold text-white shadow-xl shadow-indigo-600/20 transition-all hover:bg-indigo-500"
           >
-            <Plus class="size-4" />
+            <Plus class="size-4" aria-hidden="true" />
             Add Currency
           </Button>
         </div>

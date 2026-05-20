@@ -5,7 +5,7 @@
   import { toLocalizedPath } from '$lib/utils';
 </script>
 
-<div style="display:none">
+<div style="display:none" aria-hidden="true">
   {#each locales as locale (locale)}
     <a href={resolve(toLocalizedPath(page.url.pathname, { locale }))}>
       {locale}

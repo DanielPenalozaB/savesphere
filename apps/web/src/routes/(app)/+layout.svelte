@@ -22,9 +22,15 @@
   <AppSidebar />
   <Sidebar.Inset>
     <Header />
-    <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+    <main id="main-content" class="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <a
+        href="#main-content"
+        class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+      >
+        Skip to main content
+      </a>
       {@render children()}
-    </div>
+    </main>
   </Sidebar.Inset>
 </Sidebar.Provider>
 <LocaleSwitcherLinks />

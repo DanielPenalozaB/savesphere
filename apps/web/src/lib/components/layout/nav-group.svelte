@@ -3,7 +3,9 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
 	import { toPath } from '$lib/utils';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		label,
@@ -30,9 +32,9 @@
 					<Sidebar.MenuItem {...props}>
 						<Sidebar.MenuButton tooltipContent={mainItem.title}>
 							{#snippet child({ props })}
-								<a href={resolve(toPath(mainItem.url))} {...props}>
+								<a href={resolve(toPath(mainItem.url))} {...props} aria-current={mainItem.isActive ? 'page' : undefined}>
 									{#if mainItem.icon}
-										<mainItem.icon />
+										<mainItem.icon aria-hidden="true" />
 									{/if}
 									<span>{mainItem.title}</span>
 								</a>
@@ -42,8 +44,8 @@
 							<Collapsible.Trigger>
 								{#snippet child({ props })}
 									<Sidebar.MenuAction {...props} class="data-[state=open]:rotate-90">
-										<ChevronRightIcon />
-										<span class="sr-only">Toggle</span>
+										<ChevronRightIcon aria-hidden="true" />
+										<span class="sr-only">{m.sidebar_toggle_submenu({ title: mainItem.title })}</span>
 									</Sidebar.MenuAction>
 								{/snippet}
 							</Collapsible.Trigger>
@@ -51,7 +53,7 @@
 								<Sidebar.MenuSub>
 									{#each mainItem.items as subItem (subItem.title)}
 										<Sidebar.MenuSubItem>
-											<Sidebar.MenuSubButton href={resolve(toPath(subItem.url))}>
+											<Sidebar.MenuSubButton href={resolve(toPath(subItem.url))} aria-current={page.url.pathname === resolve(toPath(subItem.url)) ? 'page' : undefined}>
 												<span>{subItem.title}</span>
 											</Sidebar.MenuSubButton>
 										</Sidebar.MenuSubItem>

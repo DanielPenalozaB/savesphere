@@ -123,6 +123,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin {
+    animation: none;
+  }
+}
+
 .lc-root-container {
   /* Default marks color when not using explicit color or color scale */
   --color-primary: var(--color-blue-500);

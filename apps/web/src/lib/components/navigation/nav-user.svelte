@@ -59,7 +59,7 @@
               <span class="truncate font-medium">{displayName}</span>
               <span class="truncate text-xs">{displayEmail}</span>
             </div>
-            <ChevronsUpDownIcon class="ms-auto size-4" />
+            <ChevronsUpDownIcon class="ms-auto size-4" aria-hidden="true" />
           </Sidebar.MenuButton>
         {/snippet}
       </DropdownMenu.Trigger>
@@ -84,12 +84,12 @@
         <DropdownMenu.Separator />
         <DropdownMenu.Group>
           <DropdownMenu.Item>
-            <BadgeCheckIcon />
+            <BadgeCheckIcon aria-hidden="true" />
             {m.sidebar_user_account()}
           </DropdownMenu.Item>
           <DropdownMenu.Sub>
             <DropdownMenu.SubTrigger>
-              <SunMoon />
+              <SunMoon aria-hidden="true" />
               {m.sidebar_user_theme()}
             </DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent>
@@ -106,7 +106,7 @@
           </DropdownMenu.Sub>
           <DropdownMenu.Sub>
             <DropdownMenu.SubTrigger>
-              <Globe />
+              <Globe aria-hidden="true" />
               {m.sidebar_user_language()}
             </DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent>
@@ -123,19 +123,19 @@
             onSelect={(e) => e.preventDefault()}
           >
             <div class="flex items-center gap-2">
-              <FingerprintPattern />
+              <FingerprintPattern aria-hidden="true" />
               {m.sidebar_user_privacy()}
             </div>
-            <Switch />
+            <Switch aria-label={m.sidebar_user_privacy()} />
           </DropdownMenu.Item>
           <DropdownMenu.Item>
-            <BellIcon />
+            <BellIcon aria-hidden="true" />
             {m.sidebar_user_notifications()}
           </DropdownMenu.Item>
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
         <DropdownMenu.Item onclick={() => authState.logout()}>
-          <LogOutIcon />
+          <LogOutIcon aria-hidden="true" />
           {m.sidebar_user_logout()}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
