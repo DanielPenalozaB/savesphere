@@ -6,15 +6,19 @@
 		ref = $bindable(null),
 		class: className,
 		children,
+		tag = "div",
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+		tag?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div";
+	} = $props();
 </script>
 
-<div
+<svelte:element
+	this={tag}
 	bind:this={ref}
 	data-slot="card-title"
 	class={cn("text-base leading-snug font-medium group-data-[size=sm]/card:text-sm", className)}
 	{...restProps}
 >
 	{@render children?.()}
-</div>
+</svelte:element>

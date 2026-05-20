@@ -13,13 +13,14 @@
 
 <div class="flex w-full overflow-hidden">
   <main class="flex flex-1 flex-col gap-4">
+    <h1 class="sr-only">{m.sidebar_nav_wallets()}</h1>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       <div class="rounded-md bg-slate-100 p-5 dark:bg-slate-900">
         <p class="mb-1 text-xs font-medium tracking-wider text-slate-500 uppercase">
           Liquid Assets
         </p>
         <div class="flex items-end justify-between">
-          <h3 class="text-2xl font-bold tracking-tight">{data.summary.liquidAssets}</h3>
+          <h2 class="text-2xl font-bold tracking-tight">{data.summary.liquidAssets}</h2>
           <span
             class="mb-1 flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500"
           >
@@ -30,7 +31,7 @@
       <div class="rounded-md bg-slate-100 p-5 dark:bg-slate-900">
         <p class="mb-1 text-xs font-medium tracking-wider text-slate-500 uppercase">Total Debt</p>
         <div class="flex items-end justify-between">
-          <h3 class="text-2xl font-bold tracking-tight">{data.summary.totalDebt}</h3>
+          <h2 class="text-2xl font-bold tracking-tight">{data.summary.totalDebt}</h2>
           <span
             class="mb-1 flex items-center rounded-full bg-orange-500/10 px-2 py-0.5 text-xs font-bold text-orange-500"
           >
@@ -41,7 +42,7 @@
       <div class="rounded-md bg-slate-100 p-5 dark:bg-slate-900">
         <p class="mb-1 text-xs font-medium tracking-wider text-slate-500 uppercase">Net Worth</p>
         <div class="flex items-end justify-between">
-          <h3 class="text-2xl font-bold tracking-tight">{data.summary.netWorth}</h3>
+          <h2 class="text-2xl font-bold tracking-tight">{data.summary.netWorth}</h2>
           <span
             class="mb-1 flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500"
           >

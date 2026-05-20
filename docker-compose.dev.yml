@@ -37,6 +37,9 @@ services:
     container_name: savesphere-api-dev
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/savesphere?sslmode=disable
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-do-not-use-in-production}
+      APP_ENV: ${APP_ENV:-development}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:5173}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}

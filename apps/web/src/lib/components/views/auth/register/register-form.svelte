@@ -116,7 +116,7 @@
 <div class={cn("flex flex-col gap-6", className)} {...restProps}>
   <Card.Root>
     <Card.Header class="text-center">
-      <Card.Title class="text-xl">{m.auth_register_title()}</Card.Title>
+      <Card.Title tag="h1" class="text-xl">{m.auth_register_title()}</Card.Title>
       <Card.Description>{m.auth_register_description()}</Card.Description>
     </Card.Header>
     <Card.Content>

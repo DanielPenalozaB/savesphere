@@ -1,13 +1,18 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import * as m from '$lib/paraglide/messages.js';
 </script>
 
-<div class="flex min-h-screen flex-col items-center justify-center gap-4 p-4">
+<svelte:head>
+  <title>SaveSphere | Error {page.status}</title>
+</svelte:head>
+
+<main class="flex min-h-screen flex-col items-center justify-center gap-4 p-4">
   <h1 class="text-4xl font-bold tracking-tighter text-slate-900 dark:text-white">
     {page.status}
   </h1>
   <p class="text-lg text-slate-500 dark:text-slate-400">
-    {page.error?.message || 'Something went wrong'}
+    {page.error?.message || m.auth_error_unexpected()}
   </p>
   <a
     href="/"
@@ -15,4 +20,4 @@
   >
     Go Home
   </a>
-</div>
+</main>

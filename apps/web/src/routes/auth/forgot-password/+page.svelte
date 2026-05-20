@@ -54,7 +54,7 @@
 
     <Card.Root>
       <Card.Header class="text-center">
-        <Card.Title class="text-xl">{m.auth_forgot_title()}</Card.Title>
+        <Card.Title tag="h1" class="text-xl">{m.auth_forgot_title()}</Card.Title>
         <Card.Description>{m.auth_forgot_description()}</Card.Description>
       </Card.Header>
       <Card.Content>

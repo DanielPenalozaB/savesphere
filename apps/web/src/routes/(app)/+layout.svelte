@@ -18,17 +18,17 @@
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<a
+  href="#main-content"
+  class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+>
+  Skip to main content
+</a>
 <Sidebar.Provider>
   <AppSidebar />
   <Sidebar.Inset>
     <Header />
     <main id="main-content" class="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <a
-        href="#main-content"
-        class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
-      >
-        Skip to main content
-      </a>
       {@render children()}
     </main>
   </Sidebar.Inset>
