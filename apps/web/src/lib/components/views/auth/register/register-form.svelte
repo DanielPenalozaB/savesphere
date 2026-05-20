@@ -22,6 +22,7 @@
   import type { HTMLAttributes } from "svelte/elements";
   import type { ZodIssue } from "zod";
   import { startGoogleAuth } from "$lib/auth/oauth.js";
+  import PasswordStrength from "./password-strength.svelte";
 
   let { class: className, ...restProps }: HTMLAttributes<HTMLDivElement> = $props();
 
@@ -30,7 +31,9 @@
   let fullName = $state("");
   let email = $state("");
   let password = $state("");
+  let confirmPassword = $state("");
   let showPassword = $state(false);
+  let showConfirmPassword = $state(false);
   let errors = $state<Record<string, string>>({});
   let serverError = $state("");
   let serverSuccess = $state("");
@@ -40,6 +43,7 @@
   function getZodErrorMessage(issue: ZodIssue): string {
     const field = issue.path[0] as string;
     if (field === "fullName") {
+      if (issue.code === "invalid_string") return m.auth_error_fullName_invalid();
       return m.auth_error_fullName_required();
     }
     if (field === "email") {
@@ -48,13 +52,18 @@
     }
     if (field === "password") {
       if (issue.code === "too_small") return m.auth_error_password_short();
+      if (issue.code === "invalid_string") return m.auth_error_password_complexity();
+      return m.auth_error_password_required();
+    }
+    if (field === "confirmPassword") {
+      if (issue.code === "custom") return m.auth_error_password_mismatch();
       return m.auth_error_password_required();
     }
     return m.auth_error_validation();
   }
 
   function validate() {
-    const result = registerSchema.safeParse({ fullName, email, password });
+    const result = registerSchema.safeParse({ fullName, email, password, confirmPassword });
     if (!result.success) {
       errors = {};
       for (const issue of result.error.issues) {
@@ -207,6 +216,39 @@
             </div>
             {#if errors.password}
               <FieldError id="password-error-{id}">{errors.password}</FieldError>
+            {/if}
+            <PasswordStrength {password} />
+          </Field>
+
+          <Field>
+            <FieldLabel for="confirmPassword-{id}">{m.auth_confirm_password_label()}</FieldLabel>
+            <div class="relative">
+              <Input
+                id="confirmPassword-{id}"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder={m.auth_confirm_password_placeholder()}
+                bind:value={confirmPassword}
+                class="pe-9"
+                autocomplete="new-password"
+                aria-invalid={errors.confirmPassword ? "true" : undefined}
+                aria-describedby={errors.confirmPassword ? `confirmPassword-error-${id}` : undefined}
+              />
+              <button
+                type="button"
+                onclick={() => (showConfirmPassword = !showConfirmPassword)}
+                class="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground hover:text-foreground"
+                aria-label={showConfirmPassword ? m.auth_password_hide() : m.auth_password_show()}
+                aria-pressed={showConfirmPassword}
+              >
+                {#if showConfirmPassword}
+                  <EyeOffIcon class="size-4" aria-hidden="true" />
+                {:else}
+                  <EyeIcon class="size-4" aria-hidden="true" />
+                {/if}
+              </button>
+            </div>
+            {#if errors.confirmPassword}
+              <FieldError id="confirmPassword-error-{id}">{errors.confirmPassword}</FieldError>
             {/if}
           </Field>
 

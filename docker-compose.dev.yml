@@ -38,6 +38,7 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/savesphere?sslmode=disable
       JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-do-not-use-in-production}
+      JWT_ACCESS_TOKEN_EXPIRY: ${JWT_ACCESS_TOKEN_EXPIRY:-24h}
       APP_ENV: ${APP_ENV:-development}
       APP_BASE_URL: ${APP_BASE_URL:-http://localhost:5173}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
