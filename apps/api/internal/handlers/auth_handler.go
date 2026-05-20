@@ -4,6 +4,9 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strings"
+	"time"
+	"unicode"
 
 	"savesphere-api/internal/common/response"
 	"savesphere-api/internal/models"
@@ -21,13 +24,13 @@ func getClientInfo(c echo.Context) (net.IP, string) {
 	return ip, c.Request().UserAgent()
 }
 
-func setAuthCookies(c echo.Context, accessToken string, refreshToken string) {
+func setAuthCookies(c echo.Context, accessToken string, refreshToken string, accessExpiry time.Duration) {
 	isProd := os.Getenv("APP_ENV") == "production"
 	c.SetCookie(&http.Cookie{
 		Name:     "access_token",
 		Value:    accessToken,
 		Path:     "/",
-		MaxAge:   900, // 15 minutes
+		MaxAge:   int(accessExpiry.Seconds()),
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 		Secure:   isProd,
@@ -48,6 +51,60 @@ func clearAuthCookies(c echo.Context) {
 	c.SetCookie(&http.Cookie{Name: "refresh_token", Value: "", Path: "/", MaxAge: -1})
 }
 
+// validationErrorMessage translates validator errors into user-friendly messages.
+func validationErrorMessage(err error) string {
+	if validationErrors, ok := err.(validator.ValidationErrors); ok {
+		msgs := make([]string, 0, len(validationErrors))
+		for _, fe := range validationErrors {
+			field := strings.ToLower(fe.Field())
+			switch fe.Tag() {
+			case "required":
+				msgs = append(msgs, field+" is required")
+			case "email":
+				msgs = append(msgs, "please enter a valid email")
+			case "password":
+				msgs = append(msgs, "password must be at least 8 characters with 1 uppercase letter and 1 number")
+			case "fullname":
+				msgs = append(msgs, "full name cannot contain numbers")
+			default:
+				msgs = append(msgs, field+" is invalid")
+			}
+		}
+		return strings.Join(msgs, ", ")
+	}
+	return "Invalid request"
+}
+
+// passwordValidator checks: len>=8, at least 1 uppercase, at least 1 digit.
+func passwordValidator(fl validator.FieldLevel) bool {
+	password := fl.Field().String()
+	if len(password) < 8 {
+		return false
+	}
+	hasUpper := false
+	hasDigit := false
+	for _, r := range password {
+		if unicode.IsUpper(r) {
+			hasUpper = true
+		}
+		if unicode.IsDigit(r) {
+			hasDigit = true
+		}
+	}
+	return hasUpper && hasDigit
+}
+
+// fullnameValidator checks that the string contains no digits.
+func fullnameValidator(fl validator.FieldLevel) bool {
+	name := fl.Field().String()
+	for _, r := range name {
+		if unicode.IsDigit(r) {
+			return false
+		}
+	}
+	return true
+}
+
 type AuthHandler struct {
 	userService              services.UserService
 	jwtService               services.JWTService
@@ -66,6 +123,9 @@ func NewAuthHandler(
 	sessionService services.SessionService,
 	auditService services.AuditService,
 ) *AuthHandler {
+	v := validator.New()
+	_ = v.RegisterValidation("password", passwordValidator)
+	_ = v.RegisterValidation("fullname", fullnameValidator)
 	return &AuthHandler{
 		userService:              userService,
 		jwtService:               jwtService,
@@ -73,18 +133,18 @@ func NewAuthHandler(
 		emailVerificationService: emailVerificationService,
 		sessionService:           sessionService,
 		auditService:             auditService,
-		validator:                validator.New(),
+		validator:                v,
 	}
 }
 
 func (h *AuthHandler) Register(c echo.Context) error {
 	var req models.RegisterRequest
 	if err := c.Bind(&req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "Invalid request", nil)
+		return response.BadRequest(c, "Invalid request", err)
 	}
 
 	if err := h.validator.Struct(req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "Invalid request", nil)
+		return response.Error(c, http.StatusBadRequest, validationErrorMessage(err), nil)
 	}
 
 	user, err := h.userService.Register(c.Request().Context(), req)
@@ -97,10 +157,10 @@ func (h *AuthHandler) Register(c echo.Context) error {
 
 	accessToken, refreshToken, err := h.sessionService.CreateSession(c.Request().Context(), user.ID)
 	if err != nil {
-		return response.Error(c, http.StatusInternalServerError, "Something went wrong", nil)
+		return response.InternalError(c, "Something went wrong", err)
 	}
 
-	setAuthCookies(c, accessToken, refreshToken)
+	setAuthCookies(c, accessToken, refreshToken, h.jwtService.AccessTokenExpiry())
 
 	return response.JSON(c, http.StatusCreated, "Account created", models.AuthResponse{
 		User:  *user,
@@ -111,11 +171,11 @@ func (h *AuthHandler) Register(c echo.Context) error {
 func (h *AuthHandler) Login(c echo.Context) error {
 	var req models.LoginRequest
 	if err := c.Bind(&req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "Invalid request", nil)
+		return response.BadRequest(c, "Invalid request", err)
 	}
 
 	if err := h.validator.Struct(req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "Invalid request", nil)
+		return response.Error(c, http.StatusBadRequest, validationErrorMessage(err), nil)
 	}
 
 	ip, ua := getClientInfo(c)
@@ -146,10 +206,10 @@ func (h *AuthHandler) Login(c echo.Context) error {
 
 	accessToken, refreshToken, err := h.sessionService.CreateSession(c.Request().Context(), user.ID)
 	if err != nil {
-		return response.Error(c, http.StatusInternalServerError, "Something went wrong", nil)
+		return response.InternalError(c, "Something went wrong", err)
 	}
 
-	setAuthCookies(c, accessToken, refreshToken)
+	setAuthCookies(c, accessToken, refreshToken, h.jwtService.AccessTokenExpiry())
 
 	return response.JSON(c, http.StatusOK, "Login successful", models.AuthResponse{
 		User:  *user,
@@ -160,11 +220,11 @@ func (h *AuthHandler) Login(c echo.Context) error {
 func (h *AuthHandler) ForgotPassword(c echo.Context) error {
 	var req models.ForgotPasswordRequest
 	if err := c.Bind(&req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "Invalid request", nil)
+		return response.BadRequest(c, "Invalid request", err)
 	}
 
 	if err := h.validator.Struct(req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "Invalid request", nil)
+		return response.Error(c, http.StatusBadRequest, validationErrorMessage(err), nil)
 	}
 
 	// Always return success to prevent email enumeration
@@ -176,11 +236,11 @@ func (h *AuthHandler) ForgotPassword(c echo.Context) error {
 func (h *AuthHandler) ResetPassword(c echo.Context) error {
 	var req models.ResetPasswordRequest
 	if err := c.Bind(&req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "Invalid request", nil)
+		return response.BadRequest(c, "Invalid request", err)
 	}
 
 	if err := h.validator.Struct(req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "Invalid request", nil)
+		return response.Error(c, http.StatusBadRequest, validationErrorMessage(err), nil)
 	}
 
 	if err := h.passwordResetService.ResetPassword(c.Request().Context(), req.Token, req.Password); err != nil {
@@ -215,7 +275,7 @@ func (h *AuthHandler) Refresh(c echo.Context) error {
 		return response.Error(c, http.StatusUnauthorized, "Invalid or expired session", nil)
 	}
 
-	setAuthCookies(c, accessToken, newRefreshToken)
+	setAuthCookies(c, accessToken, newRefreshToken, h.jwtService.AccessTokenExpiry())
 	return response.JSON(c, http.StatusOK, "Token refreshed", map[string]string{
 		"token": accessToken,
 	})

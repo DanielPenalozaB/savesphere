@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"savesphere-api/internal/database"
+	"savesphere-api/internal/docs"
 	"savesphere-api/internal/handlers"
 	customMiddleware "savesphere-api/internal/middleware"
 	"savesphere-api/internal/repository"
@@ -146,6 +147,9 @@ func main() {
 			"message": "Hello from Go!",
 		})
 	})
+
+	// API Documentation (Scalar)
+	docs.RegisterRoutes(e)
 
 	log.Fatal(e.Start(":3000"))
 }

@@ -14,11 +14,13 @@ type JWTService interface {
 	GenerateToken(UserID uuid.UUID) (string, error)
 	ValidateToken(tokenString string) (*jwt.Token, error)
 	ExtractUserID(tokenString string) (uuid.UUID, error)
+	AccessTokenExpiry() time.Duration
 }
 
 type jwtService struct {
-	secretKey string
-	issuer    string
+	secretKey         string
+	issuer            string
+	accessTokenExpiry time.Duration
 }
 
 type authCustomClaims struct {
@@ -36,17 +38,30 @@ func NewJWTService() JWTService {
 		fmt.Println("FATAL: JWT_SECRET must be at least 32 characters")
 		os.Exit(1)
 	}
-	return &jwtService{
-		secretKey: secret,
-		issuer:    "savesphere-api",
+
+	expiry := 24 * time.Hour
+	if v := os.Getenv("JWT_ACCESS_TOKEN_EXPIRY"); v != "" {
+		if d, err := time.ParseDuration(v); err == nil {
+			expiry = d
+		}
 	}
+
+	return &jwtService{
+		secretKey:         secret,
+		issuer:            "savesphere-api",
+		accessTokenExpiry: expiry,
+	}
+}
+
+func (s *jwtService) AccessTokenExpiry() time.Duration {
+	return s.accessTokenExpiry
 }
 
 func (s *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
 	claims := &authCustomClaims{
 		userID,
 		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(s.accessTokenExpiry)),
 			Issuer:    s.issuer,
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},

@@ -29,8 +29,8 @@ type LoginRequest struct {
 
 type RegisterRequest struct {
 	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=8"`
-	FullName string `json:"fullName" validate:"required"`
+	Password string `json:"password" validate:"required,password"`
+	FullName string `json:"fullName" validate:"required,fullname"`
 }
 
 type AuthResponse struct {
@@ -51,5 +51,5 @@ type ForgotPasswordRequest struct {
 
 type ResetPasswordRequest struct {
 	Token    string `json:"token" validate:"required"`
-	Password string `json:"password" validate:"required,min=8"`
+	Password string `json:"password" validate:"required,password"`
 }

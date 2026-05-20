@@ -145,7 +145,7 @@ func (h *OAuthHandler) GoogleCallback(c echo.Context) error {
 	c.SetCookie(&http.Cookie{Name: "oauth_state", Value: "", Path: "/", MaxAge: -1})
 
 	// Set auth cookies
-	setAuthCookies(c, accessToken, refreshToken)
+	setAuthCookies(c, accessToken, refreshToken, h.jwtService.AccessTokenExpiry())
 
 	return response.JSON(c, http.StatusOK, "Login successful", models.AuthResponse{
 		User:  *user,
