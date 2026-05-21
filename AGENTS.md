@@ -342,7 +342,7 @@ Run `make migrate-up` after `make docker-up` to initialize the schema.
 SaveSphere is deployed to production via **Coolify** using pre-built Docker images from **GitHub Container Registry (GHCR)**.
 
 **Workflow:**
-1. Push to `main` → GitHub Actions runs lint, type-check, and Go build.
+1. Push to `master` → GitHub Actions runs lint, type-check, and Go build.
 2. GitHub Actions builds and pushes `savesphere-api` and `savesphere-web` images to GHCR.
 3. GitHub Actions calls a Coolify deploy webhook.
 4. Coolify pulls the new images and redeploys the Docker Compose stack.

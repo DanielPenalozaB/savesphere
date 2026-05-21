@@ -7,7 +7,7 @@ This document describes how SaveSphere is deployed to production using **Docker*
 ## Architecture Overview
 
 ```
-┌─────────────┐     push to main      ┌─────────────────┐
+┌─────────────┐     push to master      ┌─────────────────┐
 │   GitHub    │ ──────────────────►   │  GitHub Actions │
 │   Repo      │                       │    (CI/CD)      │
 └─────────────┘                       └─────────────────┘
@@ -176,7 +176,7 @@ All other variables have sensible defaults defined in `docker-compose.prod.yml`.
 5. Value: Paste the webhook URL from Coolify.
 6. Click **Add secret**.
 
-From now on, every push to `main` will:
+From now on, every push to `master` will:
 1. Trigger GitHub Actions to build and push new images.
 2. Automatically call the Coolify webhook to redeploy.
 
@@ -185,7 +185,7 @@ From now on, every push to `main` will:
 ## Continuous Deployment Flow
 
 ```
-Developer pushes to main
+Developer pushes to master
         │
         ▼
 GitHub Actions: lint-and-test job
@@ -262,7 +262,7 @@ If a deployment breaks:
 - [ ] `JWT_SECRET` is at least 32 characters and randomly generated.
 - [ ] Google OAuth credentials are from a production Google Cloud project.
 - [ ] `GEMINI_API_KEY` is restricted to your domain if possible.
-- [ ] Branch protection is enabled on `main` requiring CI to pass.
+- [ ] Branch protection is enabled on `master` requiring CI to pass.
 - [ ] The VPS firewall only exposes ports 80, 443, and SSH.
 - [ ] Coolify admin panel is not publicly accessible (use VPN or IP whitelist).
 
