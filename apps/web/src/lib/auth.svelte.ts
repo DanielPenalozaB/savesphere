@@ -24,7 +24,7 @@ class AuthState {
 	async init() {
 		this.isLoading = true;
 		try {
-			const res = await fetch('/auth/me', { credentials: 'include' });
+			const res = await fetch('/api/auth/me', { credentials: 'include' });
 			const json = await res.json();
 			if (res.ok && json.success && json.data) {
 				this.user = json.data as User;
@@ -42,7 +42,7 @@ class AuthState {
 
 	async logout() {
 		try {
-			await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+			await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
 		} catch {
 			// Ignore network errors
 		}

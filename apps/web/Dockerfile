@@ -13,6 +13,7 @@ RUN yarn install --frozen-lockfile
 # Copy source code
 COPY apps/web ./apps/web
 COPY packages/shared ./packages/shared
+COPY project.inlang ./project.inlang
 
 # Build the application
 RUN yarn turbo build --filter=web
@@ -21,6 +22,8 @@ RUN yarn turbo build --filter=web
 FROM node:20-alpine AS runner
 
 WORKDIR /app
+
+ENV NODE_ENV=production
 
 COPY --from=builder /app/apps/web/build ./build
 COPY --from=builder /app/apps/web/package.json ./package.json

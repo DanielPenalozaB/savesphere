@@ -5,5 +5,31 @@ yarn.lock
 bun.lock
 bun.lockb
 
+# Build outputs
+.output
+.svelte-kit/
+build/
+.turbo/
+dist/
+*.log
+
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+
+# Playwright
+test-results/
+
+# Storybook
+*storybook.log
+storybook-static/
+
 # Miscellaneous
 /static/

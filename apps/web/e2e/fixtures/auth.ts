@@ -40,7 +40,7 @@ async function interceptApi(
 }
 
 export async function mockAuthMe(page: Page, user: typeof MOCK_USER | null = MOCK_USER) {
-	await page.route('/auth/me', async (route) => {
+	await page.route('/api/auth/me', async (route) => {
 		if (route.request().resourceType() === 'document') {
 			await route.continue();
 			return;
@@ -62,38 +62,38 @@ export async function mockAuthMe(page: Page, user: typeof MOCK_USER | null = MOC
 }
 
 export async function mockAuthLogin(page: Page, response: { status: number; body: object }) {
-	await interceptApi(page, '/auth/login', response);
+	await interceptApi(page, '/api/auth/login', response);
 }
 
 export async function mockAuthRegister(page: Page, response: { status: number; body: object }) {
-	await interceptApi(page, '/auth/register', response);
+	await interceptApi(page, '/api/auth/register', response);
 }
 
 export async function mockAuthLogout(page: Page) {
-	await interceptApi(page, '/auth/logout', {
+	await interceptApi(page, '/api/auth/logout', {
 		status: 200,
 		body: { success: true, message: 'ok' }
 	});
 }
 
 export async function mockAuthForgotPassword(page: Page, response: { status: number; body: object }) {
-	await interceptApi(page, '/auth/forgot-password', response);
+	await interceptApi(page, '/api/auth/forgot-password', response);
 }
 
 export async function mockAuthResetPassword(page: Page, response: { status: number; body: object }) {
-	await interceptApi(page, '/auth/reset-password', response);
+	await interceptApi(page, '/api/auth/reset-password', response);
 }
 
 export async function mockAuthVerifyEmail(page: Page, response: { status: number; body: object }) {
-	await interceptApi(page, '/auth/verify-email**', response);
+	await interceptApi(page, '/api/auth/verify-email**', response);
 }
 
 export async function mockGoogleCallback(page: Page, response: { status: number; body: object }) {
-	await interceptApi(page, '/auth/google/callback**', response);
+	await interceptApi(page, '/api/auth/google/callback**', response);
 }
 
 export async function mockGoogleAuthInit(page: Page) {
-	await interceptApi(page, '/auth/google', {
+	await interceptApi(page, '/api/auth/google', {
 		status: 200,
 		body: {
 			success: true,

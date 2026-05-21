@@ -21,29 +21,6 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/auth': {
-        target: process.env.API_PROXY_URL || 'http://localhost:3000',
-        changeOrigin: true,
-        bypass(req) {
-          // Let SvelteKit handle GET requests to auth pages (e.g. /auth/sign-in)
-          // But proxy API endpoints like /auth/me, /auth/verify-email
-          if (req.method === 'GET') {
-            const path = req.url || '';
-            const pagePaths = ['/auth/sign-in', '/auth/register', '/auth/forgot-password', '/auth/reset-password', '/auth/callback', '/auth/verify-email'];
-            // Note: /auth/verify-email is actually an API endpoint, not a page
-            // The verify-email page is at /auth/verify-email but the backend also handles GET /auth/verify-email
-            // In production this wouldn't be an issue. For dev, we proxy API-style endpoints.
-            const apiGetPaths = ['/auth/me'];
-            if (apiGetPaths.some(p => path.startsWith(p))) {
-              return undefined; // proxy to API
-            }
-            if (pagePaths.some(p => path.startsWith(p))) {
-              return req.url; // let SvelteKit handle
-            }
-            return undefined; // proxy unknown auth paths to API
-          }
-        }
-      },
       '/api': {
         target: process.env.API_PROXY_URL || 'http://localhost:3000',
         changeOrigin: true

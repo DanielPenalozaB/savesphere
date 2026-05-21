@@ -28,7 +28,7 @@ export async function generatePKCE() {
  * POSTs to backend to get the Google auth URL, then redirects.
  */
 export async function startGoogleAuth() {
-	const res = await fetch('/auth/google', {
+	const res = await fetch('/api/auth/google', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' }
 	});

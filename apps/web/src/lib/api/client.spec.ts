@@ -33,7 +33,7 @@ describe('api client', () => {
 		it('sends correct headers and credentials', async () => {
 			fetchMock.mockResolvedValue(mockApiResponse({}));
 			await apiGet('/test');
-			expect(fetchMock).toHaveBeenCalledWith('/test', {
+			expect(fetchMock).toHaveBeenCalledWith('/api/test', {
 				headers: { 'Content-Type': 'application/json' },
 				credentials: 'include'
 			});
@@ -85,7 +85,7 @@ describe('api client', () => {
 		it('sends correct method, body, headers', async () => {
 			fetchMock.mockResolvedValue(mockApiResponse({}));
 			await apiPost('/test', { key: 'value' });
-			expect(fetchMock).toHaveBeenCalledWith('/test', {
+			expect(fetchMock).toHaveBeenCalledWith('/api/test', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ key: 'value' }),
@@ -112,7 +112,7 @@ describe('api client', () => {
 			fetchMock.mockResolvedValue(mockApiResponse({ updated: true }));
 			await apiPut('/test/1', { name: 'bar' });
 			expect(fetchMock).toHaveBeenCalledWith(
-				'/test/1',
+				'/api/test/1',
 				expect.objectContaining({ method: 'PUT' })
 			);
 		});
@@ -135,7 +135,7 @@ describe('api client', () => {
 			fetchMock.mockResolvedValue(mockApiResponse({ patched: true }));
 			await apiPatch('/test/1', { field: 'value' });
 			expect(fetchMock).toHaveBeenCalledWith(
-				'/test/1',
+				'/api/test/1',
 				expect.objectContaining({ method: 'PATCH' })
 			);
 		});
@@ -152,7 +152,7 @@ describe('api client', () => {
 			fetchMock.mockResolvedValue(mockApiResponse({ deleted: true }));
 			await apiDelete('/test/1');
 			expect(fetchMock).toHaveBeenCalledWith(
-				'/test/1',
+				'/api/test/1',
 				expect.objectContaining({ method: 'DELETE' })
 			);
 		});

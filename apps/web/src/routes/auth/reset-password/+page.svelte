@@ -51,7 +51,7 @@
     }
 
     isSubmitting = true;
-    const { error } = await apiPost("/auth/reset-password", { token, password });
+    const { error } = await apiPost("/api/auth/reset-password", { token, password });
     isSubmitting = false;
 
     if (error) {

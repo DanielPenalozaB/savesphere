@@ -36,7 +36,7 @@ const scalarHTML = `<!DOCTYPE html>
 <body>
   <script
     id="api-reference"
-    data-url="/openapi.json"
+    data-url="/api/openapi.json"
     data-theme="default"
   ></script>
   <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@latest/dist/browser/standalone.js"></script>
@@ -44,22 +44,22 @@ const scalarHTML = `<!DOCTYPE html>
 </html>
 `
 
-// RegisterRoutes adds the documentation endpoints to Echo
+// RegisterRoutes adds the documentation endpoints to Echo under /api prefix
 func RegisterRoutes(e *echo.Echo) {
 	// OpenAPI spec as JSON (Scalar loads this)
-	e.GET("/openapi.json", func(c echo.Context) error {
+	e.GET("/api/openapi.json", func(c echo.Context) error {
 		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		return c.Blob(http.StatusOK, echo.MIMEApplicationJSON, openAPISpecJSON)
 	})
 
 	// OpenAPI spec as YAML (for direct download)
-	e.GET("/openapi.yaml", func(c echo.Context) error {
+	e.GET("/api/openapi.yaml", func(c echo.Context) error {
 		c.Response().Header().Set(echo.HeaderContentType, "application/yaml")
 		return c.Blob(http.StatusOK, "application/yaml", openAPISpecYAML)
 	})
 
 	// Scalar API Reference UI
-	e.GET("/docs", func(c echo.Context) error {
+	e.GET("/api/docs", func(c echo.Context) error {
 		c.Response().Header().Set(echo.HeaderContentType, "text/html; charset=utf-8")
 		return c.HTML(http.StatusOK, scalarHTML)
 	})

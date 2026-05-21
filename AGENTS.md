@@ -324,24 +324,46 @@ Run `make migrate-up` after `make docker-up` to initialize the schema.
 
 ## Deployment
 
-Both applications are containerized:
+### Container Images
 
-- **API Dockerfile:** Multi-stage build (`golang:1.23-alpine` → `alpine:3.20`). Exposes port `3000`.
-- **API Dockerfile.dev:** Go dev container (`golang:1.23-alpine`) with live-reload via `go run`. Exposes port `3000`.
+- **API Dockerfile:** Multi-stage build (`golang:1.25-alpine` → `alpine:3.20`). Includes `migrate` CLI and an entrypoint script that runs migrations before starting the app. Exposes port `3000`.
+- **API Dockerfile.dev:** Go dev container (`golang:1.25-alpine`) with live-reload via `go run`. Exposes port `3000`.
 - **Web Dockerfile:** Multi-stage Node build (`node:20-alpine` builder + runner). Uses the Node adapter output in `build/`. Exposes port `3000`.
 - **Web Dockerfile.dev:** Node dev container (`node:20-alpine`) running Vite dev server with HMR. Exposes port `5173`.
 
-Docker Compose files:
-- `docker-compose.yml` — Database + migrations only.
-- `docker-compose.dev.yml` — Full development stack (Postgres + migrations + Go API + Vite web dev server).
+### Docker Compose Files
 
-Production orchestration is not yet defined in this repository.
+- `docker-compose.yml` — Database + migrations only (local development).
+- `docker-compose.dev.yml` — Full development stack (Postgres + migrations + Go API + Vite web dev server).
+- `docker-compose.prod.yml` — **Production stack** for Coolify deployment. Includes Postgres, API, and Web services with Traefik labels for same-domain path-based routing.
+
+### Production Architecture
+
+SaveSphere is deployed to production via **Coolify** using pre-built Docker images from **GitHub Container Registry (GHCR)**.
+
+**Workflow:**
+1. Push to `main` → GitHub Actions runs lint, type-check, and Go build.
+2. GitHub Actions builds and pushes `savesphere-api` and `savesphere-web` images to GHCR.
+3. GitHub Actions calls a Coolify deploy webhook.
+4. Coolify pulls the new images and redeploys the Docker Compose stack.
+5. The API container automatically runs database migrations on startup.
+
+**Routing (same domain):**
+- `https://savesphere.app/api/*` → Go API (all backend endpoints)
+- `https://savesphere.app/*` → SvelteKit frontend (all pages)
+
+**Key files:**
+- `docker-compose.prod.yml` — Production orchestration
+- `.github/workflows/ci-cd.yml` — GitHub Actions CI/CD pipeline
+- `DEPLOYMENT.md` — Complete deployment guide
+
+For detailed setup instructions, see `DEPLOYMENT.md`.
 
 ---
 
 ## Security Considerations
 
-- Authentication is JWT-based (`/auth/login`, `/auth/register`). The token is expected in the `Authorization: Bearer <token>` header for all `/api/*` routes.
+- Authentication is JWT-based (`/api/auth/login`, `/api/auth/register`). The token is expected in the `Authorization: Bearer <token>` header for all `/api/*` routes.
 - Passwords are hashed with bcrypt.
 - CORS is enabled globally on the Echo server.
 - AI advice logic explicitly anonymizes transaction data before sending it to Gemini (it strips wallet IDs and user IDs, sending only type, amount, fixed/variable flag, and date).
@@ -351,7 +373,7 @@ Production orchestration is not yet defined in this repository.
 
 ## Known Gaps & TODOs
 
-- Frontend API integration is now wired via Vite proxy in dev mode (`API_BASE = ''`). Both Docker dev and local dev routes `/api/*` and `/auth/*` to the backend automatically.
+- Frontend API integration uses `API_BASE = '/api'` and relative URLs. In development, Vite proxies `/api/*` to the backend. In production, Traefik routes `/api/*` to the API container on the same domain.
 - No Go API tests exist yet.
 - OpenAPI contract generation for frontend types is stubbed in the Makefile (`generate` target) but not implemented.
 - The `packages/shared` directory currently only contains `openapi.yaml` and is not consumed as a published package.

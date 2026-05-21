@@ -80,7 +80,7 @@
     isSubmitting = true;
 
     const { data: res, error, status } = await apiPost<{ user: User; token: string }>(
-      "/auth/login",
+      "/api/auth/login",
       { email, password }
     );
 

@@ -26,7 +26,7 @@
     serverSuccess = "";
     isSubmitting = true;
 
-    const { error } = await apiPost("/auth/forgot-password", { email });
+    const { error } = await apiPost("/api/auth/forgot-password", { email });
     isSubmitting = false;
 
     if (error) {

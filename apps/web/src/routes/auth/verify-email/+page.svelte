@@ -20,7 +20,7 @@
       return;
     }
 
-    const { error } = await apiGet(`/auth/verify-email?token=${encodeURIComponent(token)}`);
+    const { error } = await apiGet(`/api/auth/verify-email?token=${encodeURIComponent(token)}`);
 
     if (error) {
       status = "error";

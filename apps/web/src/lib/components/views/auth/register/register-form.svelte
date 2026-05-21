@@ -92,7 +92,7 @@
     isSubmitting = true;
 
     const { data: res, error, status } = await apiPost<{ user: User; token: string }>(
-      "/auth/register",
+      "/api/auth/register",
       { fullName, email, password }
     );
 

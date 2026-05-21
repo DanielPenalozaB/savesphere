@@ -15,6 +15,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"os"
+	"strings"
 )
 
 func main() {
@@ -76,15 +78,20 @@ func main() {
 	// Default CORS and Logger middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	// Configurable CORS origins
+	corsOrigins := os.Getenv("CORS_ALLOWED_ORIGINS")
+	if corsOrigins == "" {
+		corsOrigins = "http://localhost:5173"
+	}
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     strings.Split(corsOrigins, ","),
 		AllowMethods:     []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 		AllowCredentials: true,
 	}))
 
 	// Public Health check
-	e.GET("/health", func(c echo.Context) error {
+	e.GET("/api/health", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{
 			"status": "ok",
 			"app":    "savesphere-api",
@@ -92,7 +99,7 @@ func main() {
 	})
 
 	// Auth routes with rate limiting
-	auth := e.Group("/auth")
+	auth := e.Group("/api/auth")
 	auth.Use(middleware.RateLimiterWithConfig(middleware.RateLimiterConfig{
 		Skipper: middleware.DefaultSkipper,
 		Store: middleware.NewRateLimiterMemoryStoreWithConfig(
@@ -150,6 +157,8 @@ func main() {
 
 	// API Documentation (Scalar)
 	docs.RegisterRoutes(e)
+
+
 
 	log.Fatal(e.Start(":3000"))
 }
