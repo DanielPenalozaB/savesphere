@@ -1,6 +1,8 @@
 import type { Handle } from '@sveltejs/kit';
+import { paraglideMiddleware } from '$lib/paraglide/server.js';
+import { sequence } from '@sveltejs/kit/hooks';
 
-export const handle: Handle = async ({ event, resolve }) => {
+const authHandle: Handle = async ({ event, resolve }) => {
   // Read auth token from cookie for SSR context
   const token = event.cookies.get('access_token');
 
@@ -18,3 +20,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   return resolve(event);
 };
+
+const paraglideHandle: Handle = ({ event, resolve }) => {
+  return paraglideMiddleware(event.request, ({ locale }) => {
+    return resolve(event, {
+      transformPageChunk: ({ html }) => html.replace('%lang%', locale)
+    });
+  });
+};
+
+export const handle: Handle = sequence(authHandle, paraglideHandle);
+
