@@ -26,11 +26,11 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_ACCESS_TOKEN_EXPIRY: ${JWT_ACCESS_TOKEN_EXPIRY:-24h}
       APP_ENV: production
-      APP_BASE_URL: https://savesphere.app
-      CORS_ALLOWED_ORIGINS: https://savesphere.app,https://www.savesphere.app
+      APP_BASE_URL: https://${DOMAIN:-savesphere.app}
+      CORS_ALLOWED_ORIGINS: https://${DOMAIN:-savesphere.app},https://www.${DOMAIN:-savesphere.app}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      OAUTH_REDIRECT_URL: https://savesphere.app/auth/callback
+      OAUTH_REDIRECT_URL: https://${DOMAIN:-savesphere.app}/auth/callback
       GEMINI_API_KEY: ${GEMINI_API_KEY}
     depends_on:
       db:
@@ -43,7 +43,15 @@ services:
       start_period: 10s
     networks:
       - savesphere
-    # Coolify handles Traefik routing via the domain configuration in the UI
+      - coolify
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
+      - "traefik.http.routers.savesphere-api.rule=(Host(`${DOMAIN:-savesphere.app}`) || Host(`www.${DOMAIN:-savesphere.app}`)) && PathPrefix(`/api`)"
+      - "traefik.http.routers.savesphere-api.priority=20"
+      - "traefik.http.routers.savesphere-api.tls=true"
+      - "traefik.http.routers.savesphere-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.savesphere-api.loadbalancer.server.port=3000"
 
   web:
     image: ghcr.io/danielpenalozab/savesphere-web:latest
@@ -51,7 +59,7 @@ services:
     restart: always
     environment:
       NODE_ENV: production
-      ORIGIN: https://savesphere.app
+      ORIGIN: https://${DOMAIN:-savesphere.app}
     depends_on:
       api:
         condition: service_healthy
@@ -63,7 +71,15 @@ services:
       start_period: 10s
     networks:
       - savesphere
-    # Coolify handles Traefik routing via the domain configuration in the UI
+      - coolify
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
+      - "traefik.http.routers.savesphere-web.rule=Host(`${DOMAIN:-savesphere.app}`) || Host(`www.${DOMAIN:-savesphere.app}`)"
+      - "traefik.http.routers.savesphere-web.priority=10"
+      - "traefik.http.routers.savesphere-web.tls=true"
+      - "traefik.http.routers.savesphere-web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.savesphere-web.loadbalancer.server.port=3000"
 
 volumes:
   postgres_data:
@@ -71,3 +87,6 @@ volumes:
 networks:
   savesphere:
     driver: bridge
+  coolify:
+    name: coolify
+    external: true

@@ -90,19 +90,20 @@ This document describes how SaveSphere is deployed to production using **Docker*
 | `POSTGRES_PASSWORD` | **Yes** | — | Strong database password |
 | `POSTGRES_DB` | No | `savesphere` | Database name |
 
-### API (`api` service)
+### Stack-wide & API (`api` service)
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
+| `DOMAIN` | No | `savesphere.app` | The target domain to use for SSL, Traefik routing, CORS, and redirects (e.g. `budget.otherdomain.co`). |
 | `DATABASE_URL` | Auto | — | Constructed from Postgres vars |
 | `JWT_SECRET` | **Yes** | — | Min 32 chars. Generate: `openssl rand -hex 32` |
 | `JWT_ACCESS_TOKEN_EXPIRY` | No | `24h` | JWT token lifetime |
 | `APP_ENV` | No | `production` | Application environment |
-| `APP_BASE_URL` | No | `https://savesphere.app` | Frontend base URL |
-| `CORS_ALLOWED_ORIGINS` | No | `https://savesphere.app,https://www.savesphere.app` | Comma-separated allowed origins |
+| `APP_BASE_URL` | Auto | `https://${DOMAIN}` | Frontend base URL (automatically derived from `DOMAIN`) |
+| `CORS_ALLOWED_ORIGINS` | Auto | `https://${DOMAIN},https://www.${DOMAIN}` | Comma-separated allowed origins (derived from `DOMAIN`) |
 | `GOOGLE_CLIENT_ID` | **Yes** | — | Google OAuth client ID |
 | `GOOGLE_CLIENT_SECRET` | **Yes** | — | Google OAuth client secret |
-| `OAUTH_REDIRECT_URL` | No | `https://savesphere.app/auth/callback` | OAuth callback URL |
+| `OAUTH_REDIRECT_URL` | Auto | `https://${DOMAIN}/auth/callback` | OAuth callback URL (derived from `DOMAIN`) |
 | `GEMINI_API_KEY` | **Yes** | — | Google Gemini API key |
 
 ### Web (`web` service)
@@ -110,7 +111,7 @@ This document describes how SaveSphere is deployed to production using **Docker*
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `NODE_ENV` | No | `production` | Node environment |
-| `ORIGIN` | No | `https://savesphere.app` | Public origin for SSR/cookies |
+| `ORIGIN` | Auto | `https://${DOMAIN}` | Public origin for SSR/cookies (derived from `DOMAIN`) |
 
 ---
 
@@ -139,6 +140,7 @@ Wait for DNS propagation (can take a few minutes to a few hours).
 In the Coolify resource settings, go to the **Environment Variables** tab and add all required variables:
 
 ```
+DOMAIN=savesphere.app # Replace with your own domain name (e.g. budget.otherdomain.co)
 POSTGRES_PASSWORD=your-very-strong-password
 JWT_SECRET=your-32-char-jwt-secret
 GOOGLE_CLIENT_ID=your-google-client-id
@@ -146,14 +148,14 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 GEMINI_API_KEY=your-gemini-api-key
 ```
 
-All other variables have sensible defaults defined in `docker-compose.prod.yml`.
+All other variables (like `ORIGIN`, `CORS_ALLOWED_ORIGINS`, `APP_BASE_URL`) have sensible defaults derived from `DOMAIN`.
 
 ### 4. Configure Domain & SSL
 
-1. In Coolify, find the **web** service settings.
-2. Add the domain: `savesphere.app`.
-3. Enable **HTTPS/SSL**. Coolify will automatically request a Let's Encrypt certificate.
-4. The **api** service does not need a separate domain — Traefik routes `/api/*` to it automatically via the labels in `docker-compose.prod.yml`.
+1. In Coolify, open the **web** service settings.
+2. Set the FQDN to your domain: `https://savesphere.app` (or your custom domain, e.g. `https://budget.otherdomain.co`).
+3. Make sure to toggle **Override default request handler** (or **Generate labels only for Traefik**) in SvelteKit's proxy settings. This ensures Coolify requests the Let's Encrypt SSL certificate but lets our code-defined Traefik rules handle the path routing.
+4. The **api** service FQDN field should be left **blank** — Traefik routes `/api/*` to the Go container automatically using the labels defined in `docker-compose.prod.yml`.
 
 ### 5. First Deployment
 
@@ -163,9 +165,9 @@ All other variables have sensible defaults defined in `docker-compose.prod.yml`.
    - `api` should run migrations and start on port `3000`.
    - `web` should start on port `3000`.
 3. Once complete, verify:
-   - `https://savesphere.app` → SvelteKit frontend
-   - `https://savesphere.app/api/health` → `{"status":"ok","app":"savesphere-api"}`
-   - `https://savesphere.app/api/docs` → Scalar API documentation UI
+   - `https://<your-domain>` → SvelteKit frontend
+   - `https://<your-domain>/api/health` → `{"status":"ok","app":"savesphere-api"}`
+   - `https://<your-domain>/api/docs` → Scalar API documentation UI
 
 ### 6. Set Up Auto-Deployment Webhook
 
