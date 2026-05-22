@@ -107,7 +107,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Trigger Coolify deployment
-        if: env.COOLIFY_WEBHOOK_URL != ''
+        if: ${{ secrets.COOLIFY_WEBHOOK_URL != '' }}
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \

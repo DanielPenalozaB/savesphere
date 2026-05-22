@@ -65,15 +65,6 @@ services:
       start_period: 10s
     networks:
       - savesphere
-      - coolify
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=coolify"
-      - "traefik.http.routers.savesphere-web.rule=Host(`${DOMAIN:-savesphere.app}`) || Host(`www.${DOMAIN:-savesphere.app}`)"
-      - "traefik.http.routers.savesphere-web.priority=10"
-      - "traefik.http.routers.savesphere-web.tls=true"
-      - "traefik.http.routers.savesphere-web.tls.certresolver=letsencrypt"
-      - "traefik.http.services.savesphere-web.loadbalancer.server.port=3000"
 
 volumes:
   postgres_data:
@@ -81,6 +72,3 @@ volumes:
 networks:
   savesphere:
     driver: bridge
-  coolify:
-    name: coolify
-    external: true
