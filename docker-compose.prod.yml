@@ -43,15 +43,8 @@ services:
       start_period: 10s
     networks:
       - savesphere
-      - coolify
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=coolify"
-      - "traefik.http.routers.savesphere-api.rule=(Host(`${DOMAIN:-savesphere.app}`) || Host(`www.${DOMAIN:-savesphere.app}`)) && PathPrefix(`/api`)"
-      - "traefik.http.routers.savesphere-api.priority=20"
-      - "traefik.http.routers.savesphere-api.tls=true"
-      - "traefik.http.routers.savesphere-api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.savesphere-api.loadbalancer.server.port=3000"
+      - "traefik.enable=false"
 
   web:
     image: ghcr.io/danielpenalozab/savesphere-web:latest
@@ -60,6 +53,7 @@ services:
     environment:
       VITE_API_BASE: /api
       ORIGIN: https://${DOMAIN:-savesphere.app}
+      BACKEND_API_URL: http://api:3000
     depends_on:
       api:
         condition: service_healthy

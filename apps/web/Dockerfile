@@ -6,6 +6,8 @@ WORKDIR /app
 # Copy root configurations for workspace
 COPY package.json yarn.lock turbo.json ./
 COPY apps/web/package.json ./apps/web/
+COPY apps/api/package.json ./apps/api/
+COPY packages/shared/package.json ./packages/shared/
 
 # Install dependencies (utilizing layer caching)
 RUN yarn install --frozen-lockfile
