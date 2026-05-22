@@ -36,20 +36,14 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health > /dev/null 2>&1"]
       interval: 15s
       timeout: 5s
       retries: 3
       start_period: 10s
     networks:
       - savesphere
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.savesphere-api.rule=Host(`savesphere.app`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.savesphere-api.entrypoints=websecure"
-      - "traefik.http.routers.savesphere-api.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.savesphere-api.priority=20"
-      - "traefik.http.services.savesphere-api.loadbalancer.server.port=3000"
+    # Coolify handles Traefik routing via the domain configuration in the UI
 
   web:
     image: ghcr.io/danielpenalozab/savesphere-web:latest
@@ -61,20 +55,14 @@ services:
     depends_on:
       - api
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ > /dev/null 2>&1"]
       interval: 15s
       timeout: 5s
       retries: 3
       start_period: 10s
     networks:
       - savesphere
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.savesphere-web.rule=Host(`savesphere.app`)"
-      - "traefik.http.routers.savesphere-web.entrypoints=websecure"
-      - "traefik.http.routers.savesphere-web.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.savesphere-web.priority=10"
-      - "traefik.http.services.savesphere-web.loadbalancer.server.port=3000"
+    # Coolify handles Traefik routing via the domain configuration in the UI
 
 volumes:
   postgres_data:
