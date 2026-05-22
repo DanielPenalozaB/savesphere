@@ -5,15 +5,15 @@ import Description from './dashboard-card-description.svelte';
 import Content from './dashboard-card-content.svelte';
 
 export {
-	Root,
-	Header,
-	Title,
-	Description,
-	Content,
-	//
-	Root as DashboardCard,
-	Header as DashboardCardHeader,
-	Title as DashboardCardTitle,
-	Description as DashboardCardDescription,
-	Content as DashboardCardContent
+  Root,
+  Header,
+  Title,
+  Description,
+  Content,
+  //
+  Root as DashboardCard,
+  Header as DashboardCardHeader,
+  Title as DashboardCardTitle,
+  Description as DashboardCardDescription,
+  Content as DashboardCardContent
 };

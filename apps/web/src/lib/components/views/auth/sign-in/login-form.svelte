@@ -1,49 +1,49 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { Button } from "$lib/components/ui/button/index.js";
-  import * as Card from "$lib/components/ui/card/index.js";
+  import { goto } from '$app/navigation';
+  import { Button } from '$lib/components/ui/button/index.js';
+  import * as Card from '$lib/components/ui/card/index.js';
   import {
     Field,
     FieldLabel,
     FieldError,
     FieldGroup,
     FieldDescription,
-    FieldSeparator,
-  } from "$lib/components/ui/field/index.js";
-  import { Input } from "$lib/components/ui/input/index.js";
-  import { authState, type User } from "$lib/auth.svelte.js";
-  import { apiPost } from "$lib/api/client.js";
-  import { loginSchema } from "$lib/schemas/auth.js";
-  import { cn } from "$lib/utils.js";
-  import * as m from "$lib/paraglide/messages.js";
-  import EyeIcon from "@lucide/svelte/icons/eye";
-  import EyeOffIcon from "@lucide/svelte/icons/eye-off";
-  import AlertCircleIcon from "@lucide/svelte/icons/circle-alert";
-  import CheckCircleIcon from "@lucide/svelte/icons/circle-check";
-  import type { HTMLAttributes } from "svelte/elements";
-  import type { ZodIssue } from "zod";
-  import { startGoogleAuth } from "$lib/auth/oauth.js";
+    FieldSeparator
+  } from '$lib/components/ui/field/index.js';
+  import { Input } from '$lib/components/ui/input/index.js';
+  import { authState, type User } from '$lib/auth.svelte.js';
+  import { apiPost } from '$lib/api/client.js';
+  import { loginSchema } from '$lib/schemas/auth.js';
+  import { cn } from '$lib/utils.js';
+  import * as m from '$lib/paraglide/messages.js';
+  import EyeIcon from '@lucide/svelte/icons/eye';
+  import EyeOffIcon from '@lucide/svelte/icons/eye-off';
+  import AlertCircleIcon from '@lucide/svelte/icons/circle-alert';
+  import CheckCircleIcon from '@lucide/svelte/icons/circle-check';
+  import type { HTMLAttributes } from 'svelte/elements';
+  import type { ZodIssue } from 'zod';
+  import { startGoogleAuth } from '$lib/auth/oauth.js';
 
   let { class: className, ...restProps }: HTMLAttributes<HTMLDivElement> = $props();
 
   const id = $props.id();
 
-  let email = $state("");
-  let password = $state("");
+  let email = $state('');
+  let password = $state('');
   let showPassword = $state(false);
   let errors = $state<Record<string, string>>({});
-  let serverError = $state("");
-  let serverSuccess = $state("");
+  let serverError = $state('');
+  let serverSuccess = $state('');
   let isSubmitting = $state(false);
   let isGoogleLoading = $state(false);
 
   function getZodErrorMessage(issue: ZodIssue): string {
     const field = issue.path[0] as string;
-    if (field === "email") {
-      if (issue.code === "invalid_string") return m.auth_error_email_invalid();
+    if (field === 'email') {
+      if (issue.code === 'invalid_string') return m.auth_error_email_invalid();
       return m.auth_error_email_required();
     }
-    if (field === "password") {
+    if (field === 'password') {
       return m.auth_error_password_required();
     }
     return m.auth_error_validation();
@@ -75,14 +75,15 @@
     e.preventDefault();
     if (!validate()) return;
 
-    serverError = "";
-    serverSuccess = "";
+    serverError = '';
+    serverSuccess = '';
     isSubmitting = true;
 
-    const { data: res, error, status } = await apiPost<{ user: User; token: string }>(
-      "/api/auth/login",
-      { email, password }
-    );
+    const {
+      data: res,
+      error,
+      status
+    } = await apiPost<{ user: User; token: string }>('/api/auth/login', { email, password });
 
     isSubmitting = false;
 
@@ -94,12 +95,12 @@
     if (res) {
       serverSuccess = m.auth_success_login();
       authState.login(res.token, res.user);
-      setTimeout(() => goto("/"), 800);
+      setTimeout(() => goto('/'), 800);
     }
   }
 
   async function handleGoogleSignIn() {
-    serverError = "";
+    serverError = '';
     isGoogleLoading = true;
     try {
       await startGoogleAuth();
@@ -110,7 +111,7 @@
   }
 </script>
 
-<div class={cn("flex flex-col gap-6", className)} {...restProps}>
+<div class={cn('flex flex-col gap-6', className)} {...restProps}>
   <Card.Root>
     <Card.Header class="text-center">
       <Card.Title tag="h1" class="text-xl">{m.auth_login_title()}</Card.Title>
@@ -151,7 +152,7 @@
               placeholder={m.auth_email_placeholder()}
               bind:value={email}
               autocomplete="email"
-              aria-invalid={errors.email ? "true" : undefined}
+              aria-invalid={errors.email ? 'true' : undefined}
               aria-describedby={errors.email ? `email-error-${id}` : undefined}
             />
             {#if errors.email}
@@ -172,12 +173,12 @@
             <div class="relative">
               <Input
                 id="password-{id}"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 placeholder={m.auth_password_placeholder()}
                 bind:value={password}
                 class="pe-9"
                 autocomplete="current-password"
-                aria-invalid={errors.password ? "true" : undefined}
+                aria-invalid={errors.password ? 'true' : undefined}
                 aria-describedby={errors.password ? `password-error-${id}` : undefined}
               />
               <button

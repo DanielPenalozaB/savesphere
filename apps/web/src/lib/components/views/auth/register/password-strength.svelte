@@ -23,8 +23,16 @@
 
   const strengthConfig = {
     weak: { label: m.auth_password_strength_weak(), color: 'bg-red-500', text: 'text-red-500' },
-    medium: { label: m.auth_password_strength_medium(), color: 'bg-amber-500', text: 'text-amber-500' },
-    strong: { label: m.auth_password_strength_strong(), color: 'bg-green-500', text: 'text-green-500' }
+    medium: {
+      label: m.auth_password_strength_medium(),
+      color: 'bg-amber-500',
+      text: 'text-amber-500'
+    },
+    strong: {
+      label: m.auth_password_strength_strong(),
+      color: 'bg-green-500',
+      text: 'text-green-500'
+    }
   };
 
   const config = $derived(strengthConfig[strength]);

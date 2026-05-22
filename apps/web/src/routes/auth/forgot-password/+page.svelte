@@ -1,32 +1,32 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button/index.js";
-  import * as Card from "$lib/components/ui/card/index.js";
+  import { Button } from '$lib/components/ui/button/index.js';
+  import * as Card from '$lib/components/ui/card/index.js';
   import {
     Field,
     FieldLabel,
     FieldError,
     FieldGroup,
-    FieldDescription,
-  } from "$lib/components/ui/field/index.js";
-  import { Input } from "$lib/components/ui/input/index.js";
-  import { apiPost } from "$lib/api/client.js";
-  import * as m from "$lib/paraglide/messages.js";
-  import AlertCircleIcon from "@lucide/svelte/icons/circle-alert";
-  import CheckCircleIcon from "@lucide/svelte/icons/circle-check";
-  import GalleryVerticalEndIcon from "@lucide/svelte/icons/gallery-vertical-end";
+    FieldDescription
+  } from '$lib/components/ui/field/index.js';
+  import { Input } from '$lib/components/ui/input/index.js';
+  import { apiPost } from '$lib/api/client.js';
+  import * as m from '$lib/paraglide/messages.js';
+  import AlertCircleIcon from '@lucide/svelte/icons/circle-alert';
+  import CheckCircleIcon from '@lucide/svelte/icons/circle-check';
+  import GalleryVerticalEndIcon from '@lucide/svelte/icons/gallery-vertical-end';
 
-  let email = $state("");
-  let serverError = $state("");
-  let serverSuccess = $state("");
+  let email = $state('');
+  let serverError = $state('');
+  let serverSuccess = $state('');
   let isSubmitting = $state(false);
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
-    serverError = "";
-    serverSuccess = "";
+    serverError = '';
+    serverSuccess = '';
     isSubmitting = true;
 
-    const { error } = await apiPost("/api/auth/forgot-password", { email });
+    const { error } = await apiPost('/api/auth/forgot-password', { email });
     isSubmitting = false;
 
     if (error) {
@@ -35,7 +35,7 @@
     }
 
     serverSuccess = m.auth_forgot_success();
-    email = "";
+    email = '';
   }
 </script>
 
@@ -43,10 +43,15 @@
   <title>SaveSphere | {m.auth_forgot_title()}</title>
 </svelte:head>
 
-<main id="auth-main" class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+<main
+  id="auth-main"
+  class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10"
+>
   <div class="flex w-full max-w-sm flex-col gap-6">
     <a href="/" class="flex items-center gap-2 self-center font-medium">
-      <div class="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+      <div
+        class="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground"
+      >
         <GalleryVerticalEndIcon class="size-4" aria-hidden="true" />
       </div>
       {m.sidebar_app_name()}
@@ -62,7 +67,11 @@
           <FieldGroup>
             {#if serverError}
               <Field>
-                <div id="forgot-error" class="flex items-start gap-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive" role="alert">
+                <div
+                  id="forgot-error"
+                  class="flex items-start gap-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive"
+                  role="alert"
+                >
                   <AlertCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                   <span>{serverError}</span>
                 </div>
@@ -71,7 +80,11 @@
 
             {#if serverSuccess}
               <Field>
-                <div id="forgot-success" class="flex items-start gap-2 rounded-md border border-green-600 bg-green-600/10 p-3 text-sm text-green-700" role="status">
+                <div
+                  id="forgot-success"
+                  class="flex items-start gap-2 rounded-md border border-green-600 bg-green-600/10 p-3 text-sm text-green-700"
+                  role="status"
+                >
                   <CheckCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                   <span>{serverSuccess}</span>
                 </div>
@@ -87,7 +100,11 @@
                 bind:value={email}
                 autocomplete="email"
                 aria-invalid={serverError ? 'true' : undefined}
-                aria-describedby={serverError ? 'forgot-error' : serverSuccess ? 'forgot-success' : undefined}
+                aria-describedby={serverError
+                  ? 'forgot-error'
+                  : serverSuccess
+                    ? 'forgot-success'
+                    : undefined}
               />
             </Field>
 

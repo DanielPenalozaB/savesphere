@@ -33,4 +33,3 @@ export function toLocalizedPath(
 
 // Re-export format utilities for convenience
 export { formatCurrency, formatDate, formatPercent } from './utils/format.js';
-

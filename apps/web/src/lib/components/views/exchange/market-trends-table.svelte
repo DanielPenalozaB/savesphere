@@ -36,9 +36,7 @@
                   : 'from-rose-500/20'}"
               ></div>
               <TrendingUp
-                class="size-4 {trend.isPositive
-                  ? 'text-emerald-500'
-                  : 'rotate-180 text-rose-500'}"
+                class="size-4 {trend.isPositive ? 'text-emerald-500' : 'rotate-180 text-rose-500'}"
               />
             </div>
           </td>

@@ -24,7 +24,8 @@
           <span
             class="mb-1 flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500"
           >
-            <span class="mr-0.5"><TrendingUp class="size-4" aria-hidden="true" /></span> {data.summary.liquidAssetsTrend}%
+            <span class="mr-0.5"><TrendingUp class="size-4" aria-hidden="true" /></span>
+            {data.summary.liquidAssetsTrend}%
           </span>
         </div>
       </div>
@@ -35,7 +36,8 @@
           <span
             class="mb-1 flex items-center rounded-full bg-orange-500/10 px-2 py-0.5 text-xs font-bold text-orange-500"
           >
-            <span class="mr-0.5"><TrendingDown class="size-4" aria-hidden="true" /></span> {Math.abs(data.summary.totalDebtTrend)}%
+            <span class="mr-0.5"><TrendingDown class="size-4" aria-hidden="true" /></span>
+            {Math.abs(data.summary.totalDebtTrend)}%
           </span>
         </div>
       </div>
@@ -46,7 +48,8 @@
           <span
             class="mb-1 flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500"
           >
-            <span class="mr-0.5"><TrendingUp class="size-4" aria-hidden="true" /></span> {data.summary.netWorthTrend}%
+            <span class="mr-0.5"><TrendingUp class="size-4" aria-hidden="true" /></span>
+            {data.summary.netWorthTrend}%
           </span>
         </div>
       </div>

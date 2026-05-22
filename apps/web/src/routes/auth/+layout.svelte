@@ -28,11 +28,15 @@
 {@render children()}
 
 <!-- Language Switcher -->
-<div class="fixed bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border bg-card px-4 py-2 shadow-sm">
+<div
+  class="fixed bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border bg-card px-4 py-2 shadow-sm"
+>
   <Globe class="size-4 text-muted-foreground" aria-hidden="true" />
   <button
     type="button"
-    class="text-sm font-medium transition-colors {currentLocale === 'en' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}"
+    class="text-sm font-medium transition-colors {currentLocale === 'en'
+      ? 'text-primary'
+      : 'text-muted-foreground hover:text-foreground'}"
     onclick={() => setLocale('en')}
     aria-label="English"
   >
@@ -41,7 +45,9 @@
   <span class="text-muted-foreground" aria-hidden="true">|</span>
   <button
     type="button"
-    class="text-sm font-medium transition-colors {currentLocale === 'es' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}"
+    class="text-sm font-medium transition-colors {currentLocale === 'es'
+      ? 'text-primary'
+      : 'text-muted-foreground hover:text-foreground'}"
     onclick={() => setLocale('es')}
     aria-label="Español"
   >

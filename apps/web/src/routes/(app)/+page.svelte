@@ -20,7 +20,9 @@
   <!-- Main Content -->
   <main class="flex flex-1 flex-col gap-4">
     <div class="mb-4 flex items-end gap-4">
-      <h1 class="text-6xl font-bold tracking-tighter dark:text-white">{data.totalBalanceDisplay}</h1>
+      <h1 class="text-6xl font-bold tracking-tighter dark:text-white">
+        {data.totalBalanceDisplay}
+      </h1>
       <div class="flex items-center gap-2">
         <div
           class="flex items-center gap-2 rounded-full bg-green-500/10 px-2.5 py-1 text-xs font-medium text-green-500 ring-1 ring-green-500/20 ring-inset"
