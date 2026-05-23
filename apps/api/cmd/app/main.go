@@ -133,7 +133,9 @@ func main() {
 
 	// API routes (Protected)
 	api := e.Group("/api")
-	api.Use(customMiddleware.AuthMiddleware(jwtService))
+	api.Use(customMiddleware.AuthMiddlewareWithSkipper(jwtService, func(c echo.Context) bool {
+		return strings.HasPrefix(c.Path(), "/api/auth") || c.Path() == "/api/health"
+	}))
 	
 	// Wallet routes
 	api.POST("/wallets", walletHandler.Create)

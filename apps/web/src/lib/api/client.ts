@@ -4,7 +4,7 @@ import { authState } from '$lib/auth.svelte.js';
  * Typed fetch wrapper for API calls.
  * Authentication is handled via httpOnly cookies (credentials: 'include').
  */
-const API_BASE = import.meta.env.VITE_API_BASE ?? '/api';
+const API_BASE = '';
 
 export type ApiResponse<T> = {
   success: boolean;

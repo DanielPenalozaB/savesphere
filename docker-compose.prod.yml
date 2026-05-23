@@ -51,7 +51,6 @@ services:
     container_name: savesphere-web
     restart: always
     environment:
-      VITE_API_BASE: /api
       ORIGIN: https://${DOMAIN:-savesphere.app}
       BACKEND_API_URL: http://api:3000
     depends_on:

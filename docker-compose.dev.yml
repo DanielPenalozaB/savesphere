@@ -65,7 +65,6 @@ services:
       - "5173:5173"
     environment:
       NODE_ENV: development
-      VITE_API_BASE: /api
       API_PROXY_URL: http://api:3000
       BACKEND_API_URL: http://api:3000
     depends_on:
