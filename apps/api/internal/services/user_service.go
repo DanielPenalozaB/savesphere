@@ -16,6 +16,7 @@ type UserService interface {
 	Register(ctx context.Context, req models.RegisterRequest) (*models.User, error)
 	Login(ctx context.Context, req models.LoginRequest) (*models.User, error)
 	GetByID(ctx context.Context, id uuid.UUID) (*models.User, error)
+	GetByEmail(ctx context.Context, email string) (*models.User, error)
 	RecordFailedLogin(ctx context.Context, userID uuid.UUID) error
 	RecordSuccessfulLogin(ctx context.Context, userID uuid.UUID) error
 }
@@ -116,4 +117,8 @@ func (s *userService) RecordSuccessfulLogin(ctx context.Context, userID uuid.UUI
 
 func (s *userService) GetByID(ctx context.Context, id uuid.UUID) (*models.User, error) {
 	return s.repo.GetByID(ctx, id)
+}
+
+func (s *userService) GetByEmail(ctx context.Context, email string) (*models.User, error) {
+	return s.repo.GetByEmail(ctx, email)
 }

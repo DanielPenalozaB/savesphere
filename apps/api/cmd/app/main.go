@@ -125,6 +125,7 @@ func main() {
 	auth.POST("/forgot-password", authHandler.ForgotPassword)
 	auth.POST("/reset-password", authHandler.ResetPassword)
 	auth.GET("/verify-email", authHandler.VerifyEmail)
+	auth.POST("/resend-verification", authHandler.ResendVerification)
 	auth.POST("/refresh", authHandler.Refresh)
 	auth.POST("/logout", authHandler.Logout)
 	auth.GET("/me", authHandler.Me)

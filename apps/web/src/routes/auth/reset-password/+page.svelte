@@ -13,17 +13,14 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import { apiPost } from '$lib/api/client.js';
   import * as m from '$lib/paraglide/messages.js';
-  import AlertCircleIcon from '@lucide/svelte/icons/circle-alert';
-  import CheckCircleIcon from '@lucide/svelte/icons/circle-check';
   import GalleryVerticalEndIcon from '@lucide/svelte/icons/gallery-vertical-end';
   import EyeIcon from '@lucide/svelte/icons/eye';
   import EyeOffIcon from '@lucide/svelte/icons/eye-off';
+  import { notify } from '$lib/components/ui/toast/index.js';
 
   let password = $state('');
   let confirmPassword = $state('');
   let showPassword = $state(false);
-  let serverError = $state('');
-  let serverSuccess = $state('');
   let isSubmitting = $state(false);
 
   const token = $derived($page.url.searchParams.get('token'));
@@ -36,17 +33,15 @@
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
-    serverError = '';
-    serverSuccess = '';
 
     const validationError = validate();
     if (validationError) {
-      serverError = validationError;
+      notify.error(validationError);
       return;
     }
 
     if (!token) {
-      serverError = m.auth_reset_missing_token();
+      notify.error(m.auth_reset_missing_token());
       return;
     }
 
@@ -55,11 +50,11 @@
     isSubmitting = false;
 
     if (error) {
-      serverError = m.auth_reset_invalid_token();
+      notify.error(m.auth_reset_invalid_token());
       return;
     }
 
-    serverSuccess = m.auth_reset_success();
+    notify.success(m.auth_reset_success());
     setTimeout(() => goto('/auth/sign-in'), 1500);
   }
 </script>
@@ -90,32 +85,6 @@
       <Card.Content>
         <form onsubmit={handleSubmit} aria-busy={isSubmitting}>
           <FieldGroup>
-            {#if serverError}
-              <Field>
-                <div
-                  id="reset-error"
-                  class="flex items-start gap-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive"
-                  role="alert"
-                >
-                  <AlertCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                  <span>{serverError}</span>
-                </div>
-              </Field>
-            {/if}
-
-            {#if serverSuccess}
-              <Field>
-                <div
-                  id="reset-success"
-                  class="flex items-start gap-2 rounded-md border border-green-600 bg-green-600/10 p-3 text-sm text-green-700"
-                  role="status"
-                >
-                  <CheckCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                  <span>{serverSuccess}</span>
-                </div>
-              </Field>
-            {/if}
-
             <Field>
               <FieldLabel for="password">{m.auth_password_label()}</FieldLabel>
               <div class="relative">
@@ -126,8 +95,6 @@
                   bind:value={password}
                   class="pe-9"
                   autocomplete="new-password"
-                  aria-invalid={serverError ? 'true' : undefined}
-                  aria-describedby={serverError ? 'reset-error' : undefined}
                 />
                 <button
                   type="button"
@@ -153,8 +120,6 @@
                 placeholder={m.auth_confirm_password_placeholder()}
                 bind:value={confirmPassword}
                 autocomplete="new-password"
-                aria-invalid={serverError ? 'true' : undefined}
-                aria-describedby={serverError ? 'reset-error' : undefined}
               />
             </Field>
 

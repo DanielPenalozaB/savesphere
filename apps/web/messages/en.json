@@ -111,5 +111,8 @@
   "auth_verify_success": "Email verified! You can now sign in.",
   "auth_verify_title_loading": "Verifying email",
   "auth_verify_title_success": "Email verified!",
-  "auth_verify_title_error": "Verification failed"
+  "auth_verify_title_error": "Verification failed",
+  "auth_resend_verification": "Resend verification email",
+  "auth_resend_verification_sent": "Verification email sent. Please check your inbox.",
+  "auth_resend_verification_loading": "Sending..."
 }

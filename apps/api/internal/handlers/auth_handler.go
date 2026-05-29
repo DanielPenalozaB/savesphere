@@ -290,6 +290,24 @@ func (h *AuthHandler) Logout(c echo.Context) error {
 	return response.JSON(c, http.StatusOK, "Logged out successfully", nil)
 }
 
+func (h *AuthHandler) ResendVerification(c echo.Context) error {
+	var req struct {
+		Email string `json:"email" validate:"required,email"`
+	}
+	if err := c.Bind(&req); err != nil {
+		return response.JSON(c, http.StatusOK, "If an account exists, a verification email has been sent", nil)
+	}
+
+	user, err := h.userService.GetByEmail(c.Request().Context(), req.Email)
+	if err != nil || user == nil || user.EmailVerified {
+		return response.JSON(c, http.StatusOK, "If an account exists, a verification email has been sent", nil)
+	}
+
+	_, _ = h.emailVerificationService.CreateVerification(c.Request().Context(), user.ID, user.Email)
+
+	return response.JSON(c, http.StatusOK, "If an account exists, a verification email has been sent", nil)
+}
+
 func (h *AuthHandler) Me(c echo.Context) error {
 	accessCookie, err := c.Cookie("access_token")
 	if err != nil {

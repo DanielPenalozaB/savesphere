@@ -32,6 +32,8 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       OAUTH_REDIRECT_URL: https://${DOMAIN:-savesphere.app}/auth/callback
       GEMINI_API_KEY: ${GEMINI_API_KEY}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      EMAIL_FROM: ${EMAIL_FROM:-SaveSphere <noreply@savesphere.app>}
     depends_on:
       db:
         condition: service_healthy

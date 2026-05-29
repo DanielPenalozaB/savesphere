@@ -46,6 +46,8 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       OAUTH_REDIRECT_URL: http://localhost:5173/auth/callback
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-SaveSphere <noreply@savesphere.app>}
     ports:
       - "3001:3000"
     depends_on:

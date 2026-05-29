@@ -30,7 +30,7 @@
     }
 
     const { data, error } = await apiPost<{ user: User; token: string }>(
-      `/auth/google/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
+      `/api/auth/google/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
       {}
     );
 

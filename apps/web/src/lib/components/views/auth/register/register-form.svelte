@@ -17,12 +17,11 @@
   import * as m from '$lib/paraglide/messages.js';
   import EyeIcon from '@lucide/svelte/icons/eye';
   import EyeOffIcon from '@lucide/svelte/icons/eye-off';
-  import AlertCircleIcon from '@lucide/svelte/icons/circle-alert';
-  import CheckCircleIcon from '@lucide/svelte/icons/circle-check';
   import type { HTMLAttributes } from 'svelte/elements';
   import type { ZodIssue } from 'zod';
   import { startGoogleAuth } from '$lib/auth/oauth.js';
   import PasswordStrength from './password-strength.svelte';
+  import { notify } from '$lib/components/ui/toast/index.js';
 
   let { class: className, ...restProps }: HTMLAttributes<HTMLDivElement> = $props();
 
@@ -35,8 +34,6 @@
   let showPassword = $state(false);
   let showConfirmPassword = $state(false);
   let errors = $state<Record<string, string>>({});
-  let serverError = $state('');
-  let serverSuccess = $state('');
   let isSubmitting = $state(false);
   let isGoogleLoading = $state(false);
 
@@ -87,8 +84,6 @@
     e.preventDefault();
     if (!validate()) return;
 
-    serverError = '';
-    serverSuccess = '';
     isSubmitting = true;
 
     const {
@@ -104,25 +99,24 @@
     isSubmitting = false;
 
     if (error) {
-      serverError = mapApiError(status);
+      notify.error(mapApiError(status));
       return;
     }
 
     if (res) {
-      serverSuccess = m.auth_success_register();
+      notify.success(m.auth_success_register());
       authState.login(res.token, res.user);
       setTimeout(() => goto('/'), 800);
     }
   }
 
   async function handleGoogleSignIn() {
-    serverError = '';
     isGoogleLoading = true;
     try {
       await startGoogleAuth();
     } catch (err) {
       isGoogleLoading = false;
-      serverError = m.auth_error_unexpected();
+      notify.error(m.auth_error_unexpected());
     }
   }
 </script>
@@ -136,30 +130,6 @@
     <Card.Content>
       <form onsubmit={handleSubmit} aria-busy={isSubmitting || isGoogleLoading}>
         <FieldGroup>
-          {#if serverError}
-            <Field>
-              <div
-                class="flex items-start gap-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive"
-                role="alert"
-              >
-                <AlertCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <span>{serverError}</span>
-              </div>
-            </Field>
-          {/if}
-
-          {#if serverSuccess}
-            <Field>
-              <div
-                class="flex items-start gap-2 rounded-md border border-green-600 bg-green-600/10 p-3 text-sm text-green-700"
-                role="status"
-              >
-                <CheckCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <span>{serverSuccess}</span>
-              </div>
-            </Field>
-          {/if}
-
           <Field>
             <FieldLabel for="fullName-{id}">{m.auth_full_name_label()}</FieldLabel>
             <Input

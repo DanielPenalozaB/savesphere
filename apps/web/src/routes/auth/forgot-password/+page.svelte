@@ -11,30 +11,25 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import { apiPost } from '$lib/api/client.js';
   import * as m from '$lib/paraglide/messages.js';
-  import AlertCircleIcon from '@lucide/svelte/icons/circle-alert';
-  import CheckCircleIcon from '@lucide/svelte/icons/circle-check';
   import GalleryVerticalEndIcon from '@lucide/svelte/icons/gallery-vertical-end';
+  import { notify } from '$lib/components/ui/toast/index.js';
 
   let email = $state('');
-  let serverError = $state('');
-  let serverSuccess = $state('');
   let isSubmitting = $state(false);
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
-    serverError = '';
-    serverSuccess = '';
     isSubmitting = true;
 
     const { error } = await apiPost('/api/auth/forgot-password', { email });
     isSubmitting = false;
 
     if (error) {
-      serverError = m.auth_error_unexpected();
+      notify.error(m.auth_error_unexpected());
       return;
     }
 
-    serverSuccess = m.auth_forgot_success();
+    notify.success(m.auth_forgot_success());
     email = '';
   }
 </script>
@@ -65,32 +60,6 @@
       <Card.Content>
         <form onsubmit={handleSubmit} aria-busy={isSubmitting}>
           <FieldGroup>
-            {#if serverError}
-              <Field>
-                <div
-                  id="forgot-error"
-                  class="flex items-start gap-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive"
-                  role="alert"
-                >
-                  <AlertCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                  <span>{serverError}</span>
-                </div>
-              </Field>
-            {/if}
-
-            {#if serverSuccess}
-              <Field>
-                <div
-                  id="forgot-success"
-                  class="flex items-start gap-2 rounded-md border border-green-600 bg-green-600/10 p-3 text-sm text-green-700"
-                  role="status"
-                >
-                  <CheckCircleIcon class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                  <span>{serverSuccess}</span>
-                </div>
-              </Field>
-            {/if}
-
             <Field>
               <FieldLabel for="email">{m.auth_email_label()}</FieldLabel>
               <Input
@@ -99,12 +68,6 @@
                 placeholder={m.auth_email_placeholder()}
                 bind:value={email}
                 autocomplete="email"
-                aria-invalid={serverError ? 'true' : undefined}
-                aria-describedby={serverError
-                  ? 'forgot-error'
-                  : serverSuccess
-                    ? 'forgot-success'
-                    : undefined}
               />
             </Field>
 

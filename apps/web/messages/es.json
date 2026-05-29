@@ -111,5 +111,8 @@
   "auth_verify_success": "¡Correo verificado! Ahora puedes iniciar sesión.",
   "auth_verify_title_loading": "Verificando correo",
   "auth_verify_title_success": "¡Correo verificado!",
-  "auth_verify_title_error": "Verificación fallida"
+  "auth_verify_title_error": "Verificación fallida",
+  "auth_resend_verification": "Reenviar correo de verificación",
+  "auth_resend_verification_sent": "Correo de verificación enviado. Revisa tu bandeja de entrada.",
+  "auth_resend_verification_loading": "Enviando..."
 }
