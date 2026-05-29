@@ -19,6 +19,7 @@ type UserService interface {
 	GetByEmail(ctx context.Context, email string) (*models.User, error)
 	RecordFailedLogin(ctx context.Context, userID uuid.UUID) error
 	RecordSuccessfulLogin(ctx context.Context, userID uuid.UUID) error
+	SetPassword(ctx context.Context, userID uuid.UUID, password string) error
 }
 
 type userService struct {
@@ -121,4 +122,23 @@ func (s *userService) GetByID(ctx context.Context, id uuid.UUID) (*models.User, 
 
 func (s *userService) GetByEmail(ctx context.Context, email string) (*models.User, error) {
 	return s.repo.GetByEmail(ctx, email)
+}
+
+func (s *userService) SetPassword(ctx context.Context, userID uuid.UUID, password string) error {
+	user, err := s.repo.GetByID(ctx, userID)
+	if err != nil {
+		return err
+	}
+	if user == nil {
+		return errors.New("user not found")
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	user.PasswordHash = string(hashedPassword)
+	user.UpdatedAt = time.Now()
+	return s.repo.Update(ctx, user)
 }

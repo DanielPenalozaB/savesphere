@@ -6,6 +6,7 @@ export type User = {
   email: string;
   fullName: string;
   picture?: string;
+  authProvider: 'local' | 'google';
 };
 
 class AuthState {

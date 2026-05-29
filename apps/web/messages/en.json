@@ -114,5 +114,14 @@
   "auth_verify_title_error": "Verification failed",
   "auth_resend_verification": "Resend verification email",
   "auth_resend_verification_sent": "Verification email sent. Please check your inbox.",
-  "auth_resend_verification_loading": "Sending..."
+  "auth_resend_verification_loading": "Sending...",
+  "auth_set_password_banner_title": "You're all set! 🎉",
+  "auth_set_password_banner_description": "You signed in with Google — super convenient. Want to add a password too? It gives you another way to sign in, just in case. No pressure at all.",
+  "auth_set_password_banner_action": "Set password",
+  "auth_set_password_banner_skip": "Skip for now",
+  "auth_set_password_form_title": "Create a password",
+  "auth_set_password_form_description": "Pick something you'll remember. You'll be able to sign in with your email and password anytime.",
+  "auth_set_password_submit": "Save password",
+  "auth_set_password_loading": "Saving...",
+  "auth_set_password_success": "Password saved! You can now sign in with your email too."
 }

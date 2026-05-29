@@ -152,6 +152,9 @@ func main() {
 	api.GET("/intelligence/safe-to-spend", intelHandler.GetSafeToSpend)
 	api.GET("/intelligence/advice", intelHandler.GetAdvice)
 
+	// Password management (protected)
+	api.POST("/set-password", authHandler.SetPassword)
+
 	api.GET("/hello", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{
 			"message": "Hello from Go!",

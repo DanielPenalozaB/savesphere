@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     IncomeVsExpenses,
+    PasswordSetupBanner,
     SafeToSpendChart,
     TransactionList,
     UpcomingBills,
@@ -19,6 +20,8 @@
 <div class="flex w-full overflow-hidden">
   <!-- Main Content -->
   <main class="flex flex-1 flex-col gap-4">
+    <PasswordSetupBanner />
+
     <div class="mb-4 flex items-end gap-4">
       <h1 class="text-6xl font-bold tracking-tighter dark:text-white">
         {data.totalBalanceDisplay}

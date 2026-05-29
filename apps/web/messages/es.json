@@ -114,5 +114,14 @@
   "auth_verify_title_error": "Verificación fallida",
   "auth_resend_verification": "Reenviar correo de verificación",
   "auth_resend_verification_sent": "Correo de verificación enviado. Revisa tu bandeja de entrada.",
-  "auth_resend_verification_loading": "Enviando..."
+  "auth_resend_verification_loading": "Enviando...",
+  "auth_set_password_banner_title": "¡Todo listo! 🎉",
+  "auth_set_password_banner_description": "Iniciaste sesión con Google — súper conveniente. ¿Quieres agregar una contraseña también? Te da otra forma de iniciar sesión, por si acaso. Sin presión.",
+  "auth_set_password_banner_action": "Establecer contraseña",
+  "auth_set_password_banner_skip": "Saltar por ahora",
+  "auth_set_password_form_title": "Crear una contraseña",
+  "auth_set_password_form_description": "Elige algo que recuerdes. Podrás iniciar sesión con tu correo y contraseña cuando quieras.",
+  "auth_set_password_submit": "Guardar contraseña",
+  "auth_set_password_loading": "Guardando...",
+  "auth_set_password_success": "¡Contraseña guardada! Ahora también puedes iniciar sesión con tu correo."
 }

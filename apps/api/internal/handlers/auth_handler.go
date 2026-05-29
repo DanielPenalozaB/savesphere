@@ -13,6 +13,7 @@ import (
 	"savesphere-api/internal/services"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -306,6 +307,28 @@ func (h *AuthHandler) ResendVerification(c echo.Context) error {
 	_, _ = h.emailVerificationService.CreateVerification(c.Request().Context(), user.ID, user.Email)
 
 	return response.JSON(c, http.StatusOK, "If an account exists, a verification email has been sent", nil)
+}
+
+func (h *AuthHandler) SetPassword(c echo.Context) error {
+	var req models.SetPasswordRequest
+	if err := c.Bind(&req); err != nil {
+		return response.BadRequest(c, "Invalid request", err)
+	}
+
+	if err := h.validator.Struct(req); err != nil {
+		return response.Error(c, http.StatusBadRequest, validationErrorMessage(err), nil)
+	}
+
+	userID, ok := c.Get("user_id").(uuid.UUID)
+	if !ok {
+		return response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+	}
+
+	if err := h.userService.SetPassword(c.Request().Context(), userID, req.Password); err != nil {
+		return response.InternalError(c, "Failed to update password", err)
+	}
+
+	return response.JSON(c, http.StatusOK, "Password updated successfully", nil)
 }
 
 func (h *AuthHandler) Me(c echo.Context) error {
