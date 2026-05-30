@@ -3,7 +3,7 @@
   import Check from '@lucide/svelte/icons/check';
   import X from '@lucide/svelte/icons/x';
   import LoaderCircle from '@lucide/svelte/icons/loader-circle';
-  import Info from '@lucide/svelte/icons/info';
+  import MessageCircleWarning from '@lucide/svelte/icons/message-circle-warning';
   import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 
   let { toast }: { toast: ToastItem } = $props();
@@ -12,9 +12,9 @@
     success: Check,
     error: X,
     warning: TriangleAlert,
-    info: Info,
+    info: MessageCircleWarning,
     loading: LoaderCircle,
-    action: Info
+    action: MessageCircleWarning
   };
 
   const Icon = $derived(iconMap[toast.type]);
@@ -103,15 +103,16 @@
   {#if toast.description || toast.button}
     <!-- Description wrap -->
     <div
-      class="w-fit max-w-[350px] overflow-hidden rounded-tl-2xl rounded-tr-none rounded-br-2xl rounded-bl-2xl bg-card"
+      class="w-fit max-w-[350px] origin-top overflow-hidden rounded-tl-2xl rounded-tr-none rounded-br-2xl rounded-bl-2xl bg-card"
       style:max-height={toast.expanded ? '300px' : '0'}
       style:opacity={toast.expanded ? '1' : '0'}
+      style:transform={toast.expanded ? 'scaleY(1) translateY(0)' : 'scaleY(0.6) translateY(-4px)'}
       style:padding={toast.expanded ? '0.5rem 0.75rem' : '0 0.75rem'}
-      style:transition={`max-height 400ms var(--sonner-spring-easing), opacity 300ms ease, padding 400ms var(--sonner-spring-easing)`}
+      style:transition={`max-height 400ms var(--sonner-spring-easing), opacity 200ms ease, padding 400ms var(--sonner-spring-easing), transform 400ms var(--sonner-spring-easing)`}
     >
       {#if toast.description}
         <p
-          class="wrap-break-words m-0 w-fit max-w-[320px] text-[0.875rem] leading-5 font-normal whitespace-normal text-muted-foreground"
+          class="wrap-break-words m-0 w-fit max-w-[320px] text-[0.875rem] leading-5 font-normal whitespace-normal text-slate-400"
         >
           {toast.description}
         </p>
