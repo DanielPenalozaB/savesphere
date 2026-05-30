@@ -17,6 +17,7 @@ export interface ToastOptions {
   duration?: number | null;
   button?: { title: string; onClick: () => void };
   expanded?: boolean;
+  autoExpand?: number | boolean;
 }
 
 export interface ToastItem extends ToastOptions {
@@ -87,6 +88,13 @@ class ToastStore {
 
         setTimeout(() => {
           existing.swapping = false;
+
+          if (hasDescription && options.autoExpand !== false) {
+            const delay = typeof options.autoExpand === 'number' ? options.autoExpand : 1500;
+            setTimeout(() => {
+              if (existing.visible) existing.expanded = true;
+            }, delay);
+          }
         }, 50);
       }, 250);
 
@@ -117,6 +125,14 @@ class ToastStore {
           if (toast) toast.visible = true;
         });
       });
+
+      if (hasDescription && options.autoExpand !== false) {
+        const delay = typeof options.autoExpand === 'number' ? options.autoExpand : 1500;
+        setTimeout(() => {
+          const toast = this.toasts.find((t) => t.id === id);
+          if (toast && toast.visible) toast.expanded = true;
+        }, delay);
+      }
     } else {
       const toast = this.toasts.find((t) => t.id === id);
       if (toast) toast.visible = true;

@@ -4,14 +4,14 @@
   import X from '@lucide/svelte/icons/x';
   import LoaderCircle from '@lucide/svelte/icons/loader-circle';
   import MessageCircleWarning from '@lucide/svelte/icons/message-circle-warning';
-  import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+  import CircleAlert from '@lucide/svelte/icons/circle-alert';
 
   let { toast }: { toast: ToastItem } = $props();
 
   const iconMap = {
     success: Check,
     error: X,
-    warning: TriangleAlert,
+    warning: CircleAlert,
     info: MessageCircleWarning,
     loading: LoaderCircle,
     action: MessageCircleWarning
@@ -63,7 +63,8 @@
 <div
   class="pointer-events-auto flex w-fit flex-col items-end overflow-visible bg-transparent text-[0.825rem] font-medium {visibleClasses} {textColor}"
   style:filter={swapFilter}
-  style:transition="transform 400ms var(--sonner-spring-easing), opacity 400ms var(--sonner-spring-easing), filter 250ms ease"
+  style:transition={`transform 400ms var(--sonner-spring-easing), opacity 400ms
+  var(--sonner-spring-easing), filter 250ms ease`}
   role="alert"
   aria-live="polite"
   onmouseenter={() => {
@@ -115,7 +116,7 @@
       style:opacity={toast.expanded ? '1' : '0'}
       style:transform={toast.expanded ? 'scaleY(1) translateY(0)' : 'scaleY(0.6) translateY(-4px)'}
       style:padding={toast.expanded ? '0.5rem 0.75rem' : '0 0.75rem'}
-      style:transition={`max-height 400ms var(--sonner-spring-easing), opacity 200ms ease, padding 400ms var(--sonner-spring-easing), transform 400ms var(--sonner-spring-easing)`}
+      style:transition="max-height 400ms var(--sonner-spring-easing), opacity 200ms ease, padding 400ms var(--sonner-spring-easing), transform 400ms var(--sonner-spring-easing)"
     >
       {#if toast.description}
         <p

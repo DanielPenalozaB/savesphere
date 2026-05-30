@@ -16,6 +16,7 @@
     "web:check": "turbo check --filter=web"
   },
   "devDependencies": {
+    "eslint": "^10.4.1",
     "turbo": "latest"
   },
   "packageManager": "yarn@1.22.22"
