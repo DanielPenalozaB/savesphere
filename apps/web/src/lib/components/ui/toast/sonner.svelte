@@ -52,11 +52,18 @@
   };
 
   const btnClasses = $derived(btnClassesMap[toast.type]);
+
+  const swapFilter = $derived(
+    toast.swapping
+      ? 'drop-shadow(0 0 0.5px rgba(0,0,0,0.12)) drop-shadow(0 2px 8px rgba(0,0,0,0.06)) blur(4px)'
+      : 'drop-shadow(0 0 0.5px rgba(0,0,0,0.12)) drop-shadow(0 2px 8px rgba(0,0,0,0.06)) blur(0px)'
+  );
 </script>
 
 <div
-  class="pointer-events-auto flex w-fit flex-col items-end overflow-visible bg-transparent text-[0.825rem] font-medium transition-[transform,opacity] duration-400 ease-(--sonner-spring-easing) {visibleClasses} {textColor}"
-  style:filter="drop-shadow(0 0 0.5px rgba(0,0,0,0.12)) drop-shadow(0 2px 8px rgba(0,0,0,0.06))"
+  class="pointer-events-auto flex w-fit flex-col items-end overflow-visible bg-transparent text-[0.825rem] font-medium {visibleClasses} {textColor}"
+  style:filter={swapFilter}
+  style:transition="transform 400ms var(--sonner-spring-easing), opacity 400ms var(--sonner-spring-easing), filter 250ms ease"
   role="alert"
   aria-live="polite"
   onmouseenter={() => {

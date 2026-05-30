@@ -23,6 +23,7 @@ export interface ToastItem extends ToastOptions {
   id: string;
   createdAt: number;
   visible: boolean;
+  swapping: boolean;
   pausedAt: number | null;
   dismissAt: number | null;
   type: ToastState;
@@ -61,21 +62,48 @@ class ToastStore {
   }
 
   add(options: ToastOptions): string {
-    const id = generateId();
     const duration = options.duration === undefined ? 6000 : options.duration;
     const now = Date.now();
     const hasDescription = !!options.description;
     const expanded = options.expanded ?? false;
     const expandOnHover = !expanded && hasDescription;
+    const position = options.position || 'top-right';
+
+    const existing = this.toasts.find((t) => t.position === position && t.visible);
+
+    if (existing) {
+      existing.swapping = true;
+
+      setTimeout(() => {
+        existing.title = options.title;
+        existing.description = options.description;
+        existing.type = options.type || 'info';
+        existing.button = options.button;
+        existing.duration = duration;
+        existing.expandOnHover = !expanded && hasDescription;
+        existing.expanded = expanded;
+        existing.dismissAt = duration !== null && duration > 0 ? now + duration : null;
+        existing.pausedAt = null;
+
+        setTimeout(() => {
+          existing.swapping = false;
+        }, 50);
+      }, 250);
+
+      return existing.id;
+    }
+
+    const id = generateId();
 
     this.toasts.push({
       ...options,
       id,
       type: options.type || 'info',
-      position: options.position || 'top-right',
+      position,
       duration,
       createdAt: now,
       visible: false,
+      swapping: false,
       expanded,
       pausedAt: null,
       dismissAt: duration !== null && duration > 0 ? now + duration : null,
