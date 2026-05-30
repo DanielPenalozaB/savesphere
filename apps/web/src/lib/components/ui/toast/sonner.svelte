@@ -8,6 +8,11 @@
 
   let { toast }: { toast: ToastItem } = $props();
 
+  let dragging = $state(false);
+  let dragY = $state(0);
+  let startY = 0;
+  const DISMISS_THRESHOLD = 60;
+
   const iconMap = {
     success: Check,
     error: X,
@@ -58,16 +63,25 @@
 
   const dragBlur = $derived(Math.min(Math.abs(dragY) / 15, 5));
 
+  let expanding = $state(false);
+  let prevExpanded = $state(false);
+
+  $effect(() => {
+    if (toast.expanded && !prevExpanded) {
+      expanding = true;
+      setTimeout(() => {
+        expanding = false;
+      }, 140);
+    }
+    prevExpanded = toast.expanded;
+  });
+
   const swapFilter = $derived.by(() => {
     if (toast.swapping) return `${baseDropShadow} blur(4px)`;
+    if (expanding) return `${baseDropShadow} blur(1.5px)`;
     if (dragging && dragY !== 0) return `${baseDropShadow} blur(${dragBlur}px)`;
     return `${baseDropShadow} blur(0px)`;
   });
-
-  let dragging = $state(false);
-  let dragY = $state(0);
-  let startY = 0;
-  const DISMISS_THRESHOLD = 60;
 
   const dragOpacity = $derived(Math.max(0, 1 - Math.abs(dragY) / (DISMISS_THRESHOLD * 1.5)));
 
@@ -92,6 +106,33 @@
       dragY = 0;
     }
   }
+
+  let titleInnerEl = $state<HTMLElement | null>(null);
+  let titleWidth = $state<number | null>(null);
+  let descEl = $state<HTMLElement | null>(null);
+  let descWidth = $state<number | null>(null);
+
+  $effect(() => {
+    if (!titleInnerEl) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        titleWidth = entry.contentBoxSize[0].inlineSize;
+      }
+    });
+    ro.observe(titleInnerEl);
+    return () => ro.disconnect();
+  });
+
+  $effect(() => {
+    if (!descEl) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        descWidth = entry.contentBoxSize[0].inlineSize;
+      }
+    });
+    ro.observe(descEl);
+    return () => ro.disconnect();
+  });
 </script>
 
 <div
@@ -118,11 +159,13 @@
 >
   <!-- Title wrap -->
   <div
-    class="relative flex max-h-10 min-h-10 w-fit items-center gap-2 bg-card p-2 pr-3.5 text-sm transition-all duration-200 ease-(--sonner-spring-easing)"
+    class="relative flex max-h-10 min-h-10 items-center gap-2 overflow-visible bg-card p-2 pr-3.5 text-sm transition-all duration-200 ease-(--sonner-spring-easing)"
     style:border-radius={toast.expanded ? '24px 24px 0 0' : '24px'}
+    style:width={titleWidth !== null ? `${titleWidth + 24 + 14}px` : 'fit-content'}
   >
     <div
-      class="flex items-center gap-2 transition-all duration-200 ease-(--sonner-spring-easing)"
+      bind:this={titleInnerEl}
+      class="flex w-fit items-center gap-2 transition-[transform] duration-200 ease-(--sonner-spring-easing)"
       style:border-radius={toast.expanded ? '24px 24px 0 0' : '24px'}
       style:scale={toast.expanded ? 0.9 : 1}
     >
@@ -151,29 +194,32 @@
   {#if toast.description || toast.button}
     <!-- Description wrap -->
     <div
-      class="w-fit max-w-[350px] origin-top overflow-hidden rounded-tl-2xl rounded-tr-none rounded-br-2xl rounded-bl-2xl bg-card"
+      class="max-w-[350px] origin-top overflow-hidden rounded-tl-2xl rounded-tr-none rounded-b-2xl bg-card"
       style:max-height={toast.expanded ? '300px' : '0'}
       style:opacity={toast.expanded ? '1' : '0'}
       style:transform={toast.expanded ? 'scaleY(1) translateY(0)' : 'scaleY(0.6) translateY(-4px)'}
-      style:padding={toast.expanded ? '0.5rem 0.75rem' : '0 0.75rem'}
-      style:transition="max-height 200ms var(--sonner-spring-easing), opacity 100ms ease, padding 200ms var(--sonner-spring-easing), transform 200ms var(--sonner-spring-easing)"
+      style:padding={toast.expanded ? '0.75rem 1rem' : '0 1rem'}
+      style:min-width={descWidth !== null ? `${descWidth + 32}px` : undefined}
+      style:transition="max-height 400ms var(--sonner-spring-easing), opacity 200ms ease, padding 400ms var(--sonner-spring-easing), transform 400ms var(--sonner-spring-easing), min-width 300ms var(--sonner-spring-easing)"
     >
-      {#if toast.description}
-        <p
-          class="wrap-break-words m-0 w-fit max-w-[320px] text-[0.875rem] leading-5 font-normal whitespace-normal text-slate-400"
-        >
-          {toast.description}
-        </p>
-      {/if}
-      {#if toast.button}
-        <button
-          type="button"
-          class="mt-2 cursor-pointer rounded-full border-none p-1.5 text-xs font-medium transition-colors duration-200 {btnClasses}"
-          onclick={toast.button.onClick}
-        >
-          {toast.button.title}
-        </button>
-      {/if}
+      <div bind:this={descEl} class="w-fit">
+        {#if toast.description}
+          <p
+            class="wrap-break-words m-0 w-fit max-w-[320px] text-[0.875rem] leading-5 font-normal whitespace-normal text-slate-400"
+          >
+            {toast.description}
+          </p>
+        {/if}
+        {#if toast.button}
+          <button
+            type="button"
+            class="mt-2 cursor-pointer rounded-full border-none p-1.5 text-xs font-medium transition-colors duration-200 {btnClasses}"
+            onclick={toast.button.onClick}
+          >
+            {toast.button.title}
+          </button>
+        {/if}
+      </div>
     </div>
   {/if}
 </div>

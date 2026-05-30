@@ -113,7 +113,7 @@
 
     <!-- Wallets Section -->
     <section class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {#each data.wallets as wallet}
+      {#each data.wallets as wallet (wallet.id)}
         <WalletCard
           type={wallet.name}
           accountNumber={wallet.id}
