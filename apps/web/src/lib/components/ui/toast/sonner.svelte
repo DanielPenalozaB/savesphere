@@ -118,11 +118,11 @@
 >
   <!-- Title wrap -->
   <div
-    class="relative flex max-h-10 min-h-10 w-fit items-center gap-2 bg-card p-2 pr-3.5 text-sm transition-all duration-400 ease-(--sonner-spring-easing)"
+    class="relative flex max-h-10 min-h-10 w-fit items-center gap-2 bg-card p-2 pr-3.5 text-sm transition-all duration-200 ease-(--sonner-spring-easing)"
     style:border-radius={toast.expanded ? '24px 24px 0 0' : '24px'}
   >
     <div
-      class="flex items-center gap-2 transition-all duration-400 ease-(--sonner-spring-easing)"
+      class="flex items-center gap-2 transition-all duration-200 ease-(--sonner-spring-easing)"
       style:border-radius={toast.expanded ? '24px 24px 0 0' : '24px'}
       style:scale={toast.expanded ? 0.9 : 1}
     >
@@ -135,7 +135,7 @@
     {#if toast.description || toast.button}
       <!-- Concave curve connector -->
       <svg
-        class="absolute bottom-4 -left-4 translate-y-full text-card transition-opacity duration-300"
+        class="absolute bottom-4 -left-4 translate-y-full text-card transition-opacity duration-200"
         style:opacity={toast.expanded ? '1' : '0'}
         width="16"
         height="16"
@@ -156,7 +156,7 @@
       style:opacity={toast.expanded ? '1' : '0'}
       style:transform={toast.expanded ? 'scaleY(1) translateY(0)' : 'scaleY(0.6) translateY(-4px)'}
       style:padding={toast.expanded ? '0.5rem 0.75rem' : '0 0.75rem'}
-      style:transition="max-height 400ms var(--sonner-spring-easing), opacity 200ms ease, padding 400ms var(--sonner-spring-easing), transform 400ms var(--sonner-spring-easing)"
+      style:transition="max-height 200ms var(--sonner-spring-easing), opacity 100ms ease, padding 200ms var(--sonner-spring-easing), transform 200ms var(--sonner-spring-easing)"
     >
       {#if toast.description}
         <p

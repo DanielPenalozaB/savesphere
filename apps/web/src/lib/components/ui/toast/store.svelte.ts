@@ -73,30 +73,33 @@ class ToastStore {
     const existing = this.toasts.find((t) => t.position === position && t.visible);
 
     if (existing) {
-      existing.swapping = true;
+      existing.expanded = false;
 
       setTimeout(() => {
-        existing.title = options.title;
-        existing.description = options.description;
-        existing.type = options.type || 'info';
-        existing.button = options.button;
-        existing.duration = duration;
-        existing.expandOnHover = !expanded && hasDescription;
-        existing.expanded = expanded;
-        existing.dismissAt = duration !== null && duration > 0 ? now + duration : null;
-        existing.pausedAt = null;
+        existing.swapping = true;
 
         setTimeout(() => {
-          existing.swapping = false;
+          existing.title = options.title;
+          existing.description = options.description;
+          existing.type = options.type || 'info';
+          existing.button = options.button;
+          existing.duration = duration;
+          existing.expandOnHover = !expanded && hasDescription;
+          existing.dismissAt = duration !== null && duration > 0 ? now + duration : null;
+          existing.pausedAt = null;
 
-          if (hasDescription && options.autoExpand !== false) {
-            const delay = typeof options.autoExpand === 'number' ? options.autoExpand : 1500;
-            setTimeout(() => {
-              if (existing.visible) existing.expanded = true;
-            }, delay);
-          }
-        }, 50);
-      }, 250);
+          setTimeout(() => {
+            existing.swapping = false;
+
+            if (hasDescription && options.autoExpand !== false) {
+              const delay = typeof options.autoExpand === 'number' ? options.autoExpand : 600;
+              setTimeout(() => {
+                if (existing.visible) existing.expanded = true;
+              }, delay);
+            }
+          }, 30);
+        }, 120);
+      }, 150);
 
       return existing.id;
     }
@@ -127,7 +130,7 @@ class ToastStore {
       });
 
       if (hasDescription && options.autoExpand !== false) {
-        const delay = typeof options.autoExpand === 'number' ? options.autoExpand : 1500;
+        const delay = typeof options.autoExpand === 'number' ? options.autoExpand : 600;
         setTimeout(() => {
           const toast = this.toasts.find((t) => t.id === id);
           if (toast && toast.visible) toast.expanded = true;
