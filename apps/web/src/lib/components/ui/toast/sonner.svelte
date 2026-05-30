@@ -28,10 +28,10 @@
   );
 
   const textColorMap: Record<string, string> = {
-    success: 'text-[var(--sileo-success)]',
-    error: 'text-[var(--sileo-error)]',
-    warning: 'text-[var(--sileo-warning)]',
-    info: 'text-[var(--sileo-info)]',
+    success: 'text-[var(--sonner-success)]',
+    error: 'text-[var(--sonner-error)]',
+    warning: 'text-[var(--sonner-warning)]',
+    info: 'text-[var(--sonner-info)]',
     loading: 'text-foreground',
     action: 'text-primary'
   };
@@ -40,12 +40,12 @@
 
   const btnClassesMap: Record<string, string> = {
     success:
-      'bg-[color-mix(in_oklch,var(--sileo-success)_15%,transparent)] text-[var(--sileo-success)] hover:bg-[color-mix(in_oklch,var(--sileo-success)_25%,transparent)]',
+      'bg-[color-mix(in_oklch,var(--sonner-success)_15%,transparent)] text-[var(--sonner-success)] hover:bg-[color-mix(in_oklch,var(--sonner-success)_25%,transparent)]',
     error:
-      'bg-[color-mix(in_oklch,var(--sileo-error)_15%,transparent)] text-[var(--sileo-error)] hover:bg-[color-mix(in_oklch,var(--sileo-error)_25%,transparent)]',
+      'bg-[color-mix(in_oklch,var(--sonner-error)_15%,transparent)] text-[var(--sonner-error)] hover:bg-[color-mix(in_oklch,var(--sonner-error)_25%,transparent)]',
     warning:
-      'bg-[color-mix(in_oklch,var(--sileo-warning)_15%,transparent)] text-[var(--sileo-warning)] hover:bg-[color-mix(in_oklch,var(--sileo-warning)_25%,transparent)]',
-    info: 'bg-[color-mix(in_oklch,var(--sileo-info)_15%,transparent)] text-[var(--sileo-info)] hover:bg-[color-mix(in_oklch,var(--sileo-info)_25%,transparent)]',
+      'bg-[color-mix(in_oklch,var(--sonner-warning)_15%,transparent)] text-[var(--sonner-warning)] hover:bg-[color-mix(in_oklch,var(--sonner-warning)_25%,transparent)]',
+    info: 'bg-[color-mix(in_oklch,var(--sonner-info)_15%,transparent)] text-[var(--sonner-info)] hover:bg-[color-mix(in_oklch,var(--sonner-info)_25%,transparent)]',
     loading: 'bg-[color-mix(in_oklch,var(--foreground)_15%,transparent)] text-foreground',
     action:
       'bg-[color-mix(in_oklch,var(--primary)_15%,transparent)] text-primary hover:bg-[color-mix(in_oklch,var(--primary)_25%,transparent)]'
@@ -55,7 +55,8 @@
 </script>
 
 <div
-  class="pointer-events-auto flex w-fit flex-col items-end overflow-visible bg-transparent text-[0.825rem] font-medium transition-[transform,opacity] duration-400 ease-(--sileo-spring-easing) {visibleClasses} {textColor}"
+  class="pointer-events-auto flex w-fit flex-col items-end overflow-visible bg-transparent text-[0.825rem] font-medium transition-[transform,opacity] duration-400 ease-(--sonner-spring-easing) {visibleClasses} {textColor}"
+  style:filter="drop-shadow(0 0 0.5px rgba(0,0,0,0.12)) drop-shadow(0 2px 8px rgba(0,0,0,0.06))"
   role="alert"
   aria-live="polite"
   onmouseenter={() => {
@@ -69,11 +70,11 @@
 >
   <!-- Title wrap -->
   <div
-    class="flex max-h-10 min-h-10 w-fit items-center gap-2 bg-card p-2 pr-3.5 text-sm shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-400 ease-(--sileo-spring-easing)"
+    class="relative flex max-h-10 min-h-10 w-fit items-center gap-2 bg-card p-2 pr-3.5 text-sm transition-all duration-400 ease-(--sonner-spring-easing)"
     style:border-radius={toast.expanded ? '24px 24px 0 0' : '24px'}
   >
     <div
-      class="flex items-center gap-2 transition-all duration-400 ease-(--sileo-spring-easing)"
+      class="flex items-center gap-2 transition-all duration-400 ease-(--sonner-spring-easing)"
       style:border-radius={toast.expanded ? '24px 24px 0 0' : '24px'}
       style:scale={toast.expanded ? 0.9 : 1}
     >
@@ -82,17 +83,31 @@
       </span>
       <span class="text-right font-normal whitespace-nowrap">{toast.title}</span>
     </div>
+
+    {#if toast.description || toast.button}
+      <!-- Concave curve connector -->
+      <svg
+        class="absolute bottom-4 -left-4 translate-y-full text-card transition-opacity duration-300"
+        style:opacity={toast.expanded ? '1' : '0'}
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M16 0 C16 8.837 8.837 16 0 16 L16 16 Z" />
+      </svg>
+    {/if}
   </div>
 
   {#if toast.description || toast.button}
     <!-- Description wrap -->
     <div
-      class="w-fit max-w-[350px] overflow-hidden rounded-tl-2xl rounded-b-2xl bg-card shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+      class="w-fit max-w-[350px] overflow-hidden rounded-tl-2xl rounded-tr-none rounded-br-2xl rounded-bl-2xl bg-card"
       style:max-height={toast.expanded ? '300px' : '0'}
       style:opacity={toast.expanded ? '1' : '0'}
       style:padding={toast.expanded ? '0.5rem 0.75rem' : '0 0.75rem'}
-      style:transition={`max-height 400ms var(--sileo-spring-easing), opacity 300ms ease, padding
-      400ms var(--sileo-spring-easing)`}
+      style:transition={`max-height 400ms var(--sonner-spring-easing), opacity 300ms ease, padding 400ms var(--sonner-spring-easing)`}
     >
       {#if toast.description}
         <p

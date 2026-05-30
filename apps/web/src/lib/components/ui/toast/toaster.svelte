@@ -1,6 +1,6 @@
 <script lang="ts">
   import { toastStore } from './store.svelte.js';
-  import SileoToast from './sileo-toast.svelte';
+  import Sonner from './sonner.svelte';
   import type { ToastPosition } from './store.svelte.js';
 
   const positions: ToastPosition[] = [
@@ -34,7 +34,7 @@
 {#each positions as pos}
   <div class={positionClasses(pos)}>
     {#each toastStore.toasts.filter((t) => t.position === pos) as toast (toast.id)}
-      <SileoToast {toast} />
+      <Sonner {toast} />
     {/each}
   </div>
 {/each}

@@ -142,13 +142,13 @@
   --color-surface-content: var(--color-gray-900);
 }
 
-/* Sileo toast system */
+/* Sonner toast system */
 :root {
-  --sileo-success: oklch(0.723 0.219 142.136);
-  --sileo-error: oklch(0.637 0.237 25.331);
-  --sileo-warning: oklch(0.795 0.184 86.047);
-  --sileo-info: oklch(0.685 0.169 237.323);
-  --sileo-spring-easing: linear(
+  --sonner-success: oklch(0.723 0.219 142.136);
+  --sonner-error: oklch(0.637 0.237 25.331);
+  --sonner-warning: oklch(0.795 0.184 86.047);
+  --sonner-info: oklch(0.685 0.169 237.323);
+  --sonner-spring-easing: linear(
     0, 0.002 0.6%, 0.007 1.2%, 0.015 1.8%, 0.026 2.4%, 0.041 3.1%,
     0.06 3.8%, 0.108 5.3%, 0.157 6.6%, 0.214 8%, 0.467 13.7%, 0.577 16.3%,
     0.631 17.7%, 0.682 19.1%, 0.73 20.5%, 0.771 21.8%, 0.808 23.1%,

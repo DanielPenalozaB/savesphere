@@ -33,7 +33,8 @@
             notify.success({
               title: 'Success toast',
               description: 'This is a description that will expand.',
-              duration: 180000
+              duration: 180000,
+              expanded: true
             })}
         >
           Success
