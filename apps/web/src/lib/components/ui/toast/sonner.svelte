@@ -53,20 +53,60 @@
 
   const btnClasses = $derived(btnClassesMap[toast.type]);
 
-  const swapFilter = $derived(
-    toast.swapping
-      ? 'drop-shadow(0 0 0.5px rgba(0,0,0,0.12)) drop-shadow(0 2px 8px rgba(0,0,0,0.06)) blur(4px)'
-      : 'drop-shadow(0 0 0.5px rgba(0,0,0,0.12)) drop-shadow(0 2px 8px rgba(0,0,0,0.06)) blur(0px)'
-  );
+  const baseDropShadow =
+    'drop-shadow(0 0 0.5px rgba(0,0,0,0.12)) drop-shadow(0 2px 8px rgba(0,0,0,0.06))';
+
+  const dragBlur = $derived(Math.min(Math.abs(dragY) / 15, 5));
+
+  const swapFilter = $derived.by(() => {
+    if (toast.swapping) return `${baseDropShadow} blur(4px)`;
+    if (dragging && dragY !== 0) return `${baseDropShadow} blur(${dragBlur}px)`;
+    return `${baseDropShadow} blur(0px)`;
+  });
+
+  let dragging = $state(false);
+  let dragY = $state(0);
+  let startY = 0;
+  const DISMISS_THRESHOLD = 60;
+
+  const dragOpacity = $derived(Math.max(0, 1 - Math.abs(dragY) / (DISMISS_THRESHOLD * 1.5)));
+
+  function onPointerDown(e: PointerEvent) {
+    dragging = true;
+    dragY = 0;
+    startY = e.clientY;
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }
+
+  function onPointerMove(e: PointerEvent) {
+    if (!dragging) return;
+    dragY = e.clientY - startY;
+  }
+
+  function onPointerUp(e: PointerEvent) {
+    if (!dragging) return;
+    dragging = false;
+    if (Math.abs(dragY) >= DISMISS_THRESHOLD) {
+      toastStore.dismiss(toast.id);
+    } else {
+      dragY = 0;
+    }
+  }
 </script>
 
 <div
-  class="pointer-events-auto flex w-fit flex-col items-end overflow-visible bg-transparent text-[0.825rem] font-medium {visibleClasses} {textColor}"
+  class="pointer-events-auto flex w-fit cursor-grab flex-col items-end overflow-visible bg-transparent text-[0.825rem] font-medium {visibleClasses} {textColor}"
+  class:cursor-grabbing={dragging}
   style:filter={swapFilter}
-  style:transition={`transform 400ms var(--sonner-spring-easing), opacity 400ms
-  var(--sonner-spring-easing), filter 250ms ease`}
+  style:transform="translateY({dragY}px)"
+  style:opacity={dragging ? dragOpacity : undefined}
+  style:transition={dragging ? 'filter 250ms ease' : 'transform 400ms var(--sonner-spring-easing), opacity 400ms var(--sonner-spring-easing), filter 250ms ease'}
   role="alert"
   aria-live="polite"
+  onpointerdown={onPointerDown}
+  onpointermove={onPointerMove}
+  onpointerup={onPointerUp}
+  onpointercancel={onPointerUp}
   onmouseenter={() => {
     toastStore.pause(toast.id);
     if (toast.expandOnHover) toast.expanded = true;
