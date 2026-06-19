@@ -32,9 +32,8 @@
           onclick={() =>
             notify.success({
               title: 'Success toast',
-              description: 'This is a description that will expand.',
-              duration: 180000,
-              expanded: true
+              description: 'This is a description that will NOT expand.',
+              duration: 180000
             })}
         >
           Success

@@ -25,6 +25,7 @@ export interface ToastItem extends ToastOptions {
   createdAt: number;
   visible: boolean;
   swapping: boolean;
+  expanded: boolean;
   pausedAt: number | null;
   dismissAt: number | null;
   type: ToastState;

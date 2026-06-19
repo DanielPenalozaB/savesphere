@@ -73,7 +73,7 @@
         expanding = false;
       }, 140);
     }
-    prevExpanded = toast.expanded;
+    prevExpanded = !!toast.expanded;
   });
 
   const swapFilter = $derived.by(() => {
@@ -97,7 +97,7 @@
     dragY = e.clientY - startY;
   }
 
-  function onPointerUp(e: PointerEvent) {
+  function onPointerUp() {
     if (!dragging) return;
     dragging = false;
     if (Math.abs(dragY) >= DISMISS_THRESHOLD) {
