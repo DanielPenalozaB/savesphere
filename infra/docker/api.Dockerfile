@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # Build context: repository root.
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 RUN npm install -g pnpm@12.14.0
 WORKDIR /repo
 
@@ -14,7 +14,7 @@ RUN pnpm turbo build --filter=@savesphere/api...
 # Self-contained production bundle: the API plus its workspace packages, prod deps only.
 RUN pnpm deploy --legacy --filter=@savesphere/api --prod /out
 
-FROM node:24-alpine AS runtime
+FROM node:26-alpine AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build --chown=node:node /out ./
