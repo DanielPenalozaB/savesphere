@@ -1,0 +1,19 @@
+{
+	"name": "@savesphere/e2e",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"stack:up": "docker compose -f ../infra/compose.test.yml up -d --build --wait",
+		"stack:down": "docker compose -f ../infra/compose.test.yml down -v",
+		"e2e": "pnpm stack:up && playwright test; status=$?; pnpm stack:down; exit $status",
+		"e2e:run": "playwright test",
+		"check": "tsc --noEmit",
+		"lint": "eslint ."
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.60.0",
+		"@types/node": "^24",
+		"typescript": "~6.0.3"
+	}
+}

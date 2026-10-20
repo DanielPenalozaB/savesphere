@@ -1,0 +1,15 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"app_name": "SaveSphere",
+	"app_tagline": "Your calm companion for expenses, savings and plans.",
+	"status_api_ok": "All systems ready",
+	"status_api_down": "We can't reach the server right now",
+	"ai_badge": "AI",
+	"ai_locked_label": "{feature} needs AI",
+	"ai_locked_not_configured": "Connect an AI provider to unlock this feature.",
+	"ai_locked_invalid_key": "Your AI key stopped working. Update it to unlock this feature.",
+	"ai_locked_disabled_by_user": "You turned AI off. Turn it back on to use this feature.",
+	"ai_locked_cta": "Open AI settings",
+	"ai_settings_title": "AI settings",
+	"ai_settings_intro": "Connect your own AI provider key (Anthropic, OpenAI, Google or a local model) to unlock smart features. SaveSphere works fully without it."
+}

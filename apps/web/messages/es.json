@@ -1,0 +1,15 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"app_name": "SaveSphere",
+	"app_tagline": "Tu compañero tranquilo para gastos, ahorros y planes.",
+	"status_api_ok": "Todo listo",
+	"status_api_down": "No podemos conectar con el servidor en este momento",
+	"ai_badge": "IA",
+	"ai_locked_label": "{feature} requiere IA",
+	"ai_locked_not_configured": "Conecta un proveedor de IA para desbloquear esta función.",
+	"ai_locked_invalid_key": "Tu clave de IA dejó de funcionar. Actualízala para desbloquear esta función.",
+	"ai_locked_disabled_by_user": "Desactivaste la IA. Vuelve a activarla para usar esta función.",
+	"ai_locked_cta": "Abrir ajustes de IA",
+	"ai_settings_title": "Ajustes de IA",
+	"ai_settings_intro": "Conecta la clave de tu proveedor de IA (Anthropic, OpenAI, Google o un modelo local) para desbloquear funciones inteligentes. SaveSphere funciona por completo sin ella."
+}

@@ -1,0 +1,8 @@
+pnpm-lock.yaml
+**/dist/
+**/build/
+**/.svelte-kit/
+**/coverage/
+**/static/
+**/src/lib/paraglide/
+packages/db/migrations/

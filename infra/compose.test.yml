@@ -1,0 +1,49 @@
+# Full stack built from the production Dockerfiles, used by the Playwright E2E suite.
+name: savesphere-e2e
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: savesphere
+      POSTGRES_PASSWORD: savesphere
+      POSTGRES_DB: savesphere
+    tmpfs:
+      - /var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U savesphere']
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  api:
+    image: ${API_IMAGE:-savesphere-api:e2e}
+    build:
+      context: ..
+      dockerfile: infra/docker/api.Dockerfile
+    environment:
+      DATABASE_URL: postgres://savesphere:savesphere@postgres:5432/savesphere
+      APP_URL: http://localhost:4173
+      BETTER_AUTH_SECRET: e2e-secret-e2e-secret-e2e-secret-e2e-secret
+      AI_KEYS_ENCRYPTION_KEY: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+      # Deterministic AI responses: any key is accepted unless it starts with "invalid".
+      AI_PROVIDER_MODE: fake
+      # Every E2E user signs up from the same IP within seconds.
+      AUTH_RATE_LIMIT: 'false'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    image: ${WEB_IMAGE:-savesphere-web:e2e}
+    build:
+      context: ..
+      dockerfile: infra/docker/web.Dockerfile
+    environment:
+      ORIGIN: http://localhost:4173
+      API_INTERNAL_URL: http://api:3000
+    ports:
+      - '4173:3000'
+    depends_on:
+      api:
+        condition: service_healthy

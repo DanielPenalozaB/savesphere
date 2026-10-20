@@ -1,0 +1,56 @@
+# Production stack for Coolify ("Docker Compose" resource pointing at this file).
+# Images are built and pushed to GHCR by CI; Coolify only pulls and runs them.
+# Set every ${VAR} in Coolify's Environment Variables UI. Assign your domain to the `web` service only:
+# the API is private and reached through the web proxy at https://<domain>/api.
+name: savesphere
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-savesphere}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-savesphere}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-savesphere}']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: ghcr.io/danielpenalozab/savesphere-api:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://${POSTGRES_USER:-savesphere}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-savesphere}
+      APP_URL: https://${DOMAIN:?set DOMAIN, e.g. savesphere.app}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET}
+      AI_KEYS_ENCRYPTION_KEY: ${AI_KEYS_ENCRYPTION_KEY:?set AI_KEYS_ENCRYPTION_KEY}
+      AI_PROVIDER_MODE: real
+      INSTANCE_AI_PROVIDER: ${INSTANCE_AI_PROVIDER:-}
+      INSTANCE_AI_KEY: ${INSTANCE_AI_KEY:-}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      WHATSAPP_ACCESS_TOKEN: ${WHATSAPP_ACCESS_TOKEN:-}
+      WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    image: ghcr.io/danielpenalozab/savesphere-web:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    environment:
+      ORIGIN: https://${DOMAIN}
+      API_INTERNAL_URL: http://api:3000
+      # Behind Coolify's Traefik: take the client IP from the proxy header (1 trusted hop).
+      ADDRESS_HEADER: X-Forwarded-For
+      XFF_DEPTH: '1'
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
