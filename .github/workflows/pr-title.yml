@@ -36,4 +36,5 @@ jobs:
             e2e
             infra
             deps
+            deps-dev
           requireScope: false
