@@ -2,6 +2,18 @@
 
 Read `README.md` and `docs/architecture.md` first. This file lists the non-obvious rules.
 
+## Context and memory
+
+- **Start of a task:** `engram context savesphere` (decisions, gotchas, incidents and current
+  status from earlier sessions).
+- **End of a task:** save durable findings, meaning decisions with their _why_, quirks and
+  incidents, not what the code or git history already shows:
+  `engram save "SaveSphere: <topic>" "<content>" --project savesphere --scope project --type <decision|architecture|bugfix|discovery>`
+- **Designs:** Google Stitch via the `stitch` MCP server. The reference project is
+  "Expense and Budget Tracker" (`projects/5847185384350444925`), with "Ledgerly Personal Finance
+  PWA" (`projects/7060669007477980538`) for Quick Add and Home variants. The designs are desktop
+  and Spanish; implement them mobile-first, with every string in both `en.json` and `es.json`.
+
 ## Environment
 
 - Node 24 (`.nvmrc`), pnpm 12, Docker running (integration tests and E2E use containers).
