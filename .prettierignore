@@ -6,3 +6,4 @@ pnpm-lock.yaml
 **/static/
 **/src/lib/paraglide/
 packages/db/migrations/
+**/project.inlang/cache/
