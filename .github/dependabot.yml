@@ -5,21 +5,58 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
-    groups:
-      minor-and-patch:
-        update-types: [minor, patch]
     commit-message:
       prefix: build
       include: scope
+    # Packages that must move together are grouped, so CI never sees half an upgrade.
+    groups:
+      vitest:
+        patterns: ['vitest', '@vitest/*', 'vitest-browser-*']
+      svelte:
+        patterns:
+          [
+            'svelte',
+            'svelte-check',
+            '@sveltejs/*',
+            'eslint-plugin-svelte',
+            'prettier-plugin-svelte'
+          ]
+      nestjs:
+        patterns: ['@nestjs/*']
+      ai-sdk:
+        patterns: ['ai', '@ai-sdk/*']
+      drizzle:
+        patterns: ['drizzle-orm', 'drizzle-kit']
+      lint-format:
+        patterns:
+          ['eslint', '@eslint/*', 'typescript-eslint', 'prettier', 'prettier-plugin-*', 'globals']
+      testcontainers:
+        patterns: ['testcontainers', '@testcontainers/*']
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Types must match the Node runtime (24 LTS, see .nvmrc); bump together with Node.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+      # typescript-eslint supports TypeScript < 6.1; upgrade TypeScript deliberately.
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major', 'version-update:semver-minor']
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
     commit-message:
       prefix: ci
+    groups:
+      actions:
+        patterns: ['*']
   - package-ecosystem: docker
     directories: [/infra/docker]
     schedule:
       interval: monthly
     commit-message:
       prefix: build
+    ignore:
+      # Stay on the Node LTS line chosen in .nvmrc; move majors deliberately.
+      - dependency-name: node
+        update-types: ['version-update:semver-major']
