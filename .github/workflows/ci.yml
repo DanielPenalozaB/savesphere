@@ -43,7 +43,7 @@ jobs:
         run: pnpm --filter @savesphere/web exec playwright install --with-deps chromium
       # API integration tests start a real Postgres 18 with Testcontainers (Docker is preinstalled).
       - run: pnpm turbo test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage
@@ -89,7 +89,7 @@ jobs:
       - name: Stack logs
         if: failure()
         run: docker compose -f infra/compose.test.yml logs --no-color
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
