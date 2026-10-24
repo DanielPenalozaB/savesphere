@@ -76,7 +76,23 @@ instance has its credentials, and it shows as locked otherwise.
 ## Web
 
 - SvelteKit 3 with adapter-node. `hooks.server.ts` proxies `/api/*`, forwarding the client IP so
-  auth rate limiting works per user.
+  auth rate limiting works per user, then resolves `locals.user` from the session cookie
+  (`GET /api/me`).
+- Routes: `(auth)` holds sign-in and sign-up, and redirects signed-in users home. `(app)` holds
+  everything else behind the session guard in `(app)/+layout.server.ts`, inside the app shell
+  (desktop sidebar; mobile top bar, bottom bar and "More" drawer, configured in
+  `src/lib/navigation.ts`).
+- Auth forms are form actions that call Better Auth through `event.fetch`, so the session cookie
+  reaches the browser and they work before hydration (credentials never end up in a URL).
+  Sign-out is a `POST /logout`.
+- Origin: SvelteKit 3's adapter has no runtime `ORIGIN`. The server derives it from the `Host`
+  header plus `X-Forwarded-Proto` (`PROTOCOL_HEADER`), which Traefik sets; it's needed for the
+  CSRF check on form posts.
+- Design system: tokens in `src/routes/layout.css` (`@theme`), taken from the Stitch project
+  "Expense and Budget Tracker". Use the Material 3 role classes (`bg-surface`,
+  `text-on-surface-variant`, `bg-primary-container`…) and the `card` utility, never raw colors.
+  Fonts are self-hosted (Inter, Plus Jakarta Sans); icons are Material Symbols via
+  `unplugin-icons` (`import Icon from '~icons/material-symbols/<name>'`).
 - PWA: `static/manifest.webmanifest` plus `src/service-worker.ts`. The app shell is cached;
   `/api/*` is never cached.
 - i18n with Paraglide. Locale comes from a cookie, then the browser language. Every string goes in

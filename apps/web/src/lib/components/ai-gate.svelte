@@ -36,14 +36,17 @@
 			aria-expanded={open}
 			onclick={() => (open = !open)}
 		>
-			<span class="rounded-full bg-teal-700 px-2 py-0.5 text-xs font-medium text-white">
+			<span class="rounded-full bg-primary-container px-2 py-0.5 text-label-md text-on-primary">
 				🔒 {m.ai_badge()}
 			</span>
 		</button>
 		{#if open}
-			<div role="status" class="mt-2 rounded-xl bg-teal-50 p-3 text-sm text-teal-900">
+			<div
+				role="status"
+				class="mt-2 rounded-xl bg-primary-fixed p-3 text-body-md text-on-primary-fixed-variant"
+			>
 				<p>{reasons[ai.reason ?? 'not_configured']()}</p>
-				<a href={resolve('/settings/ai')} class="mt-1 inline-block font-medium underline"
+				<a href={resolve('settings/ai')} class="mt-1 inline-block font-medium underline"
 					>{m.ai_locked_cta()}</a
 				>
 			</div>

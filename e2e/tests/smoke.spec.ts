@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-test('home page renders through SSR with the API reachable', async ({ page }) => {
+test('signed-out visitors land on the sign-in page (SSR guard)', async ({ page }) => {
 	await page.goto('/');
-	await expect(page.getByRole('heading', { name: 'SaveSphere' })).toBeVisible();
-	await expect(page.getByTestId('api-status')).toHaveText('All systems ready');
+	await expect(page).toHaveURL('/login');
+	await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
 });
 
 test('serves the PWA manifest and service worker', async ({ request }) => {
@@ -17,7 +17,7 @@ test.describe('in Spanish', () => {
 	test.use({ locale: 'es-ES' });
 
 	test('follows the browser language', async ({ page }) => {
-		await page.goto('/');
-		await expect(page.getByTestId('api-status')).toHaveText('Todo listo');
+		await page.goto('/login');
+		await expect(page.getByRole('heading', { name: 'Bienvenido de nuevo' })).toBeVisible();
 	});
 });

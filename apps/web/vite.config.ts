@@ -1,5 +1,6 @@
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import tailwindcss from '@tailwindcss/vite';
+import icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import adapter from '@sveltejs/adapter-node';
@@ -8,6 +9,8 @@ import { sveltekit } from '@sveltejs/kit/vite';
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
+		// Material Symbols as tree-shaken Svelte components: `import Icon from '~icons/material-symbols/<name>'`.
+		icons({ compiler: 'svelte' }),
 		sveltekit({
 			compilerOptions: {
 				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
