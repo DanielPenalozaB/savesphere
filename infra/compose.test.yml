@@ -40,7 +40,8 @@ services:
       context: ..
       dockerfile: infra/docker/web.Dockerfile
     environment:
-      ORIGIN: http://localhost:4173
+      # Same as production; Playwright sends X-Forwarded-Proto: http in place of the proxy.
+      PROTOCOL_HEADER: X-Forwarded-Proto
       API_INTERNAL_URL: http://api:3000
     ports:
       - '4173:3000'

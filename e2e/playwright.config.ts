@@ -10,11 +10,16 @@ export default defineConfig({
 	reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
 	use: {
 		baseURL,
-		extraHTTPHeaders: { Origin: baseURL },
+		// X-Forwarded-Proto stands in for the reverse proxy: the web server derives its origin
+		// (for CSRF checks on form posts) from it, as it does behind Traefik in production.
+		extraHTTPHeaders: {
+			Origin: baseURL,
+			'X-Forwarded-Proto': new URL(baseURL).protocol.slice(0, -1)
+		},
 		trace: 'retain-on-failure'
 	},
 	projects: [
-		{ name: 'smoke', testMatch: /smoke\.spec\.ts/, use: { ...devices['Desktop Chrome'] } },
+		{ name: 'smoke', testMatch: /(smoke|auth)\.spec\.ts/, use: { ...devices['Desktop Chrome'] } },
 		// The same journeys run with and without AI, so both modes stay supported.
 		{
 			name: 'ai-off',

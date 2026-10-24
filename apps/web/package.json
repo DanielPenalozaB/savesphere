@@ -18,6 +18,9 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
+		"@fontsource-variable/inter": "^5.3.0",
+		"@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+		"@iconify-json/material-symbols": "^1.2.95",
 		"@inlang/paraglide-js": "^2.18.2",
 		"@savesphere/contracts": "workspace:*",
 		"@sveltejs/adapter-node": "^6.0.0",
@@ -38,6 +41,7 @@
 		"tailwindcss": "^4.3.0",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.60.1",
+		"unplugin-icons": "^24.0.0",
 		"vite": "^8.3.0",
 		"vitest": "^4.1.8",
 		"vitest-browser-svelte": "^2.1.1",
