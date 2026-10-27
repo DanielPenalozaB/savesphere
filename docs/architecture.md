@@ -88,6 +88,14 @@ instance has its credentials, and it shows as locked otherwise.
 - Origin: SvelteKit 3's adapter has no runtime `ORIGIN`. The server derives it from the `Host`
   header plus `X-Forwarded-Proto` (`PROTOCOL_HEADER`), which Traefik sets; it's needed for the
   CSRF check on form posts.
+- Ledger UI: `(app)/+layout.server.ts` loads settings, accounts and categories once for every page
+  and the "Record movement" sheet (`lib/components/ledger/quick-add-sheet.svelte`, opened via
+  `lib/quick-add.svelte.ts`). Writes are form actions (`/activity/new`, `/accounts/new`,
+  `?/delete`) that validate in `lib/server/*-form.ts`, so they also work without JavaScript.
+- Money and dates in the browser: `lib/money.ts` formats and parses amounts per locale with the
+  currency's minor units (`SUPPORTED_CURRENCIES` in contracts), never through floats;
+  `lib/dates.ts` computes month ranges in the user's time zone (saved at sign-up with their
+  regional locale, e.g. `America/Bogota`, `es-CO`).
 - Design system: tokens in `src/routes/layout.css` (`@theme`), taken from the Stitch project
   "Expense and Budget Tracker". Use the Material 3 role classes (`bg-surface`,
   `text-on-surface-variant`, `bg-primary-container`…) and the `card` utility, never raw colors.
@@ -100,6 +108,8 @@ instance has its credentials, and it shows as locked otherwise.
 
 ## Roadmap of modules
 
-Done: auth, settings, capabilities, accounts, categories, transactions, AI credentials and parsing.
+Done: auth, settings, capabilities, accounts, categories, transactions (+ monthly summary), goals
+(list with progress, create), AI credentials and parsing. UI: Panel, Movimientos, "Record
+movement", first-account setup, sidebar vaults (active goals) and new-vault form.
 Next: budgets, goals and the planner, recurring rules and subscriptions, insights and reports (BullMQ
 worker on Redis), notifications (web push, email), and Telegram/WhatsApp adapters.

@@ -37,10 +37,12 @@ export const settingsNav: NavItem = {
 	icon: IconSettings
 };
 
-/** Mobile bottom bar: the most frequent destinations; the rest live in the "More" drawer. */
-export const bottomNav: NavItem[] = (['', 'activity', 'budgets', 'goals'] as const).map((href) =>
-	navItem(href)
-);
+/**
+ * Mobile bottom bar: the most frequent destinations, split around the central "Record" button;
+ * the rest live in the "More" drawer.
+ */
+export const bottomNavStart: NavItem[] = (['', 'activity'] as const).map((href) => navItem(href));
+export const bottomNavEnd: NavItem[] = (['budgets'] as const).map((href) => navItem(href));
 
 /** Whether `pathname` (from `page.url.pathname`) is inside the section at `href`. */
 export function isActive(href: Path, pathname: string): boolean {

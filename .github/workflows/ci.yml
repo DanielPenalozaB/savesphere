@@ -31,6 +31,8 @@ jobs:
   test:
     name: Unit & integration tests
     runs-on: ubuntu-latest
+    # A hung browser or container must fail fast (and leave logs), not burn the 6-hour default.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6

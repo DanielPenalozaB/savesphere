@@ -88,3 +88,28 @@ export const transactionPageSchema = z.object({
 	nextCursor: z.string().nullable()
 });
 export type TransactionPage = z.infer<typeof transactionPageSchema>;
+
+export const transactionSummaryQuerySchema = z.object({
+	from: isoDateTime,
+	/** Exclusive, so consecutive periods never double-count. */
+	to: isoDateTime
+});
+export type TransactionSummaryQuery = z.infer<typeof transactionSummaryQuerySchema>;
+
+/** Income and expenses in a period, one row per account currency (amounts are never mixed). */
+export const transactionSummarySchema = z.object({
+	totals: z.array(
+		z.object({
+			currency: z.string(),
+			/** Sum of income, positive. */
+			incomeMinor: amountMinor,
+			/** Sum of expenses, positive. */
+			expenseMinor: amountMinor,
+			/** Every movement touching this currency, transfers and adjustments included. */
+			count: z.number().int(),
+			incomeCount: z.number().int(),
+			expenseCount: z.number().int()
+		})
+	)
+});
+export type TransactionSummary = z.infer<typeof transactionSummarySchema>;

@@ -12,10 +12,13 @@ import {
 import {
 	createTransactionSchema,
 	listTransactionsQuerySchema,
+	transactionSummaryQuerySchema,
 	type CreateTransactionInput,
 	type ListTransactionsQuery,
 	type Transaction,
-	type TransactionPage
+	type TransactionPage,
+	type TransactionSummary,
+	type TransactionSummaryQuery
 } from '@savesphere/contracts';
 import { CurrentUser, type AuthUser } from '../auth/auth.decorators.js';
 import { ZodValidationPipe } from '../common/zod-validation.pipe.js';
@@ -31,6 +34,15 @@ export class TransactionsController {
 		@Query(new ZodValidationPipe(listTransactionsQuerySchema)) query: ListTransactionsQuery
 	): Promise<TransactionPage> {
 		return this.transactions.list(user.id, query);
+	}
+
+	// Declared before ':id' so "summary" isn't parsed as a transaction id.
+	@Get('summary')
+	summary(
+		@CurrentUser() user: AuthUser,
+		@Query(new ZodValidationPipe(transactionSummaryQuerySchema)) query: TransactionSummaryQuery
+	): Promise<TransactionSummary> {
+		return this.transactions.summary(user.id, query);
 	}
 
 	@Get(':id')
