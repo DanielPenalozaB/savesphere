@@ -1,6 +1,7 @@
 <script lang="ts">
 	import IconMail from '~icons/material-symbols/mail-outline';
 	import IconPerson from '~icons/material-symbols/person-outline';
+	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { resolve } from '$app/paths';
 	import { authErrorMessages } from '#lib/auth/messages.ts';
@@ -19,6 +20,13 @@
 	let email = $state(form?.email ?? '');
 	let password = $state('');
 	let busy = $state(false);
+	let regional = $state({ timezone: '', locale: '' });
+	onMount(() => {
+		regional = {
+			timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+			locale: navigator.language
+		};
+	});
 </script>
 
 <svelte:head>
@@ -66,6 +74,9 @@
 		hint={m.auth_password_hint()}
 		bind:value={password}
 	/>
+	<!-- Filled in the browser; without JS the account keeps the defaults. -->
+	<input type="hidden" name="timezone" value={regional.timezone} />
+	<input type="hidden" name="locale" value={regional.locale} />
 	<AuthSubmit {busy} label={m.auth_sign_up_cta()} />
 </form>
 

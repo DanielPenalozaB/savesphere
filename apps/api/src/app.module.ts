@@ -6,6 +6,7 @@ import { CategoriesModule } from './categories/categories.module.js';
 import { ConfigModule } from './config/config.module.js';
 import type { Env } from './config/env.js';
 import { DatabaseModule } from './database/database.module.js';
+import { GoalsModule } from './goals/goals.module.js';
 import { HealthController } from './health/health.controller.js';
 import { MeModule } from './me/me.module.js';
 import { TransactionsModule } from './transactions/transactions.module.js';
@@ -23,7 +24,8 @@ export class AppModule {
 				AiModule,
 				AccountsModule,
 				CategoriesModule,
-				TransactionsModule
+				TransactionsModule,
+				GoalsModule
 			],
 			controllers: [HealthController]
 		};
