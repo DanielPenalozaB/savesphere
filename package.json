@@ -31,7 +31,7 @@
 		"prettier-plugin-tailwindcss": "^0.8.0",
 		"turbo": "^2.11.9",
 		"typescript": "~6.0.3",
-		"typescript-eslint": "^8.60.1"
+		"typescript-eslint": "^8.72.0"
 	},
 	"type": "module"
 }
