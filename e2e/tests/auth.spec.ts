@@ -16,7 +16,7 @@ test('sign up, sign out and sign back in', async ({ page }) => {
 	await expect(page).toHaveURL('/');
 	await expect(page.getByRole('heading', { name: 'Hi, Ada' })).toBeVisible();
 
-	await page.getByLabel('Account').click();
+	await page.getByLabel('Account', { exact: true }).click();
 	await page.getByRole('button', { name: 'Sign out' }).click();
 	await expect(page).toHaveURL('/login');
 

@@ -3,7 +3,9 @@ import type {
 	CreateTransactionInput,
 	ListTransactionsQuery,
 	Transaction,
-	TransactionPage
+	TransactionPage,
+	TransactionSummary,
+	TransactionSummaryQuery
 } from '@savesphere/contracts';
 import { buildEntries, type TransactionDraft } from '@savesphere/core';
 import {
@@ -129,6 +131,58 @@ export class TransactionsService {
 		return {
 			items: await this.withEntries(page),
 			nextCursor: rows.length > query.limit && last ? encodeCursor(last) : null
+		};
+	}
+
+	/**
+	 * Income and expenses in `[from, to)`, grouped by account currency. `count` covers every
+	 * movement (transfers and adjustments too), matching what the activity list shows.
+	 */
+	async summary(userId: string, query: TransactionSummaryQuery): Promise<TransactionSummary> {
+		const rows = await this.db
+			.select({
+				currency: accounts.currency,
+				income: sql<string>`coalesce(sum(${transactionEntries.amountMinor}) filter (where ${transactions.kind} = 'income'), 0)`,
+				expense: sql<string>`coalesce(-sum(${transactionEntries.amountMinor}) filter (where ${transactions.kind} = 'expense'), 0)`,
+				count: sql<number>`count(distinct ${transactions.id})::int`,
+				incomeCount: sql<number>`(count(distinct ${transactions.id}) filter (where ${transactions.kind} = 'income'))::int`,
+				expenseCount: sql<number>`(count(distinct ${transactions.id}) filter (where ${transactions.kind} = 'expense'))::int`
+			})
+			.from(transactions)
+			.innerJoin(
+				transactionEntries,
+				and(
+					eq(transactionEntries.userId, transactions.userId),
+					eq(transactionEntries.transactionId, transactions.id)
+				)
+			)
+			.innerJoin(
+				accounts,
+				and(
+					eq(accounts.userId, transactionEntries.userId),
+					eq(accounts.id, transactionEntries.accountId)
+				)
+			)
+			.where(
+				and(
+					eq(transactions.userId, userId),
+					isNull(transactions.deletedAt),
+					gte(transactions.occurredAt, new Date(query.from)),
+					lt(transactions.occurredAt, new Date(query.to))
+				)
+			)
+			.groupBy(accounts.currency)
+			.orderBy(accounts.currency);
+
+		return {
+			totals: rows.map((row) => ({
+				currency: row.currency,
+				incomeMinor: toSafeNumber(BigInt(row.income)),
+				expenseMinor: toSafeNumber(BigInt(row.expense)),
+				count: row.count,
+				incomeCount: row.incomeCount,
+				expenseCount: row.expenseCount
+			}))
 		};
 	}
 
