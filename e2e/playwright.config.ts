@@ -19,7 +19,11 @@ export default defineConfig({
 		trace: 'retain-on-failure'
 	},
 	projects: [
-		{ name: 'smoke', testMatch: /(smoke|auth)\.spec\.ts/, use: { ...devices['Desktop Chrome'] } },
+		{
+			name: 'smoke',
+			testMatch: /(smoke|auth|ledger)\.spec\.ts/,
+			use: { ...devices['Desktop Chrome'] }
+		},
 		// The same journeys run with and without AI, so both modes stay supported.
 		{
 			name: 'ai-off',

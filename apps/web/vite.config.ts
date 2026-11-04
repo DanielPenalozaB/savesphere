@@ -33,6 +33,19 @@ export default defineConfig({
 		projects: [
 			{
 				extends: './vite.config.ts',
+				// Pre-bundle what Vite would otherwise discover mid-run: a re-optimization reloads the
+				// browser and breaks imports of spec files still loading ("Failed to fetch dynamically
+				// imported module"), which happens on cold CI caches.
+				optimizeDeps: {
+					include: [
+						'@sveltejs/kit > devalue',
+						'@sveltejs/kit > esm-env',
+						'zod',
+						'svelte/animate',
+						'svelte/easing',
+						'svelte/transition'
+					]
+				},
 				test: {
 					name: 'client',
 					browser: {

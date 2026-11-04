@@ -1,5 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { callAuth, formString } from '#lib/server/auth.ts';
+import { regionalSettings } from '#lib/server/regional.ts';
 import type { Actions } from './$types';
 
 export const actions: Actions = {
@@ -14,6 +15,18 @@ export const actions: Actions = {
 			password: formString(data, 'password')
 		});
 		if (error) return fail(400, { error, name, email });
+
+		// Months and money follow the browser's time zone and region (e.g. America/Bogota, es-CO).
+		const regional = regionalSettings(data);
+		if (Object.keys(regional).length > 0) {
+			await event
+				.fetch('/api/me/settings', {
+					method: 'PATCH',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify(regional)
+				})
+				.catch(() => undefined); // Defaults (UTC, en-US) still work.
+		}
 		redirect(303, '/');
 	}
 };
