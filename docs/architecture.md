@@ -109,7 +109,10 @@ instance has its credentials, and it shows as locked otherwise.
 ## Roadmap of modules
 
 Done: auth, settings, capabilities, accounts, categories, transactions (+ monthly summary), goals
-(list with progress, create), AI credentials and parsing. UI: Panel, Movimientos, "Record
-movement", first-account setup, sidebar vaults (active goals) and new-vault form.
-Next: budgets, goals and the planner, recurring rules and subscriptions, insights and reports (BullMQ
+(list with progress, create), budgets (monthly envelopes per expense category, grouped into
+50/30/20 buckets, with spending per envelope), AI credentials and parsing. UI: Panel, Movimientos,
+"Record movement", first-account setup, sidebar vaults (active goals), new-vault form, and the
+budgets page with its create/edit form.
+Next: budget follow-ups (moving money between envelopes with a history, the AI surplus card),
+goals and the planner, recurring rules and subscriptions, insights and reports (BullMQ
 worker on Redis), notifications (web push, email), and Telegram/WhatsApp adapters.

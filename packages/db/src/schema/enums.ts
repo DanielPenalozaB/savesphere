@@ -31,6 +31,8 @@ export const subscriptionStatus = pgEnum('subscription_status', [
 	'cancelled'
 ]);
 export const periodKind = pgEnum('period_kind', ['weekly', 'monthly', 'quarterly', 'yearly']);
+/** 50/30/20 grouping of budget envelopes: needs, wants and savings. */
+export const budgetBucket = pgEnum('budget_bucket', ['needs', 'wants', 'savings']);
 export const goalStatus = pgEnum('goal_status', ['active', 'achieved', 'paused', 'abandoned']);
 export const verdictKind = pgEnum('verdict_kind', ['affordable', 'wait', 'not_recommended']);
 export const generatedBy = pgEnum('generated_by', ['rules', 'ai']);

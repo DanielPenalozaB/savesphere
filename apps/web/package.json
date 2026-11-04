@@ -23,6 +23,7 @@
 		"@iconify-json/material-symbols": "^1.2.97",
 		"@inlang/paraglide-js": "^2.29.3",
 		"@savesphere/contracts": "workspace:*",
+		"@savesphere/core": "workspace:*",
 		"@sveltejs/adapter-node": "^6.0.1",
 		"@sveltejs/kit": "^3.1.1",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",

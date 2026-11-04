@@ -21,7 +21,7 @@ export default defineConfig({
 	projects: [
 		{
 			name: 'smoke',
-			testMatch: /(smoke|auth|ledger)\.spec\.ts/,
+			testMatch: /(smoke|auth|ledger|budgets)\.spec\.ts/,
 			use: { ...devices['Desktop Chrome'] }
 		},
 		// The same journeys run with and without AI, so both modes stay supported.

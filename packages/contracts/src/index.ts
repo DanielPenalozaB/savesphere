@@ -7,3 +7,4 @@ export * from './categories.js';
 export * from './transactions.js';
 export * from './ai.js';
 export * from './goals.js';
+export * from './budgets.js';
