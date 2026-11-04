@@ -30,7 +30,7 @@ describe('AiGate', () => {
 		);
 
 		await page.getByRole('button', { name: 'Receipt scanning needs AI' }).click();
-		await expect.element(page.getByRole('status')).toHaveTextContent('You turned AI off');
+		await expect.element(page.getByRole('status')).toMatchTextContent('You turned AI off');
 		await expect
 			.element(page.getByRole('link', { name: 'Open AI settings' }))
 			.toHaveAttribute('href', '/settings/ai');
