@@ -16,7 +16,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { createdAt, minor, pk, timestamptz } from './_helpers.js';
 import { users } from './auth.js';
-import { generatedBy, goalStatus, periodKind, verdictKind } from './enums.js';
+import { budgetBucket, generatedBy, goalStatus, periodKind, verdictKind } from './enums.js';
 import { accounts, categories, transactions } from './ledger.js';
 import { currencies } from './reference.js';
 
@@ -52,6 +52,7 @@ export const budgetLimits = pgTable(
 		budgetId: uuid('budget_id').notNull(),
 		categoryId: uuid('category_id').notNull(),
 		limitMinor: minor('limit_minor').notNull(),
+		bucket: budgetBucket('bucket').notNull().default('needs'),
 		alertThresholdPct: smallint('alert_threshold_pct').notNull().default(80),
 		rollover: boolean('rollover').notNull().default(false)
 	},

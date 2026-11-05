@@ -2,6 +2,7 @@ import { Module, type DynamicModule } from '@nestjs/common';
 import { AccountsModule } from './accounts/accounts.module.js';
 import { AiModule } from './ai/ai.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { BudgetsModule } from './budgets/budgets.module.js';
 import { CategoriesModule } from './categories/categories.module.js';
 import { ConfigModule } from './config/config.module.js';
 import type { Env } from './config/env.js';
@@ -25,7 +26,8 @@ export class AppModule {
 				AccountsModule,
 				CategoriesModule,
 				TransactionsModule,
-				GoalsModule
+				GoalsModule,
+				BudgetsModule
 			],
 			controllers: [HealthController]
 		};
