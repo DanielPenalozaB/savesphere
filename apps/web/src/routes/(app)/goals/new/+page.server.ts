@@ -27,6 +27,6 @@ export const actions: Actions = {
 		} catch {
 			return fail(500, { error: 'generic' as const });
 		}
-		redirect(303, '/');
+		redirect(303, '/goals');
 	}
 };

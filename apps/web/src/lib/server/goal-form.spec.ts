@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toGoalInput } from './goal-form.ts';
+import { toAllocationInput, toGoalInput } from './goal-form.ts';
 
 const form = (fields: Record<string, string>) => {
 	const data = new FormData();
@@ -42,5 +42,21 @@ describe('toGoalInput', () => {
 				'2026-10-23'
 			)
 		).toEqual({ error: 'date' });
+	});
+});
+
+describe('toAllocationInput', () => {
+	it('reads a deposit or a withdrawal in the goal currency', () => {
+		expect(toAllocationInput(form({ amount: '250.000', note: ' Prima ' }), 'COP', 'es-CO')).toEqual(
+			{ input: { amountMinor: 25_000_000, note: 'Prima' } }
+		);
+		expect(
+			toAllocationInput(form({ amount: '12.50', direction: 'withdraw' }), 'USD', 'en-US')
+		).toEqual({ input: { amountMinor: -1_250 } });
+	});
+
+	it('rejects a missing or invalid amount', () => {
+		expect(toAllocationInput(form({ amount: '' }), 'COP', 'es-CO')).toEqual({ error: 'amount' });
+		expect(toAllocationInput(form({ amount: '-5' }), 'COP', 'es-CO')).toEqual({ error: 'amount' });
 	});
 });
