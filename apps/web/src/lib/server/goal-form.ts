@@ -1,4 +1,8 @@
-import { SUPPORTED_CURRENCIES, type CreateGoalInput } from '@savesphere/contracts';
+import {
+	SUPPORTED_CURRENCIES,
+	type CreateGoalAllocationInput,
+	type CreateGoalInput
+} from '@savesphere/contracts';
 import { parseAmount } from '#lib/money.ts';
 
 export type GoalFormError = 'name' | 'amount' | 'date' | 'generic';
@@ -24,4 +28,27 @@ export function toGoalInput(
 		return { error: 'date' };
 	}
 	return { input: { name, currency, targetMinor, targetDate: targetDate || undefined } };
+}
+
+export type AllocationFormError = 'amount';
+
+/** "Add money" / "Take money out": a positive amount and a direction, in the goal's currency. */
+export function toAllocationInput(
+	data: FormData,
+	currency: string,
+	locale: string
+): { input: CreateGoalAllocationInput } | { error: AllocationFormError } {
+	const text = (name: string) => {
+		const value = data.get(name);
+		return typeof value === 'string' ? value.trim() : '';
+	};
+	const amount = parseAmount(text('amount'), currency, locale);
+	if (amount === null) return { error: 'amount' };
+	const note = text('note');
+	return {
+		input: {
+			amountMinor: text('direction') === 'withdraw' ? -amount : amount,
+			...(note && { note: note.slice(0, 200) })
+		}
+	};
 }

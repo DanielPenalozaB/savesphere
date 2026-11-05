@@ -54,3 +54,83 @@ describe('goals', () => {
 		expect((await agent.get('/api/goals').expect(200)).body.data).toEqual([]);
 	});
 });
+
+describe('goal updates and allocations', () => {
+	let t: TestApp;
+	beforeAll(async () => {
+		t = await createTestApp();
+	});
+	afterAll(() => t.close());
+
+	async function newGoal(agent: Awaited<ReturnType<typeof signUp>>['agent']) {
+		const response = await agent
+			.post('/api/goals')
+			.send({ name: 'Viaje a Kioto', targetMinor: 700_000_000, currency: 'COP' })
+			.expect(201);
+		return response.body.data.id as string;
+	}
+
+	it('edits a goal, clears its date and stamps achievedAt on completion', async () => {
+		const { agent } = await signUp(t.app);
+		const id = await newGoal(agent);
+
+		const edited = await agent
+			.patch(`/api/goals/${id}`)
+			.send({ name: 'Kioto 2027', targetMinor: 800_000_000, targetDate: '2027-07-31' })
+			.expect(200);
+		expect(edited.body.data).toMatchObject({
+			name: 'Kioto 2027',
+			targetMinor: 800_000_000,
+			targetDate: '2027-07-31',
+			status: 'active',
+			achievedAt: null
+		});
+
+		await agent.patch(`/api/goals/${id}`).send({ targetDate: null }).expect(200);
+		const achieved = await agent.patch(`/api/goals/${id}`).send({ status: 'achieved' }).expect(200);
+		expect(achieved.body.data.targetDate).toBeNull();
+		expect(achieved.body.data.achievedAt).toEqual(expect.any(String));
+
+		const reopened = await agent.patch(`/api/goals/${id}`).send({ status: 'active' }).expect(200);
+		expect(reopened.body.data.achievedAt).toBeNull();
+
+		await agent.patch(`/api/goals/${id}`).send({}).expect(422);
+		await agent.patch(`/api/goals/${id}`).send({ status: 'done' }).expect(422);
+	});
+
+	it('adds and withdraws money, never below zero', async () => {
+		const { agent } = await signUp(t.app);
+		const id = await newGoal(agent);
+
+		const deposit = await agent
+			.post(`/api/goals/${id}/allocations`)
+			.send({ amountMinor: 50_000_000, note: 'Prima' })
+			.expect(201);
+		expect(deposit.body.data.savedMinor).toBe(50_000_000);
+
+		const withdrawal = await agent
+			.post(`/api/goals/${id}/allocations`)
+			.send({ amountMinor: -20_000_000, allocatedOn: '2026-11-04' })
+			.expect(201);
+		expect(withdrawal.body.data.savedMinor).toBe(30_000_000);
+
+		await agent.post(`/api/goals/${id}/allocations`).send({ amountMinor: -30_000_001 }).expect(422);
+		await agent.post(`/api/goals/${id}/allocations`).send({ amountMinor: 0 }).expect(422);
+		expect((await agent.get(`/api/goals/${id}`).expect(200)).body.data.savedMinor).toBe(30_000_000);
+
+		await agent.patch(`/api/goals/${id}`).send({ status: 'abandoned' }).expect(200);
+		await agent.post(`/api/goals/${id}/allocations`).send({ amountMinor: 1_000 }).expect(409);
+	});
+
+	it("keeps other users' goals out of reach", async () => {
+		const owner = await signUp(t.app);
+		const id = await newGoal(owner.agent);
+		const other = await signUp(t.app);
+		await other.agent.get(`/api/goals/${id}`).expect(404);
+		await other.agent.patch(`/api/goals/${id}`).send({ name: 'Mine' }).expect(404);
+		await other.agent.post(`/api/goals/${id}/allocations`).send({ amountMinor: 1_000 }).expect(404);
+		expect((await owner.agent.get(`/api/goals/${id}`).expect(200)).body.data.name).toBe(
+			'Viaje a Kioto'
+		);
+	});
+});
